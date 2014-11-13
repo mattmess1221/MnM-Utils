@@ -1,0 +1,15 @@
+# gradle logs
+.gradle
+
+# IDE project files
+.project
+.classpath
+.settings/
+.idea
+*.ipr
+*.iws
+
+# build
+bin/
+build/
+run/
