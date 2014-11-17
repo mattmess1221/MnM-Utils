@@ -2,6 +2,9 @@ package mnm.mods.util;
 
 import io.netty.util.NetUtil;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+
 public class IPUtils {
 
     private static final int DEFAULT_PORT = 25565;
@@ -78,6 +81,10 @@ public class IPUtils {
         return this.host + (hasPort() ? "" : ":" + port);
     }
 
+    public SocketAddress getSocketAddress() {
+        return InetSocketAddress.createUnresolved(host, port);
+    }
+
     public String getFileSafeAddress() {
         return this.host.replace(':', '_') + (hasPort() ? "" : "(" + port + ")");
     }
@@ -87,4 +94,5 @@ public class IPUtils {
         IPV6,
         NAME;
     }
+
 }
