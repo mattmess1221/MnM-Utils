@@ -4,8 +4,21 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * Class to help with reflection.
+ */
 public final class ReflectionHelper {
 
+    /**
+     * Gets the value of a field using a class and object.
+     *
+     * @param cl The class
+     * @param obj The object
+     * @param fieldName The field name
+     * @return The value
+     * @throws IllegalAccessException
+     * @throws NoSuchFieldException
+     */
     public static Object getFieldValue(Class<?> cl, Object obj, String fieldName)
             throws IllegalAccessException, NoSuchFieldException {
         Field fd = cl.getField(fieldName);
@@ -13,6 +26,17 @@ public final class ReflectionHelper {
         return fd.get(obj);
     }
 
+    /**
+     * Gets the value of a field using a class, object, and possible field
+     * names. Useful when dealing with obfuscated classes.
+     *
+     * @param cl The class
+     * @param obj The object
+     * @param fieldNames Possible field names
+     * @return The value
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
     public static Object getFieldValue(Class<?> cl, Object obj, String[] fieldNames)
             throws NoSuchFieldException, IllegalAccessException {
         NoSuchFieldException latest = null;
@@ -27,6 +51,18 @@ public final class ReflectionHelper {
 
     }
 
+    /**
+     * Invokes a method using a class, object, and arguments.
+     *
+     * @param cl The class
+     * @param obj The object
+     * @param methodName The name
+     * @param args The arguments
+     * @return The return value
+     * @throws NoSuchMethodException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     */
     public static Object invokeMethod(Class<?> cl, Object obj, String methodName, Object[] args)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         Class<?>[] parameterTypes = getParameterTypes(args);
@@ -35,6 +71,19 @@ public final class ReflectionHelper {
         return md.invoke(obj, args);
     }
 
+    /**
+     * Invokes a method using a class, object, arguments, and possible method
+     * names. Useful when dealing with obfuscated classes.
+     *
+     * @param cl The class
+     * @param obj The object
+     * @param methodNames Possible method names
+     * @param args The arguments
+     * @return The return value
+     * @throws NoSuchMethodException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     */
     public static Object invokeMethod(Class<?> cl, Object obj, String[] methodNames, Object[] args)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         NoSuchMethodException latest = null;

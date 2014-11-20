@@ -21,10 +21,20 @@ public abstract class Settings {
     private JsonObject jobj;
     protected final File file;
 
+    /**
+     * Creates settings with a settings file at root/name.json. Settings are not
+     * automatically loaded.
+     *
+     * @param root The parent directory of the settings file
+     * @param name The name of the settings file
+     */
     public Settings(File root, String name) {
         this.file = new File(root, name + ".json");
     }
 
+    /**
+     * Saves the settings to file.
+     */
     public final void saveSettingsFile() {
         jobj = new JsonObject();
         saving = true;
@@ -38,36 +48,69 @@ public abstract class Settings {
         }
     }
 
+    /**
+     * Saves a boolean value.
+     *
+     * @param key
+     * @param value
+     */
     protected void saveSetting(String key, Boolean value) {
         if (saving) {
             jobj.addProperty(key, value);
         }
     }
 
+    /**
+     * Saves a number value.
+     *
+     * @param key
+     * @param value
+     */
     protected void saveSetting(String key, Number value) {
         if (saving) {
             jobj.addProperty(key, value);
         }
     }
 
+    /**
+     * Saves a character value.
+     *
+     * @param key
+     * @param value
+     */
     protected void saveSetting(String key, Character value) {
         if (saving) {
             jobj.addProperty(key, value);
         }
     }
 
+    /**
+     * Saves a string value.
+     *
+     * @param key
+     * @param value
+     */
     protected void saveSetting(String key, String value) {
         if (saving) {
             jobj.addProperty(key, value);
         }
     }
 
+    /**
+     * Saves an advanced json element.
+     *
+     * @param key
+     * @param jsonTree
+     */
     protected void saveSetting(String key, JsonElement jsonTree) {
         if (saving) {
             jobj.add(key, jsonTree);
         }
     }
 
+    /**
+     * Loads settings from file.
+     */
     public final void loadSettingsFile() {
         file.getParentFile().mkdirs();
         try {
@@ -99,6 +142,5 @@ public abstract class Settings {
      * @param value
      */
     protected abstract void loadSetting(String setting, JsonElement value);
-
 
 }

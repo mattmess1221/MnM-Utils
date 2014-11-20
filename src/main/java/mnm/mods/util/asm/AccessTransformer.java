@@ -31,7 +31,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 /**
- * Access Transformers for use in LiteMods
+ * Access Transformers for use in LiteMods. See the Minecraft Forge wiki on how
+ * to use Access Transformers.
+ * <p/>
+ * Add <code>
+ *  "classTransformerClasses": "mnm.mods.util.asm.AccessTransformer"
+ *  </code> into your litemod.json to use this.
  *
  * @author Matthew Messinger
  *

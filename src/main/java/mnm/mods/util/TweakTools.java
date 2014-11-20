@@ -8,14 +8,30 @@ import net.minecraft.launchwrapper.Launch;
 
 public class TweakTools {
 
+    /**
+     * Returns whether LiteLoader is loaded into LaunchWrapper.
+     *
+     * @return True if it's loaded
+     */
     public static boolean isLiteLoaderLoaded() {
         return isTweakLoaded("com.mumfrey.liteloader.launch.LiteLoaderTweaker");
     }
 
+    /**
+     * Returns whether FML is loaded into LaunchWrapper.
+     *
+     * @return True if it's loaded
+     */
     public static boolean isFMLLoaded() {
         return isTweakLoaded("net.minecraftforge.fml.common.launcher.FMLTweaker");
     }
 
+    /**
+     * Gets if a given tweak is loaded into LaunchWrapper.
+     *
+     * @param name The fully qualified class name
+     * @return True if it's loaded
+     */
     public static boolean isTweakLoaded(String name) {
         boolean load = false;
         @SuppressWarnings("unchecked")

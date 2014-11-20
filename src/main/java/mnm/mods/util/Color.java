@@ -6,6 +6,10 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
+/**
+ * Represents a color and provides an easy way to convert to and from html color
+ * codes.
+ */
 public class Color {
 
     private final int red;
@@ -13,6 +17,11 @@ public class Color {
     private final int blue;
     private final int alpha;
 
+    /**
+     * Creates a color using an html color code.
+     *
+     * @param hexColor The html color code
+     */
     public Color(int hexColor) {
         this.alpha = hexColor >> 24 & 255;
         this.red = hexColor >> 16 & 255;
@@ -20,6 +29,14 @@ public class Color {
         this.blue = hexColor & 255;
     }
 
+    /**
+     * Creates a color using RGBA color format.
+     *
+     * @param red Red color
+     * @param green Green color
+     * @param blue Blue color
+     * @param alpha Transparency
+     */
     public Color(int red, int green, int blue, int alpha) {
         this.red = red;
         this.green = green;
@@ -27,6 +44,12 @@ public class Color {
         this.alpha = alpha;
     }
 
+    /**
+     * Gets the html hex color code of this color usable by Minecraft's
+     * {@link net.minecraft.client.gui.Gui}.
+     *
+     * @return The html hex code.
+     */
     public int getColor() {
         int alphaI = alpha << 24;
         int redI = red << 16;
@@ -35,22 +58,52 @@ public class Color {
         return alphaI + redI + greenI + blueI;
     }
 
+    /**
+     * Gets the red value.
+     *
+     * @return The red value
+     */
     public int getRed() {
         return red;
     }
 
+    /**
+     * Gets the green value.
+     *
+     * @return The green value
+     */
     public int getGreen() {
         return green;
     }
 
+    /**
+     * Gets the blue value.
+     *
+     * @return The blue value
+     */
     public int getBlue() {
         return blue;
     }
 
+    /**
+     * Gets the alpha value.
+     *
+     * @return The alpha value
+     */
     public int getAlpha() {
         return alpha;
     }
 
+    /**
+     * Convenience method for getting the html code for a RGBA color. Creates a
+     * new object and calls {@link Color#getColor()}.
+     *
+     * @param red The red value
+     * @param green The green value
+     * @param blue The blue value
+     * @param alpha The alpha value
+     * @return
+     */
     public static int getColor(int red, int green, int blue, int alpha) {
         return new Color(red, green, blue, alpha).getColor();
     }

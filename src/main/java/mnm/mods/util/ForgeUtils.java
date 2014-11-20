@@ -1,8 +1,23 @@
 package mnm.mods.util;
 
+/**
+ * Class for dealing with Forge.
+ */
 public final class ForgeUtils {
 
+    /**
+     * Detects if FML is on the classpath.<br/>
+     *
+     * Note: This only tells if FML is installed, not if it is actually loaded
+     * into LaunchWrapper.
+     *
+     * @see TweakTools#isFMLLoaded()
+     */
     public static final boolean FML_INSTALLED = fmlInstalled();
+
+    /**
+     * Detects if Minecraft Forge is on the classpath.
+     */
     public static final boolean FORGE_INSTALLED = forgeInstalled();
 
     private static boolean fmlInstalled() {
