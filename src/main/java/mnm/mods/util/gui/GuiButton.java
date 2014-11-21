@@ -4,6 +4,9 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 
 import mnm.mods.util.TexturedModal;
+import mnm.mods.util.gui.events.ActionPerformed;
+import mnm.mods.util.gui.events.GuiEvent;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -22,6 +25,14 @@ public class GuiButton extends GuiComponent {
 
     public GuiButton(int x, int y, int width, int height) {
         super(x, y, width, height);
+        this.addEventListener(new ActionPerformed() {
+            @Override
+            public void actionPerformed(GuiEvent event) {
+                mc.getSoundHandler().playSound(
+                        PositionedSoundRecord
+                        .create(new ResourceLocation("gui.button.press"), 1.0F));
+            }
+        });
     }
 
     public GuiButton(String text) {
