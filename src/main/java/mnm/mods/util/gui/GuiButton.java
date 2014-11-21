@@ -20,12 +20,12 @@ public class GuiButton extends GuiComponent {
     protected String text = "";
     public int packedFGColour;
 
-    public GuiButton(GuiPanel parent, int x, int y, int width, int height) {
-        super(parent, x, y, width, height);
+    public GuiButton(int x, int y, int width, int height) {
+        super(x, y, width, height);
     }
 
-    public GuiButton(GuiPanel parent, String text) {
-        this(parent, 0, 0, 100, 20);
+    public GuiButton(String text) {
+        this(0, 0, 100, 20);
         this.text = text;
     }
 

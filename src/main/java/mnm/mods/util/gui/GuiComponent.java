@@ -32,18 +32,17 @@ public abstract class GuiComponent extends Gui {
     private List<GuiListener> listeners = Lists.newArrayList();
     private boolean held;
 
-    public GuiComponent(GuiPanel parent) {
-        this(parent, new Rectangle());
+    public GuiComponent() {
+        this(new Rectangle());
     }
 
-    public GuiComponent(GuiPanel parent, int x, int y, int w, int h) {
-        this(parent, new Rectangle(x, y, w, h));
+    public GuiComponent(int x, int y, int w, int h) {
+        this(new Rectangle(x, y, w, h));
     }
 
     /* Everything will be assigned here */
-    public GuiComponent(GuiPanel parent, Rectangle bounds) {
+    public GuiComponent(Rectangle bounds) {
         this.bounds = bounds;
-        this.parent = parent;
     }
 
     public abstract void drawComponent(int mouseX, int mouseY);
@@ -158,6 +157,10 @@ public abstract class GuiComponent extends Gui {
 
     public GuiPanel getParent() {
         return this.parent;
+    }
+
+    void setParent(GuiPanel guiPanel) {
+        this.parent = guiPanel;
     }
 
     public Point getActualPosition() {

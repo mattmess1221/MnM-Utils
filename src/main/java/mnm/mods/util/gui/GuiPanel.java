@@ -13,22 +13,11 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
     private List<GuiComponent> components = Lists.newArrayList();
     private ILayout layout;
 
-    public GuiPanel(GuiPanel parent, ILayout layout) {
-        super(parent);
-        setLayout(layout);
-    }
-
     public GuiPanel(ILayout layout) {
-        super(null);
         setLayout(layout);
-    }
-
-    public GuiPanel(GuiPanel parent) {
-        super(parent);
     }
 
     public GuiPanel() {
-        super(null);
     }
 
     @Override
@@ -85,6 +74,7 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
 
     public void addComponent(GuiComponent guiComponent, Object constraints) {
         if (guiComponent != null) {
+            guiComponent.setParent(this);
             components.add(guiComponent);
             if (layout != null) {
                 layout.addComponent(guiComponent, constraints);

@@ -9,10 +9,6 @@ public class GuiComboBox<T> extends GuiComponent {
 
     private List<T> options = Lists.newArrayList();
 
-    public GuiComboBox(GuiPanel parent) {
-        super(parent);
-    }
-
     @Override
     public void drawComponent(int mouseX, int mouseY) {
         // TODO Auto-generated method stub
