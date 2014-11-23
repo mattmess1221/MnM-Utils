@@ -23,9 +23,6 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
     @Override
     public void drawComponent(int mouseX, int mouseY) {
 
-        GlStateManager.pushMatrix();
-        // Make the upper left corner of the panel (0,0).
-        GlStateManager.translate(this.getBounds().x, this.getBounds().y, 0.0F);
         if (layout != null) {
             layout.layoutComponents();
         }
@@ -37,7 +34,6 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
                 GlStateManager.popMatrix();
             }
         }
-        GlStateManager.popMatrix();
     }
 
     @Override
