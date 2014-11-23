@@ -6,6 +6,8 @@ import java.awt.Rectangle;
 import java.util.List;
 
 import mnm.mods.util.gui.events.ActionPerformed;
+import mnm.mods.util.gui.events.GuiKeyboardAdapter;
+import mnm.mods.util.gui.events.GuiKeyboardEvent;
 import mnm.mods.util.gui.events.GuiListener;
 import mnm.mods.util.gui.events.GuiMouseAdapter;
 import mnm.mods.util.gui.events.GuiMouseEvent;
@@ -13,6 +15,7 @@ import mnm.mods.util.gui.events.GuiMouseWheelEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.google.common.collect.Lists;
@@ -22,6 +25,7 @@ public abstract class GuiComponent extends Gui {
     public boolean enabled = true;
     public boolean visible = true;
     public boolean hovered = false;
+    private boolean entered = false;
 
     protected Minecraft mc = Minecraft.getMinecraft();
 
@@ -59,74 +63,93 @@ public abstract class GuiComponent extends Gui {
     }
 
     public void handleMouseInput() {
-        int mouseX = Mouse.getEventX() * mc.currentScreen.width / mc.displayWidth;
-        int mouseY = mc.currentScreen.height - Mouse.getEventY() * mc.currentScreen.height
-                / mc.displayHeight - 1;
-        Point actual = getActualPosition();
-        int scroll = Mouse.getEventDWheel();
-        GuiMouseEvent event = new GuiMouseEvent(this, new Point(mouseX, mouseY),
-                Mouse.getEventButton());
-        for (GuiListener listener : this.listeners) {
-            if (mouseX != 0 && mouseY != 0 && listener instanceof GuiMouseAdapter) {
-                // mouse moved
-                ((GuiMouseAdapter) listener).mouseMoved(event);
-                if (event.getButton() != -1) {
-                    // mouse dragged
-                    ((GuiMouseAdapter) listener).mouseDragged(event);
-                }
-            }
-            if (scroll != 0 && listener instanceof GuiMouseAdapter) {
-                // wheel moved
-                GuiMouseWheelEvent wheelEvent = new GuiMouseWheelEvent(event, scroll);
-                ((GuiMouseAdapter) listener).mouseWheelMoved(wheelEvent);
-            }
+        if (mc.currentScreen != null) {
+            int mouseX = Mouse.getEventX() * mc.currentScreen.width / mc.displayWidth;
+            int mouseY = mc.currentScreen.height - Mouse.getEventY() * mc.currentScreen.height
+                    / mc.displayHeight - 1;
+            Point actual = getActualPosition();
+            int scroll = Mouse.getEventDWheel();
+            GuiMouseEvent event = new GuiMouseEvent(this, new Point(mouseX, mouseY),
+                    Mouse.getEventButton());
+
             if (mouseX > actual.x && mouseX < actual.x + bounds.width && mouseY > actual.y
                     && mouseY < actual.y + bounds.height) {
-                if (listener instanceof ActionPerformed && event.getButton() == 0
-                        && !Mouse.getEventButtonState()) {
-                    // left button released
-                    ((ActionPerformed) listener).actionPerformed(event);
+                if (!hovered) {
+                    this.entered = true;
                 }
-                if (listener instanceof GuiMouseAdapter) {
+                this.hovered = true;
+            } else {
+                if (!hovered) {
+                    this.entered = false;
+                }
+                this.hovered = false;
+            }
+            for (GuiListener listener : this.listeners) {
+                if (mouseX != 0 && mouseY != 0 && listener instanceof GuiMouseAdapter) {
+                    // mouse moved
+                    ((GuiMouseAdapter) listener).mouseMoved(event);
                     if (event.getButton() != -1) {
-                        if (Mouse.getEventButtonState()) {
-                            // button pressed
-                            this.held = true;
-                            ((GuiMouseAdapter) listener).mousePressed(event);
-                        } else {
-                            // button released
-                            ((GuiMouseAdapter) listener).mouseReleased(event);
-                            if (held) {
-                                // button clicked
-                                ((GuiMouseAdapter) listener).mouseClicked(event);
+                        // mouse dragged
+                        ((GuiMouseAdapter) listener).mouseDragged(event);
+                    }
+                }
+                if (scroll != 0 && listener instanceof GuiMouseAdapter) {
+                    // wheel moved
+                    GuiMouseWheelEvent wheelEvent = new GuiMouseWheelEvent(event, scroll);
+                    ((GuiMouseAdapter) listener).mouseWheelMoved(wheelEvent);
+                }
+                if (hovered) {
+                    if (listener instanceof ActionPerformed && event.getButton() == 0
+                            && !Mouse.getEventButtonState()) {
+                        // left button released
+                        ((ActionPerformed) listener).actionPerformed(event);
+                    }
+                    if (listener instanceof GuiMouseAdapter) {
+                        if (event.getButton() != -1) {
+                            if (Mouse.getEventButtonState()) {
+                                // button pressed
+                                this.held = true;
+                                ((GuiMouseAdapter) listener).mousePressed(event);
+                            } else {
+                                // button released
+                                ((GuiMouseAdapter) listener).mouseReleased(event);
+                                if (held) {
+                                    // button clicked
+                                    ((GuiMouseAdapter) listener).mouseClicked(event);
+                                }
                             }
                         }
+                        if (entered) {
+                            // mouse entered
+                            ((GuiMouseAdapter) listener).mouseEntered(event);
+                        } else {
+                            // mouse left
+                            ((GuiMouseAdapter) listener).mouseHovered(event);
+                        }
                     }
-                    if (!hovered) {
-                        // mouse entered
-                        hovered = true;
-                        ((GuiMouseAdapter) listener).mouseEntered(event);
-                    } else {
-                        // mouse left
-                        ((GuiMouseAdapter) listener).mouseHovered(event);
+                } else {
+                    if (entered && listener instanceof GuiMouseAdapter) {
+                        // mouse exited
+                        hovered = false;
+                        this.held = false;
+                        ((GuiMouseAdapter) listener).mouseExited(event);
                     }
                 }
-            } else {
-                if (hovered && listener instanceof GuiMouseAdapter) {
-                    // mouse exited
-                    hovered = false;
-                    this.held = false;
-                    ((GuiMouseAdapter) listener).mouseExited(event);
-                }
+
             }
-
         }
-
     }
 
     public void handleKeyboardInput() {
-        // TODO Auto-generated method stub
-
+        int key = Keyboard.getEventKey();
+        char character = Keyboard.getEventCharacter();
+        long time = Keyboard.getEventNanoseconds();
+        GuiKeyboardEvent event = new GuiKeyboardEvent(this, key, character, time);
+        for (GuiListener listener : this.listeners) {
+            if (listener instanceof GuiKeyboardAdapter) {
+                ((GuiKeyboardAdapter) listener).keyTyped(event);
+            }
+        }
     }
 
     public void setBounds(Rectangle bounds) {
