@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.util.Iterator;
 import java.util.List;
 
+import mnm.mods.util.gui.events.GuiMouseAdapter;
+import mnm.mods.util.gui.events.GuiMouseEvent;
 import net.minecraft.client.renderer.GlStateManager;
 
 import com.google.common.collect.Lists;
@@ -14,10 +16,18 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
     private ILayout layout;
 
     public GuiPanel(ILayout layout) {
+        this();
         setLayout(layout);
     }
 
     public GuiPanel() {
+        this.addEventListener(new GuiMouseAdapter() {
+            @Override
+            public void mouseClicked(GuiMouseEvent event) {
+                // Unfocus all Focusables.
+                unfocusAll();
+            }
+        });
     }
 
     @Override
@@ -100,6 +110,16 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
 
     public ILayout getLayout() {
         return layout;
+    }
+
+    public void unfocusAll() {
+        for (GuiComponent comp : components) {
+            if (comp instanceof Focusable) {
+                ((Focusable) comp).setFocused(false);
+            } else if (comp instanceof GuiPanel) {
+                ((GuiPanel) comp).unfocusAll();
+            }
+        }
     }
 
     @Override
