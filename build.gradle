@@ -15,17 +15,20 @@ buildscript {
     }
 }
 
-apply plugin: 'fml'
-//apply plugin: 'liteloader'
-
 group = "mnm.mods"
-archivesBaseName = "MmMone-Utils"
+archivesBaseName = "MnM-Utils"
 version = String.format("%s.%s.%s", versionMajor, versionMinor, versionRevision)
 
+/* // Uncomment if building standalone
+apply plugin: 'fml'
 minecraft {
-    version = String.format("%s-%s", mcversion, fmlversion)
+    version = String.format("%s-%s", mcversion, fmlversion) // add fmlversion in gradle.properties
     runDir = "run/minecraft"
 }
+reobf{
+    setSrgMcp()
+}
+*/
 processResources{
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
@@ -62,6 +65,3 @@ task jarSrc(type:Jar){
 artifacts{
     archives jarDev, jarSrc
 }
-reobf{reobf(jar){
-    setSrgMcp()
-}}
