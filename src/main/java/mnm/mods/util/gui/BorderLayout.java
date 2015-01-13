@@ -98,7 +98,7 @@ public class BorderLayout implements ILayout {
             if (north == null) {
                 bounds.y = 0;
             } else {
-                bounds.y = north.getBounds().height - 1;
+                bounds.y = north.getBounds().height + 1;
             }
 
             if (west == null) {
@@ -130,10 +130,10 @@ public class BorderLayout implements ILayout {
                 }
             } else {
                 if (north == null) {
-                    bounds.height = panel.getBounds().height - south.getBounds().height;
+                    bounds.height = panel.getBounds().height - south.getBounds().height - 1;
                 } else {
                     bounds.height = panel.getBounds().height - south.getBounds().height
-                            - north.getBounds().height;
+                            - north.getBounds().height - 2;
                 }
             }
         }
