@@ -1,6 +1,5 @@
 package mnm.mods.util.gui;
 
-import java.awt.Dimension;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -13,11 +12,6 @@ public class GuiComboBox<T> extends GuiComponent {
     public void drawComponent(int mouseX, int mouseY) {
         // TODO Auto-generated method stub
 
-    }
-
-    @Override
-    public Dimension getPreferedSize() {
-        return null;
     }
 
     public void addOption(T t) {

@@ -34,7 +34,7 @@ public class VerticalLayout implements ILayout {
         for (GuiComponent comp : list) {
             comp.getBounds().x = 0;
             comp.getBounds().y = y;
-            y += comp.getPreferedSize().height;
+            y += comp.getMinimumSize().height;
         }
     }
 
@@ -43,8 +43,8 @@ public class VerticalLayout implements ILayout {
         int width = 0;
         int height = 0;
         for (GuiComponent comp : list) {
-            width = Math.max(width, comp.getPreferedSize().width);
-            height += comp.getPreferedSize().height;
+            width = Math.max(width, comp.getMinimumSize().width);
+            height += comp.getMinimumSize().height;
         }
         return new Dimension(width, height);
     }

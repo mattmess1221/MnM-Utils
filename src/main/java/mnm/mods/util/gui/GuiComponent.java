@@ -26,6 +26,7 @@ public abstract class GuiComponent extends Gui {
     public boolean visible = true;
     public boolean hovered = false;
     private boolean entered = false;
+    public boolean held;
 
     protected Minecraft mc = Minecraft.getMinecraft();
 
@@ -33,8 +34,8 @@ public abstract class GuiComponent extends Gui {
     private int foreColor = -1;
     private GuiPanel parent;
     private Rectangle bounds;
+    private Dimension minimumSize = new Dimension();
     private List<GuiListener> listeners = Lists.newArrayList();
-    private boolean held;
 
     public GuiComponent() {
         this(new Rectangle());
@@ -64,8 +65,8 @@ public abstract class GuiComponent extends Gui {
 
     public void handleMouseInput() {
         if (mc.currentScreen != null) {
-            int mouseX = Mouse.getEventX() * mc.currentScreen.width / mc.displayWidth;
-            int mouseY = mc.currentScreen.height - Mouse.getEventY() * mc.currentScreen.height
+            int mouseX = Mouse.getX() * mc.currentScreen.width / mc.displayWidth;
+            int mouseY = mc.currentScreen.height - Mouse.getY() * mc.currentScreen.height
                     / mc.displayHeight - 1;
             Point actual = getActualPosition();
             int scroll = Mouse.getEventDWheel();
@@ -84,19 +85,44 @@ public abstract class GuiComponent extends Gui {
                 }
                 this.hovered = false;
             }
+            if (Mouse.getEventButtonState()) {
+                this.held = false;
+            }
             for (GuiListener listener : this.listeners) {
-                if (mouseX != 0 && mouseY != 0 && listener instanceof GuiMouseAdapter) {
-                    // mouse moved
-                    ((GuiMouseAdapter) listener).mouseMoved(event);
-                    if (event.getButton() != -1) {
-                        // mouse dragged
-                        ((GuiMouseAdapter) listener).mouseDragged(event);
+                if (listener instanceof GuiMouseAdapter) {
+                    ((GuiMouseAdapter) listener).handleRaw();
+
+                    if (hovered || held) {
+                        if (Mouse.getEventDX() != 0 && Mouse.getEventDY() != 0) {
+                            // mouse moved
+                            ((GuiMouseAdapter) listener).mouseMoved(event);
+                            if (held) {
+                                // mouse dragged
+                                ((GuiMouseAdapter) listener).mouseDragged(event);
+                            }
+                        }
+                        if (event.getButton() != -1) {
+                            if (Mouse.getEventButtonState()) {
+                                // button pressed
+                                this.held = true;
+                                ((GuiMouseAdapter) listener).mousePressed(event);
+                            } else if (!Mouse.getEventButtonState()) {
+                                // button released
+                                ((GuiMouseAdapter) listener).mouseReleased(event);
+                                if (held) {
+                                    // button clicked
+                                    ((GuiMouseAdapter) listener).mouseClicked(event);
+                                }
+                                this.held = false;
+                            }
+                        }
                     }
-                }
-                if (scroll != 0 && listener instanceof GuiMouseAdapter) {
-                    // wheel moved
-                    GuiMouseWheelEvent wheelEvent = new GuiMouseWheelEvent(event, scroll);
-                    ((GuiMouseAdapter) listener).mouseWheelMoved(wheelEvent);
+
+                    if (scroll != 0) {
+                        // wheel moved
+                        GuiMouseWheelEvent wheelEvent = new GuiMouseWheelEvent(event, scroll);
+                        ((GuiMouseAdapter) listener).mouseWheelMoved(wheelEvent);
+                    }
                 }
                 if (hovered) {
                     if (listener instanceof ActionPerformed && event.getButton() == 0
@@ -105,20 +131,7 @@ public abstract class GuiComponent extends Gui {
                         ((ActionPerformed) listener).actionPerformed(event);
                     }
                     if (listener instanceof GuiMouseAdapter) {
-                        if (event.getButton() != -1) {
-                            if (Mouse.getEventButtonState()) {
-                                // button pressed
-                                this.held = true;
-                                ((GuiMouseAdapter) listener).mousePressed(event);
-                            } else {
-                                // button released
-                                ((GuiMouseAdapter) listener).mouseReleased(event);
-                                if (held) {
-                                    // button clicked
-                                    ((GuiMouseAdapter) listener).mouseClicked(event);
-                                }
-                            }
-                        }
+
                         if (entered) {
                             // mouse entered
                             ((GuiMouseAdapter) listener).mouseEntered(event);
@@ -131,7 +144,6 @@ public abstract class GuiComponent extends Gui {
                     if (entered && listener instanceof GuiMouseAdapter) {
                         // mouse exited
                         hovered = false;
-                        this.held = false;
                         ((GuiMouseAdapter) listener).mouseExited(event);
                     }
                 }
@@ -196,7 +208,13 @@ public abstract class GuiComponent extends Gui {
         return point;
     }
 
-    public abstract Dimension getPreferedSize();
+    public void setMinimumSize(Dimension size) {
+        this.minimumSize = size;
+    }
+
+    public Dimension getMinimumSize() {
+        return minimumSize;
+    }
 
     public int getBackColor() {
         int result = backColor;

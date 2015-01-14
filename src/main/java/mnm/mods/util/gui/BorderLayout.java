@@ -60,14 +60,14 @@ public class BorderLayout implements ILayout {
             bounds.x = 0;
             bounds.y = 0;
             bounds.width = parent.width;
-            bounds.height = north.getPreferedSize().height;
+            bounds.height = north.getMinimumSize().height;
         }
 
         if (west != null) {
             Rectangle bounds = west.getBounds();
             Rectangle parent = west.getParent().getBounds();
             bounds.x = 0;
-            bounds.width = west.getPreferedSize().width;
+            bounds.width = west.getMinimumSize().width;
 
             if (north == null) {
                 bounds.y = 0;
@@ -142,8 +142,8 @@ public class BorderLayout implements ILayout {
             Rectangle bounds = east.getBounds();
             Rectangle panel = east.getParent().getBounds();
 
-            bounds.x = panel.width - east.getPreferedSize().width;
-            bounds.width = east.getPreferedSize().width;
+            bounds.x = panel.width - east.getMinimumSize().width;
+            bounds.width = east.getMinimumSize().width;
             if (north == null) {
                 bounds.y = 0;
             } else {
@@ -153,14 +153,14 @@ public class BorderLayout implements ILayout {
                 if (north == null) {
                     bounds.height = panel.height;
                 } else {
-                    bounds.height = panel.height - north.getPreferedSize().height;
+                    bounds.height = panel.height - north.getMinimumSize().height;
                 }
             } else {
                 if (north == null) {
-                    bounds.height = panel.height - south.getPreferedSize().height;
+                    bounds.height = panel.height - south.getMinimumSize().height;
                 } else {
-                    bounds.height = panel.height - south.getPreferedSize().height
-                            - north.getPreferedSize().height;
+                    bounds.height = panel.height - south.getMinimumSize().height
+                            - north.getMinimumSize().height;
                 }
             }
         }
@@ -171,7 +171,7 @@ public class BorderLayout implements ILayout {
 
             bounds.x = 0;
             bounds.width = parent.width;
-            bounds.height = south.getPreferedSize().height;
+            bounds.height = south.getMinimumSize().height;
             bounds.y = parent.height - bounds.height;
         }
     }
@@ -181,7 +181,7 @@ public class BorderLayout implements ILayout {
         int width = 0;
         int height = 0;
         for (Entry<Position, GuiComponent> comp : components.entrySet()) {
-            Dimension size = comp.getValue().getPreferedSize();
+            Dimension size = comp.getValue().getMinimumSize();
             switch (comp.getKey()) {
             case CENTER:
                 width += size.width;

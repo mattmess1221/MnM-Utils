@@ -1,7 +1,5 @@
 package mnm.mods.util.gui;
 
-import java.awt.Dimension;
-
 import mnm.mods.util.SettingValue;
 
 public abstract class GuiSetting<T> extends GuiComponent {
@@ -37,10 +35,5 @@ public abstract class GuiSetting<T> extends GuiComponent {
 
     public void saveValue() {
         this.setting.setValue(this.value);
-    }
-
-    @Override
-    public Dimension getPreferedSize() {
-        return getBounds().getSize();
     }
 }

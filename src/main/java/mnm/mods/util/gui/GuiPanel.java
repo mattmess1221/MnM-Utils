@@ -123,7 +123,7 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
     }
 
     @Override
-    public Dimension getPreferedSize() {
+    public Dimension getMinimumSize() {
         Dimension size = null;
         if (getLayout() != null) {
             size = getLayout().getLayoutSize();

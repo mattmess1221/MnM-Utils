@@ -116,7 +116,7 @@ public class GuiButton extends GuiComponent {
     }
 
     @Override
-    public Dimension getPreferedSize() {
+    public Dimension getMinimumSize() {
         return new Dimension(mc.fontRendererObj.getStringWidth(this.text) + 8, 20);
     }
 

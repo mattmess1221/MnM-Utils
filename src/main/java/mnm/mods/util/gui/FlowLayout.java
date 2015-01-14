@@ -24,7 +24,7 @@ public class FlowLayout implements ILayout {
         int xPos = 0;
         int yPos = 0;
         for (GuiComponent comp : components) {
-            comp.setSize(comp.getPreferedSize().width, comp.getPreferedSize().height);
+            comp.setSize(comp.getMinimumSize().width, comp.getMinimumSize().height);
             comp.setPosition(xPos, yPos);
             xPos += comp.getBounds().width;
         }

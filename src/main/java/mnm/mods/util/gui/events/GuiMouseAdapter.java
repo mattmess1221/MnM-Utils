@@ -28,4 +28,7 @@ public class GuiMouseAdapter extends GuiListener {
 
     public void mouseMoved(GuiMouseEvent event) {
     }
+
+    public void handleRaw() {
+    }
 }
