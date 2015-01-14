@@ -47,7 +47,7 @@ public abstract class GuiComponent extends Gui {
 
     /* Everything will be assigned here */
     public GuiComponent(Rectangle bounds) {
-        this.bounds = bounds;
+        this.setBounds(bounds);
     }
 
     public abstract void drawComponent(int mouseX, int mouseY);
@@ -73,8 +73,8 @@ public abstract class GuiComponent extends Gui {
             GuiMouseEvent event = new GuiMouseEvent(this, new Point(mouseX, mouseY),
                     Mouse.getEventButton());
 
-            if (mouseX > actual.x && mouseX < actual.x + bounds.width && mouseY > actual.y
-                    && mouseY < actual.y + bounds.height) {
+            if (mouseX > actual.x && mouseX < actual.x + getBounds().width && mouseY > actual.y
+                    && mouseY < actual.y + getBounds().height) {
                 if (!hovered) {
                     this.entered = true;
                 }
@@ -199,7 +199,7 @@ public abstract class GuiComponent extends Gui {
     }
 
     public Point getActualPosition() {
-        Point point = new Point(bounds.x, bounds.y);
+        Point point = new Point(getBounds().x, getBounds().y);
         if (getParent() != null) {
             Point parent = getParent().getActualPosition();
             point.x += parent.x;
