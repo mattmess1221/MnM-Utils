@@ -2,7 +2,6 @@ package mnm.mods.util.gui;
 
 import mnm.mods.util.SettingValue;
 import mnm.mods.util.Translatable;
-import mnm.mods.util.gui.events.GuiMouseAdapter;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
@@ -20,13 +19,12 @@ public class GuiSettingEnum<T extends Translatable> extends GuiSetting<T> {
         selected = getCurrentPosition();
         setBounds(xPos, yPos, width, height);
 
-        this.addEventListener(new GuiMouseAdapter() {
-            @Override
-            public void mousePressed(GuiMouseEvent event) {
-                if (event.getButton() == 0) {
+        this.addMouseAdapter(event -> {
+            if (event.event == GuiMouseEvent.PRESSED) {
+                if (event.button == 0) {
                     // Left click, go forward
                     select(selected + 1);
-                } else if (event.getButton() == 1) {
+                } else if (event.button == 1) {
                     // Right click, go backward
                     select(selected - 1);
                 }

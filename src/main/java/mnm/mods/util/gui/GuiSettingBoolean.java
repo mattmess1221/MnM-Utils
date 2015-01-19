@@ -1,8 +1,6 @@
 package mnm.mods.util.gui;
 
 import mnm.mods.util.SettingValue;
-import mnm.mods.util.gui.events.ActionPerformed;
-import mnm.mods.util.gui.events.GuiEvent;
 import net.minecraft.client.gui.Gui;
 
 public class GuiSettingBoolean extends GuiSetting<Boolean> {
@@ -12,12 +10,7 @@ public class GuiSettingBoolean extends GuiSetting<Boolean> {
     public GuiSettingBoolean(SettingValue<Boolean> setting, int xPos, int yPos, String title) {
         super(setting, xPos, yPos);
         this.setSize(9, 9);
-        this.addEventListener(new ActionPerformed() {
-            @Override
-            public void actionPerformed(GuiEvent event) {
-                setValue(!getValue());
-            }
-        });
+        this.addActionListener(event -> setValue(!getValue()));
         this.title = title;
         setBackColor(0x99ffffa0);
     }

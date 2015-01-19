@@ -1,9 +1,6 @@
 package mnm.mods.util.gui;
 
 import mnm.mods.util.SettingValue;
-import mnm.mods.util.gui.events.GuiKeyboardAdapter;
-import mnm.mods.util.gui.events.GuiKeyboardEvent;
-import mnm.mods.util.gui.events.GuiMouseAdapter;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import net.minecraft.client.gui.GuiTextField;
 
@@ -19,20 +16,16 @@ public class GuiSettingString extends GuiSetting<String> implements Focusable {
         textField.setText(getValue());
         setSize(100, 20);
 
-        this.addEventListener(new GuiMouseAdapter() {
-            @Override
-            public void mouseClicked(GuiMouseEvent event) {
+        this.addMouseAdapter(event -> {
+            if (event.event == GuiMouseEvent.CLICKED) {
                 setFocused(true);
             }
         });
 
-        this.addEventListener(new GuiKeyboardAdapter() {
-            @Override
-            public void keyTyped(GuiKeyboardEvent event) {
-                if (Keyboard.isKeyDown(event.key)) {
-                    textField.textboxKeyTyped(event.character, event.key);
-                    setValue(textField.getText());
-                }
+        this.addKeyboardAdapter(event -> {
+            if (Keyboard.isKeyDown(event.key)) {
+                textField.textboxKeyTyped(event.character, event.key);
+                setValue(textField.getText());
             }
         });
     }
