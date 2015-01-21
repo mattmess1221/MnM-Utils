@@ -1,22 +1,34 @@
 package mnm.mods.util.gui;
 
+import java.util.Arrays;
+
 import mnm.mods.util.SettingValue;
-import mnm.mods.util.Translatable;
 import mnm.mods.util.gui.events.GuiMouseAdapter;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
 
-public class GuiSettingEnum<T extends Translatable> extends GuiSetting<T> {
+public class GuiSettingEnum<T> extends GuiSetting<T> {
 
     private String text;
     private final T[] values;
+    private String[] names;
     private int selected;
 
-    @SuppressWarnings("unchecked")
-    public GuiSettingEnum(SettingValue<T> setting, int xPos, int yPos, int width, int height) {
+    public GuiSettingEnum(SettingValue<T> setting, T[] values, String[] names) {
+        this(setting, values);
+        this.names = names;
+        select(Arrays.binarySearch(values, setting.getValue()));
+    }
+
+    public GuiSettingEnum(SettingValue<T> setting, T[] values) {
+        this(setting, values, 0, 0, 0, 0);
+    }
+
+    public GuiSettingEnum(SettingValue<T> setting, T[] values, int xPos, int yPos, int width,
+            int height) {
         super(setting, xPos, yPos);
-        values = (T[]) setting.getValue().getClass().getEnumConstants();
+        this.values = values;
         selected = getCurrentPosition();
         setBounds(xPos, yPos, width, height);
 
@@ -32,7 +44,7 @@ public class GuiSettingEnum<T extends Translatable> extends GuiSetting<T> {
                 }
             }
         });
-        select(0);
+        select(Arrays.binarySearch(values, setting.getValue()));
         setBackColor(0xff666666);
     }
 
@@ -55,7 +67,11 @@ public class GuiSettingEnum<T extends Translatable> extends GuiSetting<T> {
         }
         selected = id;
         setValue(values[selected]);
-        text = I18n.format(getValue().getUnlocalized());
+        String text = values[selected].toString();
+        if (names != null) {
+            text = names[selected];
+        }
+        this.text = I18n.format(text);
     }
 
     @Override

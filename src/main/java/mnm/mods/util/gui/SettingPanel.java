@@ -5,7 +5,7 @@ import mnm.mods.util.Settings;
 /**
  * Base class for a setting panel.
  */
-public abstract class SettingPanel extends GuiPanel {
+public abstract class SettingPanel<T extends Settings> extends GuiPanel {
 
     private String displayString;
 
@@ -40,7 +40,7 @@ public abstract class SettingPanel extends GuiPanel {
      *
      * @return The settings
      */
-    public abstract Settings getSettings();
+    public abstract T getSettings();
 
     public void saveSettings() {
         for (GuiComponent comp : this) {

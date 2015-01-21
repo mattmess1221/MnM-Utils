@@ -9,6 +9,10 @@ public class GuiSettingBoolean extends GuiSetting<Boolean> {
 
     private String title;
 
+    public GuiSettingBoolean(SettingValue<Boolean> setting, String title) {
+        this(setting, 0, 0, title);
+    }
+
     public GuiSettingBoolean(SettingValue<Boolean> setting, int xPos, int yPos, String title) {
         super(setting, xPos, yPos);
         this.setSize(9, 9);
