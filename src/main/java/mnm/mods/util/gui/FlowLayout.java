@@ -20,7 +20,7 @@ public class FlowLayout implements ILayout {
     }
 
     @Override
-    public void layoutComponents() {
+    public void layoutComponents(GuiPanel parent) {
         int xPos = 0;
         int yPos = 0;
         for (GuiComponent comp : components) {

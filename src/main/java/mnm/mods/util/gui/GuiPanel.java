@@ -34,7 +34,7 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
     public void drawComponent(int mouseX, int mouseY) {
 
         if (layout != null) {
-            layout.layoutComponents();
+            layout.layoutComponents(this);
         }
         for (GuiComponent gc : components) {
             if (gc.visible) {

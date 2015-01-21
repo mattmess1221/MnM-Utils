@@ -20,7 +20,7 @@ public class GuiButton extends GuiComponent {
     protected TexturedModal MODAL_NORMAL = new TexturedModal(WIDGETS, 0, 46, 200, 20);
     protected TexturedModal MODAL_HOVER = new TexturedModal(WIDGETS, 0, 66, 200, 20);
     protected TexturedModal MODAL_DISABLE = new TexturedModal(WIDGETS, 0, 86, 200, 20);
-    protected String text = "";
+    private String text = "";
     public int packedFGColour;
 
     public GuiButton(int x, int y, int width, int height) {
@@ -37,10 +37,13 @@ public class GuiButton extends GuiComponent {
 
     public GuiButton(String text) {
         this(0, 0, 100, 20);
-        this.text = text;
+        this.setText(text);
     }
 
     public void setText(String text) {
+        if (text == null) {
+            text = "";
+        }
         this.text = text;
     }
 
@@ -69,10 +72,12 @@ public class GuiButton extends GuiComponent {
         // draw middles
         while (pos < bounds.height) {
             int p = pos % 16;
-            if (p < 2)
+            if (p < 2) {
                 p += 2;
-            if (p > 14)
+            }
+            if (p > 14) {
                 p -= 2;
+            }
             // draw left
             this.drawTexturedModalRect(0, pos, modal.getXPos(), modal.getYPos() + p,
                     bounds.width / 2, 1);
@@ -98,7 +103,7 @@ public class GuiButton extends GuiComponent {
             textColor = 0xFFFFA0;
         }
 
-        this.drawCenteredString(fontrenderer, text, bounds.width / 2, (bounds.height - 8) / 2,
+        this.drawCenteredString(fontrenderer, getText(), bounds.width / 2, (bounds.height - 8) / 2,
                 textColor);
 
     }
@@ -117,7 +122,7 @@ public class GuiButton extends GuiComponent {
 
     @Override
     public Dimension getMinimumSize() {
-        return new Dimension(mc.fontRendererObj.getStringWidth(this.text) + 8, 20);
+        return new Dimension(mc.fontRendererObj.getStringWidth(this.getText()) + 8, 20);
     }
 
 }

@@ -7,10 +7,21 @@ import mnm.mods.util.Settings;
  */
 public abstract class SettingPanel extends GuiPanel {
 
+    private String displayString;
+
     /**
      * Called when this category is activated and displayed.
      */
     public void initGUI() {
+    }
+
+    /**
+     * Sets the display string for this category.
+     *
+     * @param string The display string
+     */
+    public void setDisplayString(String string) {
+        this.displayString = string;
     }
 
     /**
@@ -19,7 +30,9 @@ public abstract class SettingPanel extends GuiPanel {
      *
      * @return The display string
      */
-    public abstract String getDisplayString();
+    public String getDisplayString() {
+        return this.displayString;
+    }
 
     /**
      * Gets the {@link Settings} used for this category. Used for loading and

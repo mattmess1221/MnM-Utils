@@ -26,7 +26,7 @@ public interface ILayout {
     /**
      * Called to layout the components. Called before the panel is drawn.
      */
-    void layoutComponents();
+    void layoutComponents(GuiPanel parent);
 
     /**
      * Gets the estimated size of this layout.

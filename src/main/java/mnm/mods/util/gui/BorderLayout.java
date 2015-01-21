@@ -46,7 +46,8 @@ public class BorderLayout implements ILayout {
     }
 
     @Override
-    public void layoutComponents() {
+    public void layoutComponents(GuiPanel parent) {
+        Rectangle pbounds = parent.getBounds();
         GuiComponent center = components.get(Position.CENTER);
         GuiComponent north = components.get(Position.NORTH);
         GuiComponent south = components.get(Position.SOUTH);
@@ -55,17 +56,15 @@ public class BorderLayout implements ILayout {
 
         if (north != null) {
             Rectangle bounds = north.getBounds();
-            Rectangle parent = north.getParent().getBounds();
 
             bounds.x = 0;
             bounds.y = 0;
-            bounds.width = parent.width;
+            bounds.width = pbounds.width;
             bounds.height = north.getMinimumSize().height;
         }
 
         if (west != null) {
             Rectangle bounds = west.getBounds();
-            Rectangle parent = west.getParent().getBounds();
             bounds.x = 0;
             bounds.width = west.getMinimumSize().width;
 
@@ -77,15 +76,15 @@ public class BorderLayout implements ILayout {
 
             if (south == null) {
                 if (north == null) {
-                    bounds.height = parent.height;
+                    bounds.height = pbounds.height;
                 } else {
-                    bounds.height = parent.height - north.getBounds().height;
+                    bounds.height = pbounds.height - north.getBounds().height;
                 }
             } else {
                 if (north == null) {
-                    bounds.height = parent.height - south.getBounds().height;
+                    bounds.height = pbounds.height - south.getBounds().height;
                 } else {
-                    bounds.height = parent.height - south.getBounds().height
+                    bounds.height = pbounds.height - south.getBounds().height
                             - north.getBounds().height;
                 }
             }
@@ -93,7 +92,6 @@ public class BorderLayout implements ILayout {
 
         if (center != null) {
             Rectangle bounds = center.getBounds();
-            GuiPanel panel = center.getParent();
 
             if (north == null) {
                 bounds.y = 0;
@@ -109,30 +107,30 @@ public class BorderLayout implements ILayout {
 
             if (east == null) {
                 if (west == null) {
-                    bounds.width = panel.getBounds().width;
+                    bounds.width = pbounds.getBounds().width;
                 } else {
-                    bounds.width = panel.getBounds().width - west.getBounds().width;
+                    bounds.width = pbounds.getBounds().width - west.getBounds().width;
                 }
             } else {
                 if (west == null) {
-                    bounds.width = panel.getBounds().width - east.getBounds().width;
+                    bounds.width = pbounds.getBounds().width - east.getBounds().width;
                 } else {
-                    bounds.width = panel.getBounds().width - east.getBounds().width
+                    bounds.width = pbounds.getBounds().width - east.getBounds().width
                             - west.getBounds().width;
                 }
             }
 
             if (south == null) {
                 if (north == null) {
-                    bounds.height = panel.getBounds().height;
+                    bounds.height = pbounds.getBounds().height;
                 } else {
-                    bounds.height = panel.getBounds().height - north.getBounds().height;
+                    bounds.height = pbounds.getBounds().height - north.getBounds().height;
                 }
             } else {
                 if (north == null) {
-                    bounds.height = panel.getBounds().height - south.getBounds().height - 1;
+                    bounds.height = pbounds.getBounds().height - south.getBounds().height - 1;
                 } else {
-                    bounds.height = panel.getBounds().height - south.getBounds().height
+                    bounds.height = pbounds.getBounds().height - south.getBounds().height
                             - north.getBounds().height - 2;
                 }
             }
@@ -140,9 +138,8 @@ public class BorderLayout implements ILayout {
 
         if (east != null) {
             Rectangle bounds = east.getBounds();
-            Rectangle panel = east.getParent().getBounds();
 
-            bounds.x = panel.width - east.getMinimumSize().width;
+            bounds.x = pbounds.width - east.getMinimumSize().width;
             bounds.width = east.getMinimumSize().width;
             if (north == null) {
                 bounds.y = 0;
@@ -151,15 +148,15 @@ public class BorderLayout implements ILayout {
             }
             if (south == null) {
                 if (north == null) {
-                    bounds.height = panel.height;
+                    bounds.height = pbounds.height;
                 } else {
-                    bounds.height = panel.height - north.getMinimumSize().height;
+                    bounds.height = pbounds.height - north.getMinimumSize().height;
                 }
             } else {
                 if (north == null) {
-                    bounds.height = panel.height - south.getMinimumSize().height;
+                    bounds.height = pbounds.height - south.getMinimumSize().height;
                 } else {
-                    bounds.height = panel.height - south.getMinimumSize().height
+                    bounds.height = pbounds.height - south.getMinimumSize().height
                             - north.getMinimumSize().height;
                 }
             }
@@ -167,12 +164,11 @@ public class BorderLayout implements ILayout {
 
         if (south != null) {
             Rectangle bounds = south.getBounds();
-            Rectangle parent = south.getParent().getBounds();
 
             bounds.x = 0;
-            bounds.width = parent.width;
+            bounds.width = pbounds.width;
             bounds.height = south.getMinimumSize().height;
-            bounds.y = parent.height - bounds.height;
+            bounds.y = pbounds.height - bounds.height;
         }
     }
 
