@@ -39,7 +39,7 @@ public final class ReflectionHelper {
      */
     public static Object getFieldValue(Class<?> cl, Object obj, String[] fieldNames)
             throws NoSuchFieldException, IllegalAccessException {
-        NoSuchFieldException latest = null;
+        NoSuchFieldException latest = new NoSuchFieldException("This shouldn't happen");
         for (String fieldName : fieldNames) {
             try {
                 return getFieldValue(cl, obj, fieldName);
@@ -86,7 +86,7 @@ public final class ReflectionHelper {
      */
     public static Object invokeMethod(Class<?> cl, Object obj, String[] methodNames, Object[] args)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        NoSuchMethodException latest = null;
+        NoSuchMethodException latest = new NoSuchMethodException("This shouldn't happen");
         for (String methodName : methodNames) {
             try {
                 return invokeMethod(cl, obj, methodName, args);

@@ -102,7 +102,7 @@ public class Color {
      * @param green The green value
      * @param blue The blue value
      * @param alpha The alpha value
-     * @return
+     * @return The hexadecimal representation of this color.
      */
     public static int getColor(int red, int green, int blue, int alpha) {
         return new Color(red, green, blue, alpha).getColor();
