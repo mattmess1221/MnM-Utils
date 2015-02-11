@@ -15,8 +15,7 @@ public class TweakTools {
         boolean loaded = false;
         try {
             loaded = LiteLoader.getInstance() != null;
-        } catch (Throwable t) {
-        }
+        } catch (Throwable t) {}
         return loaded;
     }
 

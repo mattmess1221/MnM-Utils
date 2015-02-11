@@ -17,8 +17,7 @@ public class LiteModMnMUtils implements LiteMod {
     }
 
     @Override
-    public void init(File arg0) {
-    }
+    public void init(File arg0) {}
 
     @Override
     public void upgradeSettings(String arg0, File arg1, File arg2) {

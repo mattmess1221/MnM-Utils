@@ -10,8 +10,7 @@ public final class EnvironmentUtils {
     public static final String SRG = "searge names";
     public static final String MCP = "mod coder pack";
 
-    private EnvironmentUtils() {
-    }
+    private EnvironmentUtils() {}
 
     /**
      * Gets the current Minecraft environment we are in. What determines the
@@ -21,9 +20,7 @@ public final class EnvironmentUtils {
      * in "searge names." If the Minecraft class doesn't exist, we are in an
      * "obfuscated" environment.
      *
-     *
      * @return The environment we are in
-     *
      * @see EnvironmentUtils#OBF
      * @see EnvironmentUtils#SRG
      * @see EnvironmentUtils#MCP
@@ -38,11 +35,9 @@ public final class EnvironmentUtils {
             try {
                 cl.getMethod("getMinecraft");
                 env = MCP;
-            } catch (Exception e) {
-            }
+            } catch (Exception e) {}
 
-        } catch (ClassNotFoundException e) {
-        }
+        } catch (ClassNotFoundException e) {}
         return env;
     }
 

@@ -3,18 +3,20 @@ package mnm.mods.util.gui;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
-import mnm.mods.util.gui.events.GuiEvent;
+import mnm.mods.util.gui.events.ActionPerformed;
+import mnm.mods.util.gui.events.GuiKeyboardAdapter;
 import mnm.mods.util.gui.events.GuiKeyboardEvent;
+import mnm.mods.util.gui.events.GuiMouseAdapter;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+
+import com.google.common.collect.Lists;
 
 public abstract class GuiComponent extends Gui {
 
@@ -32,9 +34,9 @@ public abstract class GuiComponent extends Gui {
     private Rectangle bounds;
     private Dimension minimumSize = new Dimension();
 
-    private List<Consumer<GuiEvent>> actionListeners = new ArrayList<>();
-    private List<Consumer<GuiMouseEvent>> mouseAdapters = new ArrayList<>();
-    private List<Consumer<GuiKeyboardEvent>> keyboardAdapters = new ArrayList<>();
+    private List<ActionPerformed> actionListeners = Lists.newArrayList();
+    private List<GuiMouseAdapter> mouseAdapters = Lists.newArrayList();
+    private List<GuiKeyboardAdapter> keyboardAdapters = Lists.newArrayList();
 
     public GuiComponent() {
         this(new Rectangle());
@@ -47,6 +49,15 @@ public abstract class GuiComponent extends Gui {
     /* Everything will be assigned here */
     public GuiComponent(Rectangle bounds) {
         this.setBounds(bounds);
+        if (this instanceof ActionPerformed) {
+            actionListeners.add((ActionPerformed) this);
+        }
+        if (this instanceof GuiMouseAdapter) {
+            mouseAdapters.add((GuiMouseAdapter) this);
+        }
+        if (this instanceof GuiKeyboardAdapter) {
+            keyboardAdapters.add((GuiKeyboardAdapter) this);
+        }
     }
 
     public abstract void drawComponent(int mouseX, int mouseY);
@@ -59,8 +70,7 @@ public abstract class GuiComponent extends Gui {
         Gui.drawRect(x1 - 1, y2, x2 + 1, y2 + 1, getBackColor() + val << 24); // bottom
     }
 
-    public void updateComponent() {
-    }
+    public void updateComponent() {}
 
     public void handleMouseInput() {
         if (mc.currentScreen != null) {
@@ -89,7 +99,7 @@ public abstract class GuiComponent extends Gui {
 
             }
             GuiMouseEvent event = new GuiMouseEvent(this, GuiMouseEvent.RAW, point, button, scroll);
-            mouseAdapters.forEach(adapter -> {
+            for (GuiMouseAdapter adapter : mouseAdapters) {
                 event.event = GuiMouseEvent.RAW;
                 adapter.accept(event);
 
@@ -103,24 +113,25 @@ public abstract class GuiComponent extends Gui {
                             event.event = GuiMouseEvent.DRAGGED;
                             adapter.accept(event);
                         }
-                        if (button != -1) {
-                            if (Mouse.getEventButtonState()) {
-                                // button pressed
-                                event.event = GuiMouseEvent.PRESSED;
+                    }
+                    if (hovered && button != -1) {
+                        if (Mouse.getEventButtonState()) {
+                            // button pressed
+                            event.event = GuiMouseEvent.PRESSED;
+                            adapter.accept(event);
+                        } else if (!Mouse.getEventButtonState()) {
+                            // button released
+                            event.event = GuiMouseEvent.RELEASED;
+                            adapter.accept(event);
+                            if (held) {
+                                // button clicked
+                                event.event = GuiMouseEvent.CLICKED;
                                 adapter.accept(event);
-                            } else if (!Mouse.getEventButtonState()) {
-                                // button released
-                                event.event = GuiMouseEvent.RELEASED;
-                                adapter.accept(event);
-                                if (held) {
-                                    // button clicked
-                                    event.event = GuiMouseEvent.CLICKED;
-                                    adapter.accept(event);
-                                }
-                                this.held = false;
                             }
+                            this.held = false;
                         }
                     }
+
                     if (hovered) {
                         if (entered) {
                             // mouse entered
@@ -143,10 +154,12 @@ public abstract class GuiComponent extends Gui {
                         adapter.accept(event);
                     }
                 }
-            })  ;
+            }
             if (hovered && button == 0 && !Mouse.getEventButtonState()) {
                 // left button released
-                actionListeners.forEach(it -> it.accept(event));
+                for (ActionPerformed action : actionListeners) {
+                    action.action(event);
+                }
             }
         }
     }
@@ -156,7 +169,9 @@ public abstract class GuiComponent extends Gui {
         char character = Keyboard.getEventCharacter();
         long time = Keyboard.getEventNanoseconds();
         GuiKeyboardEvent event = new GuiKeyboardEvent(this, key, character, time);
-        keyboardAdapters.forEach(it -> it.accept(event));
+        for (GuiKeyboardAdapter adapter : keyboardAdapters) {
+            adapter.accept(event);
+        }
     }
 
     public void setBounds(Rectangle bounds) {
@@ -181,15 +196,15 @@ public abstract class GuiComponent extends Gui {
         return this.bounds;
     }
 
-    public void addActionListener(Consumer<GuiEvent> action) {
-        this.actionListeners.add(action);
+    public void addActionListener(ActionPerformed actionPerformed) {
+        this.actionListeners.add(actionPerformed);
     }
 
-    public void addMouseAdapter(Consumer<GuiMouseEvent> mouse) {
+    public void addMouseAdapter(GuiMouseAdapter mouse) {
         this.mouseAdapters.add(mouse);
     }
 
-    public void addKeyboardAdapter(Consumer<GuiKeyboardEvent> keyboard) {
+    public void addKeyboardAdapter(GuiKeyboardAdapter keyboard) {
         this.keyboardAdapters.add(keyboard);
     }
 

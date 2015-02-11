@@ -1,9 +1,8 @@
 {
-	"name": "MnM Utils",
+	"name": "mnm utils",
 	"version": "${version}",
 	"revision": "${revision}",
 	"author": "killjoy1221",
 	"mcversion": "${mcversion}",
-	"description": "A utility library mod used for my mods. Mostly GUI stuff.",
-	"classTransformerClasses": "mnm.mods.util.asm.AccessTransformer"
+	"description": "A utility library mod used for my mods. Mostly GUI stuff."
 }

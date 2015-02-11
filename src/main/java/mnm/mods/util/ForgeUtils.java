@@ -7,7 +7,6 @@ public final class ForgeUtils {
 
     /**
      * Detects if FML is on the classpath.<br/>
-     *
      * Note: This only tells if FML is installed, not if it is actually loaded
      * into LaunchWrapper.
      *
@@ -25,8 +24,7 @@ public final class ForgeUtils {
         try {
             Class.forName("net.minecraftforge.fml.common.FMLCommonHandler");
             result = true;
-        } catch (ClassNotFoundException e) {
-        }
+        } catch (ClassNotFoundException e) {}
         return result;
     }
 
@@ -35,12 +33,10 @@ public final class ForgeUtils {
         try {
             Class.forName("net.minecraftforge.common.MinecraftForge");
             result = true;
-        } catch (ClassNotFoundException e) {
-        }
+        } catch (ClassNotFoundException e) {}
         return result;
     }
 
-    private ForgeUtils() {
-    }
+    private ForgeUtils() {}
 
 }

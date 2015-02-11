@@ -57,6 +57,8 @@ public class IPUtils {
                 result = new IPUtils(ipString, DEFAULT_PORT, true);
             }
             break;
+        default:
+            throw new RuntimeException("This shouldn't have happened");
         }
         if (result.getHost().isEmpty()) {
             result.host = "localhost";
@@ -135,7 +137,7 @@ public class IPUtils {
      * Gets the file safe address of this IP. Replaces all the colons (:) with
      * underscores (_) and surrounds the port in parentheses.
      *
-     * @return
+     * @return A string usable as a file name.
      */
     public String getFileSafeAddress() {
         return this.host.replace(':', '_') + (hasPort() ? "" : "(" + port + ")");

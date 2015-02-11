@@ -21,7 +21,7 @@ public final class ReflectionHelper {
      */
     public static Object getFieldValue(Class<?> cl, Object obj, String fieldName)
             throws IllegalAccessException, NoSuchFieldException {
-        Field fd = cl.getField(fieldName);
+        Field fd = cl.getDeclaredField(fieldName);
         fd.setAccessible(true);
         return fd.get(obj);
     }
@@ -39,10 +39,32 @@ public final class ReflectionHelper {
      */
     public static Object getFieldValue(Class<?> cl, Object obj, String[] fieldNames)
             throws NoSuchFieldException, IllegalAccessException {
-        NoSuchFieldException latest = null;
+        NoSuchFieldException latest = new NoSuchFieldException("This shouldn't happen");
         for (String fieldName : fieldNames) {
             try {
                 return getFieldValue(cl, obj, fieldName);
+            } catch (NoSuchFieldException e) {
+                latest = e;
+            }
+        }
+        throw latest;
+
+    }
+
+    public static void setFieldValue(Class<?> cl, Object obj, Object value, String fieldName)
+            throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+        Field fd = cl.getDeclaredField(fieldName);
+        fd.setAccessible(true);
+        fd.set(obj, value);
+    }
+
+    public static void setFieldValue(Class<?> cl, Object obj, Object value, String[] fieldNames)
+            throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+        NoSuchFieldException latest = new NoSuchFieldException("This shouldn't happen");
+        for (String fieldName : fieldNames) {
+            try {
+                setFieldValue(cl, obj, value, fieldName);
+                return;
             } catch (NoSuchFieldException e) {
                 latest = e;
             }
@@ -66,7 +88,7 @@ public final class ReflectionHelper {
     public static Object invokeMethod(Class<?> cl, Object obj, String methodName, Object[] args)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         Class<?>[] parameterTypes = getParameterTypes(args);
-        Method md = cl.getMethod(methodName, parameterTypes);
+        Method md = cl.getDeclaredMethod(methodName, parameterTypes);
         md.setAccessible(true);
         return md.invoke(obj, args);
     }
@@ -86,7 +108,7 @@ public final class ReflectionHelper {
      */
     public static Object invokeMethod(Class<?> cl, Object obj, String[] methodNames, Object[] args)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        NoSuchMethodException latest = null;
+        NoSuchMethodException latest = new NoSuchMethodException("This shouldn't happen");
         for (String methodName : methodNames) {
             try {
                 return invokeMethod(cl, obj, methodName, args);
@@ -105,6 +127,6 @@ public final class ReflectionHelper {
         return types;
     }
 
-    private ReflectionHelper() {
-    }
+    private ReflectionHelper() {}
+
 }

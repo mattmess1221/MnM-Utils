@@ -5,12 +5,22 @@ import mnm.mods.util.Settings;
 /**
  * Base class for a setting panel.
  */
-public abstract class SettingPanel extends GuiPanel {
+public abstract class SettingPanel<T extends Settings> extends GuiPanel {
+
+    private String displayString;
 
     /**
      * Called when this category is activated and displayed.
      */
-    public void initGUI() {
+    public void initGUI() {}
+
+    /**
+     * Sets the display string for this category.
+     *
+     * @param string The display string
+     */
+    public void setDisplayString(String string) {
+        this.displayString = string;
     }
 
     /**
@@ -19,7 +29,9 @@ public abstract class SettingPanel extends GuiPanel {
      *
      * @return The display string
      */
-    public abstract String getDisplayString();
+    public String getDisplayString() {
+        return this.displayString;
+    }
 
     /**
      * Gets the {@link Settings} used for this category. Used for loading and
@@ -27,7 +39,7 @@ public abstract class SettingPanel extends GuiPanel {
      *
      * @return The settings
      */
-    public abstract Settings getSettings();
+    public abstract T getSettings();
 
     public void saveSettings() {
         for (GuiComponent comp : this) {

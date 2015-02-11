@@ -1,18 +1,28 @@
 package mnm.mods.util.gui;
 
 import mnm.mods.util.SettingValue;
+import mnm.mods.util.gui.events.ActionPerformed;
+import mnm.mods.util.gui.events.GuiEvent;
 import net.minecraft.client.gui.Gui;
 
-public class GuiSettingBoolean extends GuiSetting<Boolean> {
+public class GuiSettingBoolean extends GuiSetting<Boolean> implements ActionPerformed {
 
     private String title;
+
+    public GuiSettingBoolean(SettingValue<Boolean> setting, String title) {
+        this(setting, 0, 0, title);
+    }
 
     public GuiSettingBoolean(SettingValue<Boolean> setting, int xPos, int yPos, String title) {
         super(setting, xPos, yPos);
         this.setSize(9, 9);
-        this.addActionListener(event -> setValue(!getValue()));
         this.title = title;
         setBackColor(0x99ffffa0);
+    }
+
+    @Override
+    public void action(GuiEvent event) {
+        setValue(!getValue());
     }
 
     @Override

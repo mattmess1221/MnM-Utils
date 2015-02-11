@@ -29,7 +29,7 @@ public class VerticalLayout implements ILayout {
     }
 
     @Override
-    public void layoutComponents() {
+    public void layoutComponents(GuiPanel parent) {
         int y = 0;
         for (GuiComponent comp : list) {
             comp.getBounds().x = 0;

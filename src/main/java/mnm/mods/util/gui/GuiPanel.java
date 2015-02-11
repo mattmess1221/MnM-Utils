@@ -4,12 +4,13 @@ import java.awt.Dimension;
 import java.util.Iterator;
 import java.util.List;
 
+import mnm.mods.util.gui.events.GuiMouseAdapter;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import net.minecraft.client.renderer.GlStateManager;
 
 import com.google.common.collect.Lists;
 
-public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
+public class GuiPanel extends GuiComponent implements Iterable<GuiComponent>, GuiMouseAdapter {
 
     private List<GuiComponent> components = Lists.newArrayList();
     private ILayout layout;
@@ -19,20 +20,21 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
         setLayout(layout);
     }
 
-    public GuiPanel() {
-        // Unfocuses all focusables on click
-        this.addMouseAdapter(event -> {
-            if (event.event == GuiMouseEvent.CLICKED) {
-                unfocusAll();
-            }
-        });
+    public GuiPanel() {}
+
+    @Override
+    public void accept(GuiMouseEvent event) {
+        // Unfocuses all focusable on click
+        if (event.event == GuiMouseEvent.CLICKED) {
+            unfocusAll();
+        }
     }
 
     @Override
     public void drawComponent(int mouseX, int mouseY) {
 
         if (layout != null) {
-            layout.layoutComponents();
+            layout.layoutComponents(this);
         }
         for (GuiComponent gc : components) {
             if (gc.visible) {
