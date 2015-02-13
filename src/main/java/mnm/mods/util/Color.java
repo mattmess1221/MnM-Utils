@@ -1,6 +1,7 @@
 package mnm.mods.util;
 
 import java.io.IOException;
+import java.util.Random;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
@@ -38,10 +39,10 @@ public class Color {
      * @param alpha Transparency
      */
     public Color(int red, int green, int blue, int alpha) {
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
-        this.alpha = alpha;
+        this.red = red % 256;
+        this.green = green % 256;
+        this.blue = blue % 256;
+        this.alpha = alpha % 256;
     }
 
     /**
@@ -106,6 +107,25 @@ public class Color {
      */
     public static int getColor(int red, int green, int blue, int alpha) {
         return new Color(red, green, blue, alpha).getColor();
+    }
+
+    /**
+     * Generates a random color.
+     *
+     * @return A random color
+     */
+    public static Color random() {
+        return new Color(new Random().nextInt());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Color) {
+            Color color = (Color) obj;
+            return color.alpha == alpha && color.red == red && color.green == green
+                    && color.blue == blue;
+        }
+        return false;
     }
 
     public static class ColorAdapter extends TypeAdapter<Color> {

@@ -16,10 +16,11 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiButton extends GuiComponent implements ActionPerformed {
 
-    private final ResourceLocation WIDGETS = new ResourceLocation("textures/gui/widgets.png");
-    protected TexturedModal MODAL_NORMAL = new TexturedModal(WIDGETS, 0, 46, 200, 20);
-    protected TexturedModal MODAL_HOVER = new TexturedModal(WIDGETS, 0, 66, 200, 20);
-    protected TexturedModal MODAL_DISABLE = new TexturedModal(WIDGETS, 0, 86, 200, 20);
+    private static final ResourceLocation WIDGETS = new ResourceLocation("textures/gui/widgets.png");
+    private static final TexturedModal MODAL_NORMAL = new TexturedModal(WIDGETS, 0, 66, 200, 20);
+    private static final TexturedModal MODAL_HOVER = new TexturedModal(WIDGETS, 0, 86, 200, 20);
+    private static final TexturedModal MODAL_DISABLE = new TexturedModal(WIDGETS, 0, 46, 200, 20);
+
     private String text = "";
     public int packedFGColour;
 
@@ -107,12 +108,12 @@ public class GuiButton extends GuiComponent implements ActionPerformed {
     }
 
     private TexturedModal getHoverState(boolean hovered) {
-        TexturedModal modal = this.MODAL_NORMAL;
+        TexturedModal modal = GuiButton.MODAL_NORMAL;
 
         if (!this.enabled) {
-            modal = this.MODAL_DISABLE;
+            modal = GuiButton.MODAL_DISABLE;
         } else if (hovered) {
-            modal = this.MODAL_HOVER;
+            modal = GuiButton.MODAL_HOVER;
         }
 
         return modal;

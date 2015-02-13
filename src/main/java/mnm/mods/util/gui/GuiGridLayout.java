@@ -85,8 +85,7 @@ public class GuiGridLayout implements ILayout {
 
     @Override
     public Dimension getLayoutSize() {
-        // TODO Auto-generated method stub
-        return null;
+        return new Dimension(cols, rows);
     }
 
 }

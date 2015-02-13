@@ -80,4 +80,8 @@ public class GuiSettingString extends GuiSetting<String> implements Focusable, G
     public void drawComponent(int mouseX, int mouseY) {
         textField.drawTextBox();
     }
+
+    public GuiTextField getTextField() {
+        return textField;
+    }
 }

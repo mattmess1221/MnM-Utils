@@ -4,30 +4,37 @@ import java.awt.Dimension;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import mnm.mods.util.gui.events.GuiMouseAdapter;
 import mnm.mods.util.gui.events.GuiMouseEvent;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 
 import com.google.common.collect.Lists;
 
-public class GuiPanel extends GuiComponent implements Iterable<GuiComponent>, GuiMouseAdapter {
+public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
 
     private List<GuiComponent> components = Lists.newArrayList();
     private ILayout layout;
+    @Nullable
+    private GuiComponent overlay;
 
     public GuiPanel(ILayout layout) {
         this();
         setLayout(layout);
     }
 
-    public GuiPanel() {}
-
-    @Override
-    public void accept(GuiMouseEvent event) {
+    public GuiPanel() {
         // Unfocuses all focusable on click
-        if (event.event == GuiMouseEvent.CLICKED) {
-            unfocusAll();
-        }
+        this.addMouseAdapter(new GuiMouseAdapter() {
+            @Override
+            public void accept(GuiMouseEvent event) {
+                if (event.event == GuiMouseEvent.CLICKED) {
+                    unfocusAll();
+                }
+            }
+        });
     }
 
     @Override
@@ -44,6 +51,10 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent>, Gu
                 GlStateManager.popMatrix();
             }
         }
+        if (overlay != null) {
+            Gui.drawRect(0, 0, getBounds().width, getBounds().height, Integer.MIN_VALUE);
+            overlay.drawComponent(mouseX, mouseY);
+        }
     }
 
     @Override
@@ -52,11 +63,18 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent>, Gu
         for (GuiComponent comp : this) {
             comp.updateComponent();
         }
+        if (this.overlay != null) {
+            overlay.updateComponent();
+        }
     }
 
     @Override
     public void handleMouseInput() {
         super.handleMouseInput();
+        if (overlay != null) {
+            overlay.handleMouseInput();
+            return;
+        }
         for (int i = 0; i < this.components.size(); i++) {
             this.components.get(i).handleMouseInput();
         }
@@ -65,6 +83,10 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent>, Gu
     @Override
     public void handleKeyboardInput() {
         super.handleKeyboardInput();
+        if (overlay != null) {
+            overlay.handleKeyboardInput();
+            return;
+        }
         for (GuiComponent comp : this) {
             comp.handleKeyboardInput();
         }
@@ -95,6 +117,7 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent>, Gu
             }
         }
         components.clear();
+        setOverlay(null);
     }
 
     public void removeComponent(GuiComponent guiComp) {
@@ -110,6 +133,13 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent>, Gu
 
     public ILayout getLayout() {
         return layout;
+    }
+
+    public void setOverlay(GuiComponent gui) {
+        if (gui != null) {
+            gui.setParent(this);
+        }
+        this.overlay = gui;
     }
 
     public void unfocusAll() {
