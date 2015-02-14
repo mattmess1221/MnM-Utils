@@ -15,20 +15,19 @@ buildscript {
     }
 }
 
+apply plugin: 'java'
 group = "mnm.mods"
 archivesBaseName = "MnM-Utils"
 version = String.format("%s.%s.%s", versionMajor, versionMinor, versionRevision)
 
-/* // Uncomment if building standalone
-apply plugin: 'fml'
+apply plugin: 'forge'
 minecraft {
-    version = String.format("%s-%s", mcversion, fmlversion) // add fmlversion in gradle.properties
-    runDir = "run/minecraft"
+    version = "1.8-recommended"
+    runDir = "run"
 }
 reobf{
     setSrgMcp()
 }
-*/
 processResources{
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
