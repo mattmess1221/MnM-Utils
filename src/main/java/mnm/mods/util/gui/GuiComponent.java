@@ -73,6 +73,10 @@ public abstract class GuiComponent extends Gui {
     public void updateComponent() {}
 
     public void handleMouseInput() {
+        if (!enabled) {
+            this.hovered = false;
+            return;
+        }
         if (mc.currentScreen != null) {
             int mouseX = Mouse.getX() * mc.currentScreen.width / mc.displayWidth;
             int mouseY = mc.currentScreen.height - Mouse.getY() * mc.currentScreen.height
@@ -174,6 +178,11 @@ public abstract class GuiComponent extends Gui {
         }
     }
 
+    public void onClosed() {
+        this.hovered = false;
+        this.entered = false;
+        this.held = false;
+    }
     public void setBounds(Rectangle bounds) {
         this.bounds = bounds;
     }
@@ -257,5 +266,6 @@ public abstract class GuiComponent extends Gui {
     public void setForeColor(int foreColor) {
         this.foreColor = foreColor;
     }
+
 
 }

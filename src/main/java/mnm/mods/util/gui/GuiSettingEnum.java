@@ -22,15 +22,9 @@ public class GuiSettingEnum<T> extends GuiSetting<T> implements GuiMouseAdapter 
     }
 
     public GuiSettingEnum(SettingValue<T> setting, T[] values) {
-        this(setting, values, 0, 0, 0, 0);
-    }
-
-    public GuiSettingEnum(SettingValue<T> setting, T[] values, int xPos, int yPos, int width,
-            int height) {
-        super(setting, xPos, yPos);
+        super(setting);
         this.values = values;
         selected = getCurrentPosition();
-        setBounds(xPos, yPos, width, height);
 
         select(Arrays.binarySearch(values, setting.getValue()));
         setBackColor(0xff666666);

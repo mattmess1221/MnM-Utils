@@ -16,12 +16,7 @@ public class GuiSettingColor extends GuiSetting<Color> implements Consumer<Color
             "textures/transparency.png");
 
     public GuiSettingColor(SettingValue<Color> setting) {
-        this(setting, 0, 0);
-    }
-
-    public GuiSettingColor(SettingValue<Color> setting, int xPos, int yPos) {
-        super(setting, xPos, yPos);
-        this.setSize(10, 10);
+        super(setting);
     }
 
     @Override

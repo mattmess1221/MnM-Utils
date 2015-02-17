@@ -10,11 +10,7 @@ public class GuiSettingBoolean extends GuiSetting<Boolean> implements ActionPerf
     private String title;
 
     public GuiSettingBoolean(SettingValue<Boolean> setting, String title) {
-        this(setting, 0, 0, title);
-    }
-
-    public GuiSettingBoolean(SettingValue<Boolean> setting, int xPos, int yPos, String title) {
-        super(setting, xPos, yPos);
+        super(setting);
         this.setSize(9, 9);
         this.title = title;
         setBackColor(0x99ffffa0);

@@ -45,7 +45,6 @@ public class GuiSelectColor extends GuiPanel {
                 }
             }
         });
-        this.setSize(200, 200);
         this.setLayout(new GuiGridLayout(20, 20));
 
         this.addComponent(sliderRed = new GuiSliderColor(color.getRed() / 255D, true,

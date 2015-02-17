@@ -17,13 +17,9 @@ public class GuiSettingString extends GuiSetting<String> implements Focusable, G
     private GuiTextField textField;
 
     public GuiSettingString(SettingValue<String> setting) {
-        this(setting, 0, 0, 1, 1);
-    }
-
-    public GuiSettingString(SettingValue<String> setting, int xPos, int yPos, int width, int height) {
-        super(setting, xPos, yPos);
-        textField = new GuiTextField(0, mc.fontRendererObj, 0, 0, width, height);
-        textField.setText(getValue());
+        super(setting);
+        this.textField = new GuiTextField(0, mc.fontRendererObj, 0, 0, 1, 1);
+        this.textField.setText(setting.getValue());
     }
 
     @Override
@@ -43,21 +39,35 @@ public class GuiSettingString extends GuiSetting<String> implements Focusable, G
 
     @Override
     public void setBounds(Rectangle bounds) {
-        setTextboxSize(bounds.width, bounds.height);
+        if (getBounds() != null
+                && (bounds.width != getBounds().width || bounds.height != getBounds().height)) {
+            updateTextbox(bounds.width, bounds.height);
+        }
         super.setBounds(bounds);
     }
 
     @Override
     public void setSize(int width, int height) {
-        setTextboxSize(width, height);
+        if (width != getBounds().width || height != getBounds().height) {
+            updateTextbox(width, height);
+        }
         super.setSize(width, height);
     }
 
-    private void setTextboxSize(int width, int height) {
+    private void updateTextbox(int width, int height) {
+        // Create a new instance so it works without forge
+        String text = "";
+        int max = 32;
+        boolean bkgnd = true;
         if (textField != null) {
-            textField.width = width;
-            textField.height = height;
+            text = textField.getText();
+            max = textField.getMaxStringLength();
+            bkgnd = textField.getEnableBackgroundDrawing();
         }
+        textField = new GuiTextField(0, mc.fontRendererObj, 0, 0, width, height);
+        textField.setText(text);
+        textField.setMaxStringLength(max);
+        textField.setEnableBackgroundDrawing(bkgnd);
     }
 
     @Override
@@ -79,6 +89,12 @@ public class GuiSettingString extends GuiSetting<String> implements Focusable, G
     @Override
     public void drawComponent(int mouseX, int mouseY) {
         textField.drawTextBox();
+    }
+
+    @Override
+    public void setForeColor(int foreColor) {
+        textField.setTextColor(foreColor);
+        super.setForeColor(foreColor);
     }
 
     public GuiTextField getTextField() {

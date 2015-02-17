@@ -33,6 +33,12 @@ public class ComponentScreen extends GuiScreen {
     }
 
     @Override
+    public void onGuiClosed() {
+        PANEL.unfocusAll();
+        super.onGuiClosed();
+    }
+
+    @Override
     public void setWorldAndResolution(Minecraft mc, int width, int height) {
         PANEL.setBounds(0, 0, width, height);
         PANEL.clearComponents();

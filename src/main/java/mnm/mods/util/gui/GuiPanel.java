@@ -8,7 +8,6 @@ import javax.annotation.Nullable;
 
 import mnm.mods.util.gui.events.GuiMouseAdapter;
 import mnm.mods.util.gui.events.GuiMouseEvent;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 
 import com.google.common.collect.Lists;
@@ -40,6 +39,10 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
     @Override
     public void drawComponent(int mouseX, int mouseY) {
 
+        if (overlay != null) {
+            overlay.drawComponent(mouseX, mouseY);
+            return;
+        }
         if (layout != null) {
             layout.layoutComponents(this);
         }
@@ -50,10 +53,6 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
                 gc.drawComponent(mouseX, mouseY);
                 GlStateManager.popMatrix();
             }
-        }
-        if (overlay != null) {
-            Gui.drawRect(0, 0, getBounds().width, getBounds().height, Integer.MIN_VALUE);
-            overlay.drawComponent(mouseX, mouseY);
         }
     }
 
@@ -138,6 +137,9 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
     public void setOverlay(GuiComponent gui) {
         if (gui != null) {
             gui.setParent(this);
+            gui.setSize(getBounds().width, getBounds().height);
+        } else {
+            this.unfocusAll();
         }
         this.overlay = gui;
     }
@@ -149,6 +151,16 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
             } else if (comp instanceof GuiPanel) {
                 ((GuiPanel) comp).unfocusAll();
             }
+        }
+    }
+
+    @Override
+    public void onClosed() {
+        for (GuiComponent comp : components) {
+            comp.onClosed();
+        }
+        if (this.overlay != null) {
+            this.overlay.onClosed();
         }
     }
 

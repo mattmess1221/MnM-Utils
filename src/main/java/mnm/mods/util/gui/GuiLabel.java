@@ -41,9 +41,20 @@ public class GuiLabel extends GuiComponent {
         }
 
         int y = getBounds().height / 2 - fr.FONT_HEIGHT / 2;
-
-        fr.drawString(string, 0, y, getForeColor());
+        String[] split = string.split("\r?\n");
+        for (String s : split) {
+            fr.drawString(s, 0, y, getForeColor());
+            y += fr.FONT_HEIGHT;
+        }
         GlStateManager.popMatrix();
+    }
+
+    public void setString(String string) {
+        this.string = string;
+    }
+
+    public String getString() {
+        return string;
     }
 
 }

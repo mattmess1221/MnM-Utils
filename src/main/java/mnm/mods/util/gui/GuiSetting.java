@@ -7,10 +7,9 @@ public abstract class GuiSetting<T> extends GuiComponent {
     private T value;
     private final SettingValue<T> setting;
 
-    public GuiSetting(SettingValue<T> setting, int xPos, int yPos) {
+    public GuiSetting(SettingValue<T> setting) {
         this.setting = setting;
         this.value = setting.getValue();
-        this.setPosition(xPos, yPos);
     }
 
     public void setValue(T t) {
