@@ -24,12 +24,7 @@ public class GuiButton extends GuiComponent implements ActionPerformed {
     private String text = "";
     public int packedFGColour;
 
-    public GuiButton(int x, int y, int width, int height) {
-        super(x, y, width, height);
-    }
-
     public GuiButton(String text) {
-        this(0, 0, 100, 20);
         this.setText(text);
     }
 
@@ -58,7 +53,7 @@ public class GuiButton extends GuiComponent implements ActionPerformed {
         mc.getTextureManager().bindTexture(WIDGETS);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-        TexturedModal modal = this.getHoverState(hovered);
+        TexturedModal modal = this.getHoverState(isHovered());
         GlStateManager.enableBlend();
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -96,9 +91,9 @@ public class GuiButton extends GuiComponent implements ActionPerformed {
 
         if (packedFGColour != 0) {
             textColor = packedFGColour;
-        } else if (!this.enabled) {
+        } else if (!this.isEnabled()) {
             textColor = 0xA0A0A0;
-        } else if (this.hovered) {
+        } else if (this.isHovered()) {
             textColor = 0xFFFFA0;
         }
 
@@ -110,7 +105,7 @@ public class GuiButton extends GuiComponent implements ActionPerformed {
     private TexturedModal getHoverState(boolean hovered) {
         TexturedModal modal = GuiButton.MODAL_NORMAL;
 
-        if (!this.enabled) {
+        if (!this.isEnabled()) {
             modal = GuiButton.MODAL_DISABLE;
         } else if (hovered) {
             modal = GuiButton.MODAL_HOVER;

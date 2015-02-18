@@ -20,11 +20,11 @@ import com.google.common.collect.Lists;
 
 public abstract class GuiComponent extends Gui {
 
-    public boolean enabled = true;
-    public boolean visible = true;
-    public boolean hovered = false;
+    private boolean enabled = true;
+    private boolean visible = true;
+    private boolean hovered = false;
     private boolean entered = false;
-    public boolean held;
+    private boolean buttonHeld;
 
     protected Minecraft mc = Minecraft.getMinecraft();
 
@@ -39,16 +39,7 @@ public abstract class GuiComponent extends Gui {
     private List<GuiKeyboardAdapter> keyboardAdapters = Lists.newArrayList();
 
     public GuiComponent() {
-        this(new Rectangle());
-    }
-
-    public GuiComponent(int x, int y, int w, int h) {
-        this(new Rectangle(x, y, w, h));
-    }
-
-    /* Everything will be assigned here */
-    public GuiComponent(Rectangle bounds) {
-        this.setBounds(bounds);
+        this.setBounds(new Rectangle());
         if (this instanceof ActionPerformed) {
             actionListeners.add((ActionPerformed) this);
         }
@@ -73,7 +64,7 @@ public abstract class GuiComponent extends Gui {
     public void updateComponent() {}
 
     public void handleMouseInput() {
-        if (!enabled) {
+        if (!isEnabled()) {
             this.hovered = false;
             return;
         }
@@ -88,18 +79,18 @@ public abstract class GuiComponent extends Gui {
 
             if (mouseX > actual.x && mouseX < actual.x + getBounds().width && mouseY > actual.y
                     && mouseY < actual.y + getBounds().height) {
-                if (!hovered) {
+                if (!isHovered()) {
                     this.entered = true;
                 }
                 this.hovered = true;
             } else {
-                if (!hovered) {
+                if (!isHovered()) {
                     this.entered = false;
                 }
                 this.hovered = false;
             }
             if (button != -1 && Mouse.getEventButtonState()) {
-                this.held = true;
+                this.buttonHeld = (true);
 
             }
             GuiMouseEvent event = new GuiMouseEvent(this, GuiMouseEvent.RAW, point, button, scroll);
@@ -107,18 +98,18 @@ public abstract class GuiComponent extends Gui {
                 event.event = GuiMouseEvent.RAW;
                 adapter.accept(event);
 
-                if (hovered || held) {
+                if (isHovered() || isButtonHeld()) {
                     if (Mouse.getEventDX() != 0 && Mouse.getEventDY() != 0) {
                         // mouse moved
                         event.event = GuiMouseEvent.MOVED;
                         adapter.accept(event);
-                        if (held) {
+                        if (isButtonHeld()) {
                             // mouse dragged
                             event.event = GuiMouseEvent.DRAGGED;
                             adapter.accept(event);
                         }
                     }
-                    if (hovered && button != -1) {
+                    if (isHovered() && button != -1) {
                         if (Mouse.getEventButtonState()) {
                             // button pressed
                             event.event = GuiMouseEvent.PRESSED;
@@ -127,16 +118,16 @@ public abstract class GuiComponent extends Gui {
                             // button released
                             event.event = GuiMouseEvent.RELEASED;
                             adapter.accept(event);
-                            if (held) {
+                            if (isButtonHeld()) {
                                 // button clicked
                                 event.event = GuiMouseEvent.CLICKED;
                                 adapter.accept(event);
                             }
-                            this.held = false;
+                            this.buttonHeld = false;
                         }
                     }
 
-                    if (hovered) {
+                    if (isHovered()) {
                         if (entered) {
                             // mouse entered
                             event.event = GuiMouseEvent.ENTERED;
@@ -159,7 +150,7 @@ public abstract class GuiComponent extends Gui {
                     }
                 }
             }
-            if (hovered && button == 0 && !Mouse.getEventButtonState()) {
+            if (isHovered() && button == 0 && !Mouse.getEventButtonState()) {
                 // left button released
                 for (ActionPerformed action : actionListeners) {
                     action.action(event);
@@ -181,8 +172,9 @@ public abstract class GuiComponent extends Gui {
     public void onClosed() {
         this.hovered = false;
         this.entered = false;
-        this.held = false;
+        this.buttonHeld = false;
     }
+
     public void setBounds(Rectangle bounds) {
         this.bounds = bounds;
     }
@@ -267,5 +259,31 @@ public abstract class GuiComponent extends Gui {
         this.foreColor = foreColor;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        if (!visible) {
+            this.onClosed();
+        }
+        this.visible = visible;
+    }
+
+    public boolean isHovered() {
+        return hovered;
+    }
+
+    public boolean isButtonHeld() {
+        return buttonHeld;
+    }
 
 }

@@ -1,5 +1,7 @@
 package mnm.mods.util;
 
+import net.minecraft.client.Minecraft;
+
 /**
  * Class to determine what kind of environment we are in.
  */
@@ -15,7 +17,7 @@ public final class EnvironmentUtils {
     /**
      * Gets the current Minecraft environment we are in. What determines the
      * environment is the names of vanilla Minecraft classes. If
-     * Minecraft.getMinecraft() exists, we are in an "mod coder pack"
+     * {@link Minecraft#getMinecraft()} exists, we are in an "mod coder pack"
      * environment. If Minecraft exists, but there is no getMinecraft(), we are
      * in "searge names." If the Minecraft class doesn't exist, we are in an
      * "obfuscated" environment.

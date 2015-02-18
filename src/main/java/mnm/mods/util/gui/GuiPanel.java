@@ -47,7 +47,7 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
             layout.layoutComponents(this);
         }
         for (GuiComponent gc : components) {
-            if (gc.visible) {
+            if (gc.isVisible()) {
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(gc.getBounds().x, gc.getBounds().y, 0F);
                 gc.drawComponent(mouseX, mouseY);

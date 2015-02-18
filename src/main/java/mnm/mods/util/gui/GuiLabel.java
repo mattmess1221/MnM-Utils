@@ -24,11 +24,6 @@ public class GuiLabel extends GuiComponent {
         this.angle = angle % 360;
     }
 
-    public GuiLabel(String string, int x, int y) {
-        super(x, y, fr.getStringWidth(string), fr.FONT_HEIGHT);
-        this.string = string;
-    }
-
     @Override
     public void drawComponent(int mouseX, int mouseY) {
 
