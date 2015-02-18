@@ -3,23 +3,33 @@ package mnm.mods.util;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.io.FileUtils;
 
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+/**
+ * Used for creating settings and saving/loading them in the JSON format. Start
+ * by registering settings using {@link #registerSetting(String, SettingValue)}.
+ * If your setting requires special handling for serialization, override
+ * {@link #setupGson(GsonBuilder)} and use it to customize the {@link Gson}
+ * object to your liking.
+ *
+ * @author Matthew Messinger
+ */
 public abstract class Settings {
 
     private static final LogHelper logger = LogHelper.getLogger();
-    protected static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    private boolean saving;
-    private JsonObject jobj;
-    protected final File file;
+    private final Gson gson;
+    private final File file;
+
+    private Map<String, SettingValue<Object>> settings = Maps.newHashMap();
 
     /**
      * Creates settings with a settings file at root/name.json. Settings are not
@@ -30,16 +40,50 @@ public abstract class Settings {
      */
     public Settings(File root, String name) {
         this.file = new File(root, name + ".json");
+        GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
+        setupGson(builder);
+        this.gson = builder.create();
     }
+
+    /**
+     * Registers a {@link SettingValue} to be loaded/saved. Call this during
+     * construction. There is an issue with complex generic types. To resolve
+     * this, create a non-generic class for it. Do something like this.
+     *
+     * <pre>
+     * public SettingValue&lt;MyClassList&gt; myList = new SettingValue&lt;MyClassList&gt;(new MyClassList());
+     * 
+     * public Settings() {
+     *     registerSetting(&quot;myList&quot;, myList);
+     * }
+     * 
+     * public static class MyClassList extends ArrayList&lt;MyClass&gt; {
+     *     private static final long serialVersionUID = 0L;
+     * }
+     * </pre>
+     *
+     * @param key The setting name
+     * @param value The setting value
+     */
+    @SuppressWarnings("unchecked")
+    protected final void registerSetting(String key, SettingValue<?> value) {
+        settings.put(key, (SettingValue<Object>) value);
+    }
+
+    /**
+     * Called before the {@link Gson} object is created in order to allow
+     * customization of it.
+     *
+     * @param builder The Gson Builder
+     */
+    protected void setupGson(GsonBuilder builder) {}
 
     /**
      * Saves the settings to file.
      */
     public final void saveSettingsFile() {
-        jobj = new JsonObject();
-        saving = true;
-        saveSettings();
-        saving = false;
+        JsonObject jobj = new JsonObject();
+        saveSettings(jobj);
         try {
             file.getParentFile().mkdirs();
             FileUtils.write(file, gson.toJson(jobj));
@@ -49,70 +93,11 @@ public abstract class Settings {
     }
 
     /**
-     * Saves a boolean value.
-     *
-     * @param key
-     * @param value
-     */
-    protected void saveSetting(String key, Boolean value) {
-        if (saving) {
-            jobj.addProperty(key, value);
-        }
-    }
-
-    /**
-     * Saves a number value.
-     *
-     * @param key
-     * @param value
-     */
-    protected void saveSetting(String key, Number value) {
-        if (saving) {
-            jobj.addProperty(key, value);
-        }
-    }
-
-    /**
-     * Saves a character value.
-     *
-     * @param key
-     * @param value
-     */
-    protected void saveSetting(String key, Character value) {
-        if (saving) {
-            jobj.addProperty(key, value);
-        }
-    }
-
-    /**
-     * Saves a string value.
-     *
-     * @param key
-     * @param value
-     */
-    protected void saveSetting(String key, String value) {
-        if (saving) {
-            jobj.addProperty(key, value);
-        }
-    }
-
-    /**
-     * Saves an advanced json element.
-     *
-     * @param key
-     * @param jsonTree
-     */
-    protected void saveSetting(String key, JsonElement jsonTree) {
-        if (saving) {
-            jobj.add(key, jsonTree);
-        }
-    }
-
-    /**
      * Loads settings from file.
      */
     public final void loadSettingsFile() {
         file.getParentFile().mkdirs();
+        JsonObject jobj = null;
         try {
             file.createNewFile();
             jobj = gson.fromJson(new FileReader(file), JsonObject.class);
@@ -123,24 +108,25 @@ public abstract class Settings {
             jobj = new JsonObject();
         }
 
-        for (Entry<String, JsonElement> ele : jobj.entrySet()) {
-            loadSetting(ele.getKey(), ele.getValue());
+        loadSetting(jobj);
+    }
+
+    private void saveSettings(JsonObject output) {
+        for (Entry<String, SettingValue<Object>> value : settings.entrySet()) {
+            output.add(value.getKey(), gson.toJsonTree(value.getValue().getValue()));
         }
     }
 
-    /**
-     * Called when the settings will be saved. Call saveSetting.
-     *
-     * @param jobj Save to this
-     */
-    protected abstract void saveSettings();
-
-    /**
-     * Loads the settings one by one.
-     *
-     * @param setting
-     * @param value
-     */
-    protected abstract void loadSetting(String setting, JsonElement value);
-
+    private void loadSetting(JsonObject input) {
+        for (Entry<String, SettingValue<Object>> value : settings.entrySet()) {
+            try {
+                if (input.has(value.getKey())) {
+                    Class<? extends Object> type = value.getValue().getDefaultValue().getClass();
+                    value.getValue().setValue(gson.fromJson(input.get(value.getKey()), type));
+                }
+            } catch (Exception e) {
+                logger.warn("Failed to load setting: " + value.getKey() + ". Using defaults.", e);
+            }
+        }
+    }
 }
