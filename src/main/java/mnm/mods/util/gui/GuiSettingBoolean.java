@@ -7,12 +7,9 @@ import net.minecraft.client.gui.Gui;
 
 public class GuiSettingBoolean extends GuiSetting<Boolean> implements ActionPerformed {
 
-    private String title;
-
-    public GuiSettingBoolean(SettingValue<Boolean> setting, String title) {
+    public GuiSettingBoolean(SettingValue<Boolean> setting) {
         super(setting);
         this.setSize(9, 9);
-        this.title = title;
         setBackColor(0x99ffffa0);
     }
 
@@ -44,7 +41,5 @@ public class GuiSettingBoolean extends GuiSetting<Boolean> implements ActionPerf
             Gui.drawRect(centerX + 2, centerY, centerX + 3, centerY - 2, getForeColor());
             Gui.drawRect(centerX + 3, centerY - 2, centerX + 4, centerY - 4, getForeColor());
         }
-
-        mc.fontRendererObj.drawString(title, 15, 1, -1);
     }
 }

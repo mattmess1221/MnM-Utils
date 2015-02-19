@@ -3,6 +3,7 @@ package mnm.mods.util.gui;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.common.collect.Maps;
 
@@ -65,7 +66,14 @@ public class GuiGridLayout implements ILayout {
 
     @Override
     public void removeComponent(GuiComponent comp) {
-        grid.remove(comp);
+        Rectangle remove = null;
+        for (Entry<Rectangle, GuiComponent> entry : grid.entrySet()) {
+            if (entry.getValue() == comp) {
+                remove = entry.getKey();
+                break;
+            }
+        }
+        grid.remove(remove);
     }
 
     @Override
