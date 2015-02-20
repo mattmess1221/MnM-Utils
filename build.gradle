@@ -10,24 +10,28 @@ buildscript {
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
     }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-    }
+    dependencies.classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
 }
-
-apply plugin: 'java'
-group = "mnm.mods"
-archivesBaseName = "MnM-Utils"
-version = String.format("%s.%s.%s", versionMajor, versionMinor, versionRevision)
 
 apply plugin: 'forge'
+
+group = "mnm.mods"
+archivesBaseName = "MnM-Utils"
+version = "$versionMajor.$versionMinor.$versionRevision"
+
+configurations.compile {
+    exclude group: "org.scala-lang"
+    exclude group: "org.scala-lang.plugins"
+    exclude group: "com.typesafe"
+    exclude group: "com.typesafe.akka"
+}
+
 minecraft {
-    version = "1.8-recommended"
+    version = "$mcversion-$fmlversion"
     runDir = "run"
 }
-reobf{
-    setSrgMcp()
-}
+reobf.setSrgMcp()
+
 processResources{
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
@@ -47,20 +51,10 @@ processResources{
         exclude 'mcmod.info', 'litemod.json'
     }
 }
-jar{
-    manifest{
-        attributes "ModType":"FML,LiteLoader",
-        "ImplementationVersion":version
-    }
-}
+jar.manifest.attributes "ModType":"FML,LiteLoader"
+
 task jarDev(type:Jar){
     from sourceSets.main.output
     classifier "dev"
 }
-task jarSrc(type:Jar){
-    from sourceSets.main.allSource
-    classifier "src"
-}
-artifacts{
-    archives jarDev, jarSrc
-}
+artifacts.archives jarDev
