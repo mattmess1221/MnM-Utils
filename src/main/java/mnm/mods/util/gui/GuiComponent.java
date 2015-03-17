@@ -33,6 +33,7 @@ public abstract class GuiComponent extends Gui {
     private GuiPanel parent;
     private Rectangle bounds;
     private Dimension minimumSize = new Dimension();
+    private float scale = 1;
 
     private List<ActionPerformed> actionListeners = Lists.newArrayList();
     private List<GuiMouseAdapter> mouseAdapters = Lists.newArrayList();
@@ -224,6 +225,8 @@ public abstract class GuiComponent extends Gui {
             point.x += parent.x;
             point.y += parent.y;
         }
+        point.x *= getScale();
+        point.y *= getScale();
         return point;
     }
 
@@ -233,6 +236,14 @@ public abstract class GuiComponent extends Gui {
 
     public Dimension getMinimumSize() {
         return minimumSize;
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
+    }
+
+    public float getScale() {
+        return scale;
     }
 
     public int getBackColor() {
