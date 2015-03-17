@@ -1,8 +1,8 @@
 {
 	"modListVersion": 2,
 	"modList": [{
-		"modid": "MnmModUtils",
-		"name": "MnM Mod Utils",
+		"modid": "mnmUtils",
+		"name": "Mnm Utils",
 		"version": "${version}",
 		"mcversion": "${mcversion}",
 		"authorList": [ "killjoy1221" ],

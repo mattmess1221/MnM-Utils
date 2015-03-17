@@ -29,6 +29,8 @@ configurations.compile {
 minecraft {
     version = "$mcversion-$fmlversion"
     runDir = "run"
+
+    replace "@VERSION":project.version
 }
 reobf.setSrgMcp()
 
