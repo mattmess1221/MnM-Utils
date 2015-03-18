@@ -74,12 +74,15 @@ public abstract class GuiComponent extends Gui {
             int mouseY = mc.currentScreen.height - Mouse.getY() * mc.currentScreen.height
                     / mc.displayHeight - 1;
             Point point = new Point(mouseX, mouseY);
+
             int button = Mouse.getEventButton();
             int scroll = Mouse.getEventDWheel();
             Point actual = getActualPosition();
 
-            if (mouseX > actual.x && mouseX < actual.x + getBounds().width && mouseY > actual.y
-                    && mouseY < actual.y + getBounds().height) {
+            float scale = getActualScale();
+
+            if (mouseX > actual.x && mouseX < actual.x + getBounds().width * scale
+                    && mouseY > actual.y && mouseY < actual.y + getBounds().height * scale) {
                 if (!isHovered()) {
                     this.entered = true;
                 }
@@ -243,6 +246,14 @@ public abstract class GuiComponent extends Gui {
     }
 
     public float getScale() {
+        return scale;
+    }
+
+    public float getActualScale() {
+        float scale = getScale();
+        if (getParent() != null) {
+            scale *= getParent().getActualScale();
+        }
         return scale;
     }
 
