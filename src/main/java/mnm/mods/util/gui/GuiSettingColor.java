@@ -39,7 +39,6 @@ public class GuiSettingColor extends GuiSetting<Color> implements Consumer<Color
     @Override
     public void apply(Color input) {
         setValue(input);
-        System.out.println(input.getColor());
         getParent().setOverlay(null);
     }
 

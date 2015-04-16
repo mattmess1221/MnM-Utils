@@ -9,7 +9,7 @@ public abstract class GuiSetting<T> extends GuiComponent {
 
     public GuiSetting(SettingValue<T> setting) {
         this.setting = setting;
-        this.value = setting.getValue();
+        this.setValue(setting.getValue());
     }
 
     public void setValue(T t) {
@@ -25,14 +25,14 @@ public abstract class GuiSetting<T> extends GuiComponent {
     }
 
     public void reset() {
-        this.value = this.setting.getValue();
+        this.setValue(this.setting.getValue());
     }
 
     public void setDefault() {
-        this.value = this.setting.getDefaultValue();
+        this.setValue(this.setting.getDefaultValue());
     }
 
     public void saveValue() {
-        this.setting.setValue(this.value);
+        this.setting.setValue(this.getValue());
     }
 }

@@ -36,7 +36,7 @@ public class GuiLabel extends GuiComponent {
         }
 
         int y = getBounds().height / 2 - fr.FONT_HEIGHT / 2;
-        String[] split = string.split("\r?\n");
+        String[] split = getString().split("\r?\n");
         for (String s : split) {
             fr.drawString(s, 0, y, getForeColor());
             y += fr.FONT_HEIGHT;
