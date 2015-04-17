@@ -42,4 +42,14 @@ public class GuiSettingColor extends GuiSetting<Color> implements Consumer<Color
         getParent().setOverlay(null);
     }
 
+    @Override
+    public Color getValue() {
+        return getSetting().getValue();
+    }
+
+    @Override
+    public void setValue(Color color) {
+        getSetting().setValue(color);
+    }
+
 }

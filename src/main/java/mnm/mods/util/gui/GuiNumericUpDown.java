@@ -5,7 +5,7 @@ import java.text.NumberFormat;
 
 import mnm.mods.util.gui.events.GuiEvent;
 
-public class GuiNumericUpDown extends GuiPanel {
+public abstract class GuiNumericUpDown<T extends Number> extends GuiPanel implements IGuiInput<T> {
 
     private double min = Double.MIN_VALUE;
     private double max = Double.MAX_VALUE;
@@ -51,7 +51,7 @@ public class GuiNumericUpDown extends GuiPanel {
     }
 
     public void increment(int n) {
-        setValue(getValue() + n * getInterval());
+        setDouble(getDouble() + n * getInterval());
     }
 
     public void setFormat(NumberFormat numberFormat) {
@@ -82,11 +82,11 @@ public class GuiNumericUpDown extends GuiPanel {
         this.interval = interval;
     }
 
-    public double getValue() {
+    public double getDouble() {
         return value;
     }
 
-    public void setValue(double value) {
+    public void setDouble(double value) {
         value = Math.max(value, getMin());
         value = Math.min(value, getMax());
         this.value = value;
@@ -113,6 +113,30 @@ public class GuiNumericUpDown extends GuiPanel {
         @Override
         public void action(GuiEvent event) {
             increment(direction);
+        }
+    }
+
+    public static class IntUpDown extends GuiNumericUpDown<Integer> {
+        @Override
+        public Integer getValue() {
+            return (int) getDouble();
+        }
+
+        @Override
+        public void setValue(Integer i) {
+            setDouble(i);
+        }
+    }
+
+    public static class DoubleUpDown extends GuiNumericUpDown<Double> {
+        @Override
+        public Double getValue() {
+            return getDouble();
+        }
+
+        @Override
+        public void setValue(Double d) {
+            setDouble(d);
         }
     }
 }

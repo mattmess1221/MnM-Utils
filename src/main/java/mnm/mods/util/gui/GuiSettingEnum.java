@@ -10,6 +10,8 @@ import net.minecraft.client.resources.I18n;
 
 public class GuiSettingEnum<T> extends GuiSetting<T> implements GuiMouseAdapter {
 
+    private T value;
+
     private String text;
     private final T[] values;
     private String[] names;
@@ -76,5 +78,15 @@ public class GuiSettingEnum<T> extends GuiSetting<T> implements GuiMouseAdapter 
         int xPos = getBounds().width / 2 - mc.fontRendererObj.getStringWidth(string) / 2;
         int yPos = getBounds().height / 2 - 4;
         mc.fontRendererObj.drawString(string, xPos, yPos, getForeColor());
+    }
+
+    @Override
+    public T getValue() {
+        return value;
+    }
+
+    @Override
+    public void setValue(T value) {
+        this.value = value;
     }
 }
