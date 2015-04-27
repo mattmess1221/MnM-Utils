@@ -4,6 +4,11 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import com.mumfrey.liteloader.core.LiteLoader;
 
+/**
+ * Contains methods to detect different tweaks.
+ *
+ * @author Matthew
+ */
 public class TweakTools {
 
     /**

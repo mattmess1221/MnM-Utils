@@ -4,6 +4,11 @@ import mnm.mods.util.gui.events.ActionPerformed;
 import mnm.mods.util.gui.events.GuiEvent;
 import net.minecraft.client.gui.Gui;
 
+/**
+ * A checkbox, representing a boolean input.
+ *
+ * @author Matthew
+ */
 public class GuiCheckbox extends GuiComponent implements ActionPerformed, IGuiInput<Boolean> {
 
     private boolean value;

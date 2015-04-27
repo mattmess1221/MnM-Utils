@@ -5,6 +5,11 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+/**
+ * Displays components top to bottom. Like {@link FlowLayout}, but vertical.
+ * 
+ * @author Matthew
+ */
 public class VerticalLayout implements ILayout {
 
     private List<GuiComponent> list = Lists.newArrayList();

@@ -10,6 +10,11 @@ import mnm.mods.util.gui.events.GuiEvent;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.ResourceLocation;
 
+/**
+ * A setting for colors. When clicked, shows a {@link GuiSelectColor}.
+ *
+ * @author Matthew
+ */
 public class GuiSettingColor extends GuiSetting<Color> implements Consumer<Color>, ActionPerformed {
 
     private static final ResourceLocation TRANSPARENCY = new ResourceLocation("mnmutils",

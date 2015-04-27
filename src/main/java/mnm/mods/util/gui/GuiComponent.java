@@ -12,12 +12,18 @@ import mnm.mods.util.gui.events.GuiMouseAdapter;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiScreen;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.google.common.collect.Lists;
 
+/**
+ * The base class for all gui components.
+ *
+ * @author Matthew
+ */
 public abstract class GuiComponent extends Gui {
 
     private boolean enabled = true;
@@ -52,8 +58,22 @@ public abstract class GuiComponent extends Gui {
         }
     }
 
+    /**
+     * Draws this component on screen.
+     *
+     * @param mouseX The mouse x
+     * @param mouseY The mouse y
+     */
     public abstract void drawComponent(int mouseX, int mouseY);
 
+    /**
+     * Draws borders around the provided points.
+     *
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     */
     protected void drawBorders(int x1, int y1, int x2, int y2) {
         int val = 0xaa;
         Gui.drawRect(x1 - 1, y1 - 1, x1, y2, getBackColor() + val << 24); // left
@@ -62,8 +82,14 @@ public abstract class GuiComponent extends Gui {
         Gui.drawRect(x1 - 1, y2, x2 + 1, y2 + 1, getBackColor() + val << 24); // bottom
     }
 
+    /**
+     * Updates the component. Called when it is called on the {@link GuiScreen}.
+     */
     public void updateComponent() {}
 
+    /**
+     * Handles the mouse input and sends it to the mouse and action listeners.
+     */
     public void handleMouseInput() {
         if (!isEnabled()) {
             this.hovered = false;
@@ -163,6 +189,9 @@ public abstract class GuiComponent extends Gui {
         }
     }
 
+    /**
+     * Handles the keyboard input and sends it to the keyboard listeners.
+     */
     public void handleKeyboardInput() {
         int key = Keyboard.getEventKey();
         char character = Keyboard.getEventCharacter();
@@ -173,54 +202,123 @@ public abstract class GuiComponent extends Gui {
         }
     }
 
+    /**
+     * Called when the screen is closed.
+     */
     public void onClosed() {
         this.hovered = false;
         this.entered = false;
         this.buttonHeld = false;
     }
 
+    /**
+     * Sets the bounds of this component.
+     *
+     * @param bounds The new bounds
+     */
     public void setBounds(Rectangle bounds) {
         this.bounds = bounds;
     }
 
+    /**
+     * Sets the new bounds of this component.
+     *
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     */
     public void setBounds(int x, int y, int width, int height) {
         setBounds(new Rectangle(x, y, width, height));
     }
 
+    /**
+     * Sets the position of this component.
+     *
+     * @param xPos The X position
+     * @param yPos The Y position
+     */
     public void setPosition(int xPos, int yPos) {
         getBounds().x = xPos;
         getBounds().y = yPos;
     }
 
+    /**
+     * Sets the size of this component.
+     *
+     * @param width The width
+     * @param height The height
+     */
     public void setSize(int width, int height) {
         getBounds().width = width;
         getBounds().height = height;
     }
 
+    /**
+     * Gets the current bounds of this component. The returned object is
+     * mutable.
+     *
+     * @return The current bounds
+     */
     public Rectangle getBounds() {
         return this.bounds;
     }
 
+    /**
+     * Adds an action listener to the list.
+     *
+     * @param actionPerformed The listener
+     */
     public void addActionListener(ActionPerformed actionPerformed) {
         this.actionListeners.add(actionPerformed);
     }
 
+    /**
+     * Adds a mouse adapter to the list.
+     *
+     * @param mouse The adapter
+     */
     public void addMouseAdapter(GuiMouseAdapter mouse) {
         this.mouseAdapters.add(mouse);
     }
 
+    /**
+     * Adds a keyboard adapter to the list.
+     *
+     * @param keyboard The adapter
+     */
     public void addKeyboardAdapter(GuiKeyboardAdapter keyboard) {
         this.keyboardAdapters.add(keyboard);
     }
 
+    /**
+     * Gets the parent of this component. Will return {@code null} until it is
+     * added to a panel by being used as the parameter to
+     * {@link GuiPanel#addComponent(GuiComponent)} or
+     * {@link GuiPanel#addComponent(GuiComponent, Object)}.
+     *
+     * @return The parent or null if there is none
+     */
     public GuiPanel getParent() {
         return this.parent;
     }
 
+    /**
+     * Sets the parent of this component. Should only be used by
+     * {@link GuiPanel}.
+     *
+     * @param guiPanel The parent
+     */
     void setParent(GuiPanel guiPanel) {
         this.parent = guiPanel;
     }
 
+    /**
+     * Gets the position of this component when drawn on the screen. Includes
+     * all parent's positions and scales.
+     *
+     * @return The position
+     */
     public Point getActualPosition() {
         Point point = new Point(getBounds().x, getBounds().y);
         if (getParent() != null) {
@@ -241,14 +339,30 @@ public abstract class GuiComponent extends Gui {
         return minimumSize;
     }
 
+    /**
+     * Sets the scale for this component.
+     *
+     * @param scale The scale
+     */
     public void setScale(float scale) {
         this.scale = scale;
     }
 
+    /**
+     * Gets the scale for this component.
+     *
+     * @return The scale
+     */
     public float getScale() {
         return scale;
     }
 
+    /**
+     * Gets the total scale of this component. Takes into account all the
+     * parents.
+     *
+     * @return The scale
+     */
     public float getActualScale() {
         float scale = getScale();
         if (getParent() != null) {
@@ -257,6 +371,11 @@ public abstract class GuiComponent extends Gui {
         return scale;
     }
 
+    /**
+     * Gets the background color. If it is 0, it returns the parent's.
+     *
+     * @return The background color
+     */
     public int getBackColor() {
         int result = backColor;
         if (getParent() != null && result == 0) {
@@ -265,10 +384,20 @@ public abstract class GuiComponent extends Gui {
         return result;
     }
 
+    /**
+     * Sets the background color.
+     *
+     * @param backColor The new color
+     */
     public void setBackColor(int backColor) {
         this.backColor = backColor;
     }
 
+    /**
+     * Gets the foreground color. If it is 0, it returns the parent's.
+     *
+     * @return The foreground color
+     */
     public int getForeColor() {
         int result = foreColor;
         if (getParent() != null && result == -1) {
@@ -277,22 +406,51 @@ public abstract class GuiComponent extends Gui {
         return result;
     }
 
+    /**
+     * Sets the foreground color.
+     *
+     * @param foreColor The new color
+     */
     public void setForeColor(int foreColor) {
         this.foreColor = foreColor;
     }
 
+    /**
+     * Gets if this is enabled. Disabled components will not handle mouse or
+     * keyboard events.
+     *
+     * @return True if enabled, false if disabled.
+     */
     public boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     * Sets if this is enabled or not. Disabled components will not handle mouse
+     * or keyboard events.
+     *
+     * @param enabled True for enabled, false for disabled
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
+    /**
+     * Gets if this component is visible. Non-visible components are not
+     * rendered.
+     *
+     * @return The visibility state
+     */
     public boolean isVisible() {
         return visible;
     }
 
+    /**
+     * Sets this component's visibility. Non-visible components are not
+     * rendered.
+     *
+     * @param visible The visibility state
+     */
     public void setVisible(boolean visible) {
         if (!visible) {
             this.onClosed();
@@ -300,10 +458,19 @@ public abstract class GuiComponent extends Gui {
         this.visible = visible;
     }
 
+    /**
+     * Returns if the cursor is hovered over this component.
+     *
+     * @return THe hover state
+     */
     public boolean isHovered() {
         return hovered;
     }
 
+    /**
+     * Returns if the cursor is hovered over this component and a button is
+     * held.
+     */
     public boolean isButtonHeld() {
         return buttonHeld;
     }

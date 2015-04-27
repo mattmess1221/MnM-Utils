@@ -5,20 +5,41 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.IChatComponent;
 
+/**
+ * Gui component label used to show text on the screen.
+ *
+ * @author Matthew
+ */
 public class GuiLabel extends GuiComponent {
 
     private static FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
     private String string;
     private float angle;
 
+    /**
+     * Creates a label from an chat component.
+     *
+     * @param chat The text
+     */
     public GuiLabel(IChatComponent chat) {
         this(chat.getFormattedText(), 0);
     }
 
+    /**
+     * Creates a label from a string
+     *
+     * @param string The string
+     */
     public GuiLabel(String string) {
         this(string, 0);
     }
 
+    /**
+     * Creates a label from a string and angle.
+     *
+     * @param string The string
+     * @param angle The angle
+     */
     public GuiLabel(String string, float angle) {
         this.string = string;
         this.angle = angle % 360;
@@ -44,10 +65,20 @@ public class GuiLabel extends GuiComponent {
         GlStateManager.popMatrix();
     }
 
+    /**
+     * Sets the string of this label
+     *
+     * @param string The string
+     */
     public void setString(String string) {
         this.string = string;
     }
 
+    /**
+     * Gets the string of this label
+     *
+     * @return The string
+     */
     public String getString() {
         return string;
     }

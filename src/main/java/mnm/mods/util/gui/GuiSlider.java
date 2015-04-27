@@ -8,7 +8,12 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.input.Mouse;
 
-public class GuiSlider extends GuiComponent implements GuiMouseAdapter {
+/**
+ * A slider for double values. Click and drag or scroll to change the value.
+ *
+ * @author Matthew
+ */
+public class GuiSlider extends GuiComponent implements GuiMouseAdapter, IGuiInput<Double> {
 
     private static final ResourceLocation TRANSPARENCY = new ResourceLocation("mnmutils",
             "textures/transparency.png");
@@ -77,17 +82,19 @@ public class GuiSlider extends GuiComponent implements GuiMouseAdapter {
         }
     }
 
-    public void setValue(double value) {
+    @Override
+    public void setValue(Double value) {
         if (value < 0) {
-            value = 0;
+            value = 0D;
         }
         if (value > 1) {
-            value = 1;
+            value = 1D;
         }
         this.value = value;
     }
 
-    public double getValue() {
+    @Override
+    public Double getValue() {
         return value;
     }
 

@@ -5,6 +5,11 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+/**
+ * A layout that puts items side-by-side and left-to-right.
+ * 
+ * @author Matthew
+ */
 public class FlowLayout implements ILayout {
 
     protected List<GuiComponent> components = Lists.newArrayList();

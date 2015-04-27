@@ -1,7 +1,6 @@
 package mnm.mods.util.gui;
 
 import java.math.BigInteger;
-import java.util.Random;
 
 import mnm.mods.util.Color;
 import mnm.mods.util.Consumer;
@@ -17,9 +16,14 @@ import net.minecraft.util.EnumChatFormatting;
 
 import org.lwjgl.input.Keyboard;
 
+/**
+ * A gui used to select a color.
+ *
+ * @author Matthew
+ */
 public class GuiSelectColor extends GuiPanel {
 
-    private Consumer<Color> predicate;
+    private Consumer<Color> callback;
     private Color color;
 
     private GuiSliderColor sliderRed;
@@ -32,8 +36,14 @@ public class GuiSelectColor extends GuiPanel {
     private GuiRectangle current = new GuiRectangle();
     private GuiRectangle selected = new GuiRectangle();
 
-    public GuiSelectColor(Consumer<Color> predicate_, Color color) {
-        this.predicate = predicate_;
+    /**
+     * Creates a new instance with a color and callback.
+     *
+     * @param callback_ Called when apply is clicked
+     * @param color The starting color
+     */
+    public GuiSelectColor(Consumer<Color> callback_, Color color) {
+        this.callback = callback_;
         this.current.setForeColor(color.getColor());
         this.selected.setForeColor(color.getColor());
         this.current.addMouseAdapter(new GuiMouseAdapter() {
@@ -90,8 +100,7 @@ public class GuiSelectColor extends GuiPanel {
         random.addActionListener(new ActionPerformed() {
             @Override
             public void action(GuiEvent event) {
-                setColor(new Color(new Random().nextInt()));
-
+                setColor(Color.random());
             }
         });
         this.addComponent(random, new int[] { 13, 11, 8, 2 });
@@ -109,7 +118,7 @@ public class GuiSelectColor extends GuiPanel {
         apply.addActionListener(new ActionPerformed() {
             @Override
             public void action(GuiEvent event) {
-                predicate.apply(GuiSelectColor.this.color);
+                callback.apply(GuiSelectColor.this.color);
             }
         });
         this.addComponent(apply, new int[] { 17, 13, 4, 2 });

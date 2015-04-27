@@ -5,6 +5,9 @@ import java.io.IOException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
+/**
+ * A panel wrapper for a screen.
+ */
 public class ComponentScreen extends GuiScreen {
 
     private final GuiPanel PANEL = new GuiPanel();
@@ -45,6 +48,11 @@ public class ComponentScreen extends GuiScreen {
         super.setWorldAndResolution(mc, width, height);
     }
 
+    /**
+     * Gets the main panel on this screen. Add things to this.
+     * 
+     * @return The main panel
+     */
     public GuiPanel getPanel() {
         return PANEL;
     }

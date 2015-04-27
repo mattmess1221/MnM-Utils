@@ -2,9 +2,17 @@ package mnm.mods.util.gui;
 
 import mnm.mods.util.SettingValue;
 
+/**
+ * A base gui setting for numbers. It wraps a {@link GuiNumericUpDown}
+ *
+ * @author Matthew
+ * @param <T>
+ * @see GuiSettingDouble
+ * @see GuiSettingInt
+ */
 public abstract class GuiSettingNumber<T extends Number> extends GuiSetting<T> {
 
-    public GuiSettingNumber(SettingValue<T> setting, IGuiInput<T> input) {
+    private GuiSettingNumber(SettingValue<T> setting, GuiNumericUpDown<T> input) {
         super(setting, input);
     }
 
@@ -12,7 +20,12 @@ public abstract class GuiSettingNumber<T extends Number> extends GuiSetting<T> {
         return (GuiNumericUpDown<T>) getInput();
     }
 
-    public class GuiSettingInt extends GuiSettingNumber<Integer> {
+    /**
+     * Gui setting for integers
+     *
+     * @author Matthew
+     */
+    public static class GuiSettingInt extends GuiSettingNumber<Integer> {
 
         public GuiSettingInt(SettingValue<Integer> setting) {
             super(setting, new GuiNumericUpDown.IntUpDown());
@@ -27,9 +40,13 @@ public abstract class GuiSettingNumber<T extends Number> extends GuiSetting<T> {
         public void setValue(Integer value) {
             getNumUpDown().setValue(value);
         }
-
     }
 
+    /**
+     * Gui setting for doubles
+     *
+     * @author Matthew
+     */
     public static class GuiSettingDouble extends GuiSettingNumber<Double> {
 
         public GuiSettingDouble(SettingValue<Double> setting) {

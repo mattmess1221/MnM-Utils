@@ -1,11 +1,8 @@
 package mnm.mods.util;
 
-import java.io.IOException;
 import java.util.Random;
 
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Represents a color and provides an easy way to convert to and from html color
@@ -13,9 +10,15 @@ import com.google.gson.stream.JsonWriter;
  */
 public class Color {
 
+    private static Random random = new Random();
+
+    @SerializedName("r")
     private final int red;
+    @SerializedName("g")
     private final int green;
+    @SerializedName("b")
     private final int blue;
+    @SerializedName("a")
     private final int alpha;
 
     /**
@@ -115,7 +118,7 @@ public class Color {
      * @return A random color
      */
     public static Color random() {
-        return new Color(new Random().nextInt());
+        return new Color(random.nextInt());
     }
 
     @Override
@@ -128,44 +131,4 @@ public class Color {
         return false;
     }
 
-    public static class ColorAdapter extends TypeAdapter<Color> {
-
-        private static final String RED = "r";
-        private static final String GREEN = "g";
-        private static final String BLUE = "b";
-        private static final String ALPHA = "a";
-
-        @Override
-        public void write(JsonWriter writer, Color color) throws IOException {
-            writer.beginObject()
-                    .name(RED).value(color.getRed())
-                    .name(GREEN).value(color.getGreen())
-                    .name(BLUE).value(color.getBlue())
-                    .name(ALPHA).value(color.getAlpha())
-                    .endObject();
-        }
-
-        @Override
-        public Color read(JsonReader reader) throws IOException {
-            int red = 0, green = 0, blue = 0, alpha = 127;
-            reader.beginObject();
-            while (reader.hasNext()) {
-                String next = reader.nextName();
-                if (next.equals(RED)) {
-                    red = reader.nextInt();
-                } else if (next.equals(GREEN)) {
-                    green = reader.nextInt();
-                } else if (next.equals(BLUE)) {
-                    blue = reader.nextInt();
-                } else if (next.equals(ALPHA)) {
-                    alpha = reader.nextInt();
-                } else {
-                    reader.skipValue();
-                }
-            }
-            reader.endObject();
-
-            return new Color(red, green, blue, alpha);
-        }
-    }
 }

@@ -41,6 +41,9 @@ public abstract class SettingPanel<T extends Settings> extends GuiPanel {
      */
     public abstract T getSettings();
 
+    /**
+     * Saves all the settings
+     */
     public void saveSettings() {
         for (GuiComponent comp : this) {
             if (comp instanceof GuiSetting) {
@@ -49,6 +52,9 @@ public abstract class SettingPanel<T extends Settings> extends GuiPanel {
         }
     }
 
+    /**
+     * Resets all the settings to their value.
+     */
     public void reset() {
         for (GuiComponent comp : this) {
             if (comp instanceof GuiSetting) {
@@ -57,6 +63,9 @@ public abstract class SettingPanel<T extends Settings> extends GuiPanel {
         }
     }
 
+    /**
+     * Resets all the settings to their defaults.
+     */
     public void setDefault() {
         for (GuiComponent comp : this) {
             if (comp instanceof GuiSetting) {

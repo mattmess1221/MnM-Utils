@@ -1,5 +1,10 @@
 package mnm.mods.util;
 
+/**
+ * A wrapper that saves a default value.
+ *
+ * @param <T> The type to wrap
+ */
 public class SettingValue<T> {
 
     private final T defaultValue;

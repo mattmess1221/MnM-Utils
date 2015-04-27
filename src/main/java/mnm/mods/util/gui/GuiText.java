@@ -11,7 +11,12 @@ import net.minecraft.client.gui.GuiTextField;
 
 import org.lwjgl.input.Keyboard;
 
-public class GuiText extends GuiComponent implements IGuiInput<String>, Focusable,
+/**
+ * A gui component that wraps {@link GuiTextField}.
+ * 
+ * @author Matthew
+ */
+public class GuiText extends GuiComponent implements IGuiInput<String>, IFocusable,
         GuiMouseAdapter, GuiKeyboardAdapter {
 
     private GuiTextField textField;

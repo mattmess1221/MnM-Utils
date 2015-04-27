@@ -7,6 +7,30 @@ import java.util.Map.Entry;
 
 import com.google.common.collect.Maps;
 
+/**
+ * A layout which places components along a grid. Add components with an int[]
+ * array to define bounds. Array can be of length 2 or 4, the last 2 being
+ * optional. If they are not included, they default to 1.
+ * <p>
+ * The format of the array is <code>{ xPos, yPos, width*, height* }</code>. <br>
+ * * indicates optional
+ * <p>
+ * <b>Example Usage:</b>
+ *
+ * <pre>
+ * GuiPanel panel = new GuiPanel(new GuiGridLayout(10, 10));
+ *
+ * // creates a label and places it at x:0 y:0 and size w:1 h:1.
+ * GuiLabel label = new GuiLabel(&quot;Label&quot;);
+ * panel.addComponent(label, new int[] { 0, 0 });
+ *
+ * // creates a button and places it at x:1 y:1 with size w:3, h:2.
+ * GuiButton button = new GuiButton(&quot;button&quot;);
+ * panel.addComponent(button, new int[] { 1, 1, 3, 2 });
+ * </pre>
+ *
+ * @author Matthew
+ */
 public class GuiGridLayout implements ILayout {
 
     private int cols;

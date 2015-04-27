@@ -3,8 +3,16 @@ package mnm.mods.util.gui;
 import java.awt.Rectangle;
 import java.text.NumberFormat;
 
+import mnm.mods.util.gui.events.ActionPerformed;
 import mnm.mods.util.gui.events.GuiEvent;
 
+/**
+ * Input for numbers, also known as a slider. Use {@link DoubleUpDown} for
+ * doubles and {@link IntUpDown} for integers.
+ *
+ * @author Matthew
+ * @param <T> The number type.
+ */
 public abstract class GuiNumericUpDown<T extends Number> extends GuiPanel implements IGuiInput<T> {
 
     private double min = Double.MIN_VALUE;
@@ -15,7 +23,7 @@ public abstract class GuiNumericUpDown<T extends Number> extends GuiPanel implem
 
     private NumberFormat format = NumberFormat.getNumberInstance();
 
-    public GuiNumericUpDown() {
+    private GuiNumericUpDown() {
         setLayout(new BorderLayout());
 
         {
@@ -50,49 +58,104 @@ public abstract class GuiNumericUpDown<T extends Number> extends GuiPanel implem
         }
     }
 
+    /**
+     * Increments the value by {@code n}. Use a negative number to go down.
+     * <p>
+     * Essentially runs <code>value = value + (n * interval)</code>
+     *
+     * @param n The amount to increment
+     */
     public void increment(int n) {
         setDouble(getDouble() + n * getInterval());
     }
 
+    /**
+     * Sets the number format used drawing the value.
+     *
+     * @param numberFormat The format
+     */
     public void setFormat(NumberFormat numberFormat) {
         this.format = numberFormat;
     }
 
+    /**
+     * Gets the minimum value.
+     *
+     * @return The min
+     */
     public double getMin() {
         return min;
     }
 
+    /**
+     * Sets the minimum value.
+     *
+     * @param min The min
+     */
     public void setMin(double min) {
         this.min = min;
     }
 
+    /**
+     * Gets the maximum value.
+     *
+     * @return The max
+     */
     public double getMax() {
         return max;
     }
 
+    /**
+     * Sets the maximum value.
+     *
+     * @param max The max
+     */
     public void setMax(double max) {
         this.max = max;
     }
 
+    /**
+     * Gets the interval, which is the amount the value is changed on each
+     * increment.
+     *
+     * @return The interval
+     */
     public double getInterval() {
         return interval;
     }
+
+    /**
+     * Sets the interval, which is the amount the value is changed on each
+     * increment.
+     *
+     * @param interval The interval
+     */
 
     public void setInterval(double interval) {
         this.interval = interval;
     }
 
+    /**
+     * Gets the value as a double.
+     *
+     * @return The double value
+     */
     public double getDouble() {
         return value;
     }
 
+    /**
+     * Sets the value as a double.
+     *
+     * @param value The new value
+     */
     public void setDouble(double value) {
         value = Math.max(value, getMin());
         value = Math.min(value, getMax());
         this.value = value;
     }
 
-    private class UpDown extends GuiButton {
+    private class UpDown extends GuiButton implements ActionPerformed {
 
         private int direction;
 
@@ -116,6 +179,11 @@ public abstract class GuiNumericUpDown<T extends Number> extends GuiPanel implem
         }
     }
 
+    /**
+     * A Numeric Up Down for integers.
+     *
+     * @author Matthew
+     */
     public static class IntUpDown extends GuiNumericUpDown<Integer> {
         @Override
         public Integer getValue() {
@@ -128,6 +196,11 @@ public abstract class GuiNumericUpDown<T extends Number> extends GuiPanel implem
         }
     }
 
+    /**
+     * A Numeric Up Down for doubles.
+     *
+     * @author Matthew
+     */
     public static class DoubleUpDown extends GuiNumericUpDown<Double> {
         @Override
         public Double getValue() {

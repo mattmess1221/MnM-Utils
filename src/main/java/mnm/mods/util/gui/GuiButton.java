@@ -14,7 +14,10 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-public class GuiButton extends GuiComponent implements ActionPerformed {
+/**
+ * A {@link net.minecraft.client.gui.GuiButton} for the GuiComponent system.
+ */
+public class GuiButton extends GuiComponent {
 
     private static final ResourceLocation WIDGETS = new ResourceLocation("textures/gui/widgets.png");
     private static final TexturedModal MODAL_NORMAL = new TexturedModal(WIDGETS, 0, 66, 200, 20);
@@ -24,16 +27,27 @@ public class GuiButton extends GuiComponent implements ActionPerformed {
     private String text = "";
     public int packedFGColour;
 
+    /**
+     * Instantiates a new button with {@code text} as the display string.
+     *
+     * @param text The display string
+     */
     public GuiButton(String text) {
         this.setText(text);
+        this.addActionListener(new ActionPerformed() {
+            @Override
+            public void action(GuiEvent event) {
+                ResourceLocation press = new ResourceLocation("gui.button.press");
+                mc.getSoundHandler().playSound(PositionedSoundRecord.create(press, 1.0F));
+            }
+        });
     }
 
-    @Override
-    public void action(GuiEvent event) {
-        mc.getSoundHandler().playSound(
-                PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
-    }
-
+    /**
+     * Sets the display text for this button.
+     *
+     * @param text The new text
+     */
     public void setText(String text) {
         if (text == null) {
             text = "";
@@ -41,6 +55,11 @@ public class GuiButton extends GuiComponent implements ActionPerformed {
         this.text = text;
     }
 
+    /**
+     * Gets the display text for this button.
+     *
+     * @return The text
+     */
     public String getText() {
         return this.text;
     }

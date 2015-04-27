@@ -3,6 +3,11 @@ package mnm.mods.util.gui;
 import mnm.mods.util.Color;
 import net.minecraft.client.gui.Gui;
 
+/**
+ * The color variant of {@link GuiSlider}.
+ *
+ * @author Matthew
+ */
 public class GuiSliderColor extends GuiSlider {
 
     private Model model;
@@ -57,6 +62,9 @@ public class GuiSliderColor extends GuiSlider {
         this.base = color;
     }
 
+    /**
+     * Base colors from the rgba color model
+     */
     public static enum Model {
         RED,
         GREEN,

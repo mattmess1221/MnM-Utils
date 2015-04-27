@@ -12,6 +12,11 @@ import net.minecraft.client.renderer.GlStateManager;
 
 import com.google.common.collect.Lists;
 
+/**
+ * A component that can contain multiple components.
+ *
+ * @author Matthew
+ */
 public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
 
     private List<GuiComponent> components = Lists.newArrayList();
@@ -95,14 +100,30 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
         }
     }
 
+    /**
+     * Gets the number of components in this panel.
+     *
+     * @return The count
+     */
     public int getComponentCount() {
         return this.components.size();
     }
 
+    /**
+     * Adds a component to this panel.
+     *
+     * @param guiComponent The component
+     */
     public void addComponent(GuiComponent guiComponent) {
         addComponent(guiComponent, (Object) null);
     }
 
+    /**
+     * Adds a component to this panel with constraints.
+     *
+     * @param guiComponent The component
+     * @param constraints The constraints
+     */
     public void addComponent(GuiComponent guiComponent, Object constraints) {
         if (guiComponent != null) {
             guiComponent.setParent(this);
@@ -113,9 +134,13 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
         }
     }
 
+    /**
+     * Removes all components from this panel.
+     */
     public void clearComponents() {
-        if (layout != null) {
-            for (GuiComponent comp : components) {
+        for (GuiComponent comp : components) {
+            comp.setParent(null);
+            if (layout != null) {
                 layout.removeComponent(comp);
             }
         }
@@ -123,6 +148,11 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
         setOverlay(null);
     }
 
+    /**
+     * Removes a component from this panel.
+     *
+     * @param guiComp The component to remove
+     */
     public void removeComponent(GuiComponent guiComp) {
         components.remove(guiComp);
         if (layout != null) {
@@ -130,14 +160,31 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
         }
     }
 
+    /**
+     * Sets the layout for this panel.
+     *
+     * @param lmg The layout manager
+     */
     public void setLayout(ILayout lmg) {
         this.layout = lmg;
     }
 
+    /**
+     * Gets the layout for this panel.
+     *
+     * @return The layout
+     */
     public ILayout getLayout() {
         return layout;
     }
 
+    /**
+     * Sets the overlay for this component. An overlay temporarily replaces the
+     * contents of the panel with itself. The contents are placed back when the
+     * overlay is set to null.
+     *
+     * @param gui The component to overlay
+     */
     public void setOverlay(GuiComponent gui) {
         if (gui != null) {
             gui.setParent(this);
@@ -148,10 +195,13 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
         this.overlay = gui;
     }
 
+    /**
+     * Unfocuses all components in this panel that implement {@link IFocusable}.
+     */
     public void unfocusAll() {
         for (GuiComponent comp : components) {
-            if (comp instanceof Focusable) {
-                ((Focusable) comp).setFocused(false);
+            if (comp instanceof IFocusable) {
+                ((IFocusable) comp).setFocused(false);
             } else if (comp instanceof GuiPanel) {
                 ((GuiPanel) comp).unfocusAll();
             }

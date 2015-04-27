@@ -8,6 +8,13 @@ import mnm.mods.util.gui.events.GuiMouseEvent;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
 
+/**
+ * A setting for set values, such as enums. Values should either have a
+ * toString() method or provide a names array during construction.
+ *
+ * @author Matthew
+ * @param <T> The type
+ */
 public class GuiSettingEnum<T> extends GuiSetting<T> implements GuiMouseAdapter {
 
     private T value;

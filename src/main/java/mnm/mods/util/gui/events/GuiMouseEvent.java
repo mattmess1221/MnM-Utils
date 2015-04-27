@@ -4,6 +4,11 @@ import java.awt.Point;
 
 import mnm.mods.util.gui.GuiComponent;
 
+/**
+ * A event for the mouse adapter.
+ *
+ * @author Matthew
+ */
 public class GuiMouseEvent extends GuiEvent {
 
     /**
@@ -48,9 +53,21 @@ public class GuiMouseEvent extends GuiEvent {
      */
     public static final int MOVED = 8;
 
+    /**
+     * The event called
+     */
     public int event;
+    /**
+     * The position of the cursor
+     */
     public final Point position;
+    /**
+     * The mouse button clicked
+     */
     public final int button;
+    /**
+     * How much has been scrolled
+     */
     public final int scroll;
 
     public GuiMouseEvent(GuiComponent component, int event, Point point, int button) {

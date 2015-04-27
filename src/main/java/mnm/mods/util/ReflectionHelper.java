@@ -51,6 +51,17 @@ public final class ReflectionHelper {
 
     }
 
+    /**
+     * Sets the value of a field using a class and object.
+     *
+     * @param cl The class
+     * @param obj The object or null if static
+     * @param value The value to set
+     * @param fieldName The name of the field
+     * @throws NoSuchFieldException
+     * @throws IllegalArgumentException
+     * @throws IllegalAccessException
+     */
     public static void setFieldValue(Class<?> cl, Object obj, Object value, String fieldName)
             throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Field fd = cl.getDeclaredField(fieldName);
@@ -58,6 +69,18 @@ public final class ReflectionHelper {
         fd.set(obj, value);
     }
 
+    /**
+     * Sets the value of a field using a class, object, and possible field
+     * names.
+     *
+     * @param cl The class
+     * @param obj The object or null if static
+     * @param value The new value
+     * @param fieldNames Possible field names
+     * @throws NoSuchFieldException
+     * @throws IllegalArgumentException
+     * @throws IllegalAccessException
+     */
     public static void setFieldValue(Class<?> cl, Object obj, Object value, String[] fieldNames)
             throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         NoSuchFieldException latest = new NoSuchFieldException("This shouldn't happen");
