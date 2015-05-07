@@ -9,24 +9,21 @@ import mnm.mods.util.SettingValue;
  */
 public class GuiSettingBoolean extends GuiSetting<Boolean> {
 
-    private boolean value;
-    private GuiCheckbox checkbox;
-
     public GuiSettingBoolean(SettingValue<Boolean> setting) {
         super(setting, new GuiCheckbox());
     }
 
     @Override
     public Boolean getValue() {
-        return value;
+        return getCheckbox().getValue();
     }
 
     @Override
     public void setValue(Boolean b) {
-        value = b;
+        getCheckbox().setValue(b);
     }
 
     public GuiCheckbox getCheckbox() {
-        return checkbox;
+        return (GuiCheckbox) getInput();
     }
 }
