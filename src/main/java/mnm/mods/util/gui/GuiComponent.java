@@ -139,7 +139,7 @@ public abstract class GuiComponent extends Gui {
                             adapter.accept(event);
                         }
                     }
-                    if (isHovered() && button != -1) {
+                    if ((isHovered() || isButtonHeld()) && button != -1) {
                         if (Mouse.getEventButtonState()) {
                             // button pressed
                             event.event = GuiMouseEvent.PRESSED;
@@ -148,7 +148,7 @@ public abstract class GuiComponent extends Gui {
                             // button released
                             event.event = GuiMouseEvent.RELEASED;
                             adapter.accept(event);
-                            if (isButtonHeld()) {
+                            if (isButtonHeld() && isHovered()) {
                                 // button clicked
                                 event.event = GuiMouseEvent.CLICKED;
                                 adapter.accept(event);
