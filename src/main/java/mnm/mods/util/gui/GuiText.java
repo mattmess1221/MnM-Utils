@@ -13,7 +13,7 @@ import org.lwjgl.input.Keyboard;
 
 /**
  * A gui component that wraps {@link GuiTextField}.
- * 
+ *
  * @author Matthew
  */
 public class GuiText extends GuiComponent implements IGuiInput<String>, IFocusable,
@@ -97,6 +97,7 @@ public class GuiText extends GuiComponent implements IGuiInput<String>, IFocusab
     @Override
     public void drawComponent(int mouseX, int mouseY) {
         textField.drawTextBox();
+        super.drawComponent(mouseX, mouseY);
     }
 
     @Override

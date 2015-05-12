@@ -30,6 +30,7 @@ public abstract class GuiSetting<T> extends GuiComponent implements IGuiInput<T>
         if (input instanceof GuiComponent) {
             ((GuiComponent) input).drawComponent(mouseX, mouseY);
         }
+        super.drawComponent(mouseX, mouseY);
     }
 
     @Override

@@ -63,6 +63,7 @@ public class GuiLabel extends GuiComponent {
             y += fr.FONT_HEIGHT;
         }
         GlStateManager.popMatrix();
+        super.drawComponent(mouseX, mouseY);
     }
 
     /**

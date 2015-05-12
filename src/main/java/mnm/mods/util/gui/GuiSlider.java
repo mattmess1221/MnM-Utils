@@ -47,6 +47,7 @@ public class GuiSlider extends GuiComponent implements GuiMouseAdapter, IGuiInpu
         drawCenteredString(mc.fontRendererObj, getFormattedValue(), midX, midY, -1);
         GlStateManager.disableAlpha();
         GlStateManager.disableBlend();
+        super.drawComponent(mouseX, mouseY);
     }
 
     protected void drawMid() {

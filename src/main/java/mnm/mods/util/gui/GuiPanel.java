@@ -63,6 +63,7 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
                 GlStateManager.popMatrix();
             }
         }
+        super.drawComponent(mouseX, mouseY);
     }
 
     @Override

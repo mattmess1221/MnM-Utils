@@ -41,6 +41,7 @@ public class GuiCheckbox extends GuiComponent implements ActionPerformed, IGuiIn
             Gui.drawRect(centerX + 2, centerY, centerX + 3, centerY - 2, getForeColor());
             Gui.drawRect(centerX + 3, centerY - 2, centerX + 4, centerY - 4, getForeColor());
         }
+        super.drawComponent(mouseX, mouseY);
     }
 
     @Override

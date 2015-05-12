@@ -119,6 +119,7 @@ public class GuiButton extends GuiComponent {
         this.drawCenteredString(fontrenderer, getText(), bounds.width / 2, (bounds.height - 8) / 2,
                 textColor);
 
+        super.drawComponent(mouseX, mouseY);
     }
 
     private TexturedModal getHoverState(boolean hovered) {

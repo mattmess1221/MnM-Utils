@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.List;
 
+import mnm.mods.util.Color;
 import mnm.mods.util.gui.events.ActionPerformed;
 import mnm.mods.util.gui.events.GuiKeyboardAdapter;
 import mnm.mods.util.gui.events.GuiKeyboardEvent;
@@ -13,7 +14,10 @@ import mnm.mods.util.gui.events.GuiMouseEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -40,6 +44,7 @@ public abstract class GuiComponent extends Gui {
     private Rectangle bounds;
     private Dimension minimumSize = new Dimension();
     private float scale = 1;
+    private String caption;
 
     private List<ActionPerformed> actionListeners = Lists.newArrayList();
     private List<GuiMouseAdapter> mouseAdapters = Lists.newArrayList();
@@ -48,13 +53,13 @@ public abstract class GuiComponent extends Gui {
     public GuiComponent() {
         this.setBounds(new Rectangle());
         if (this instanceof ActionPerformed) {
-            actionListeners.add((ActionPerformed) this);
+            addActionListener((ActionPerformed) this);
         }
         if (this instanceof GuiMouseAdapter) {
-            mouseAdapters.add((GuiMouseAdapter) this);
+            addMouseAdapter((GuiMouseAdapter) this);
         }
         if (this instanceof GuiKeyboardAdapter) {
-            keyboardAdapters.add((GuiKeyboardAdapter) this);
+            addKeyboardAdapter((GuiKeyboardAdapter) this);
         }
     }
 
@@ -64,10 +69,56 @@ public abstract class GuiComponent extends Gui {
      * @param mouseX The mouse x
      * @param mouseY The mouse y
      */
-    public abstract void drawComponent(int mouseX, int mouseY);
+    public void drawComponent(int mouseX, int mouseY) {
+        // draw the caption
+        String caption = getCaption();
+        if (isHovered() && caption != null && !caption.isEmpty()) {
+            drawCaption(caption, mouseX, mouseY);
+        }
+    }
+
+    private void drawCaption(String caption, int mouseX, int mouseY) {
+        caption = StringEscapeUtils.unescapeJava(caption);
+        String[] list = caption.split("\n\r?");
+        Point point = getActualPosition();
+
+        int w = 0;
+        // find the largest width
+        for (String s : list) {
+            w = Math.max(w, (int) (mc.fontRendererObj.getStringWidth(s) * getActualScale()));
+        }
+        int x = mouseX - point.x + 8;
+        int y = mouseY - point.y - (mc.fontRendererObj.FONT_HEIGHT * list.length);
+
+        int w2 = w;
+        while (mouseX + w2 + 20 > new ScaledResolution(mc, mc.displayWidth, mc.displayHeight).getScaledWidth()) {
+            x--;
+            w2--;
+        }
+        // put it on top
+        GlStateManager.translate(0, 0, 1);
+        GlStateManager.pushMatrix();
+        Gui.drawRect(x - 2, y - 2, x + w + 2, y + mc.fontRendererObj.FONT_HEIGHT * list.length + 1,
+                0xcc333333);
+        drawBorders(x - 2, y - 2, x + w + 2, y + mc.fontRendererObj.FONT_HEIGHT * list.length + 1,
+                0xccaaaaaa);
+        for (String s : list) {
+            mc.fontRendererObj.drawStringWithShadow(s, x, y, getForeColor());
+            y += mc.fontRendererObj.FONT_HEIGHT;
+        }
+        GlStateManager.popMatrix();
+    }
+
+    protected void drawBorders(int x1, int y1, int x2, int y2, int color) {
+        Gui.drawRect(x1 - 1, y1 - 1, x1, y2, color); // left
+        Gui.drawRect(x1 - 1, y1 - 1, x2 + 1, y1, color); // top
+        Gui.drawRect(x2, y1 - 1, x2 + 1, y2 + 1, color); // right
+        Gui.drawRect(x1 - 1, y2, x2 + 1, y2 + 1, color); // bottom
+    }
 
     /**
-     * Draws borders around the provided points.
+     * Draws borders around the provided points. Uses the background color with
+     * 0xaa transparency.
      *
      * @param x1
      * @param y1
@@ -75,11 +126,9 @@ public abstract class GuiComponent extends Gui {
      * @param y2
      */
     protected void drawBorders(int x1, int y1, int x2, int y2) {
-        int val = 0xaa;
-        Gui.drawRect(x1 - 1, y1 - 1, x1, y2, getBackColor() + val << 24); // left
-        Gui.drawRect(x1 - 1, y1 - 1, x2 + 1, y1, getBackColor() + val << 24); // top
-        Gui.drawRect(x2, y1 - 1, x2 + 1, y2 + 1, getBackColor() + val << 24); // right
-        Gui.drawRect(x1 - 1, y2, x2 + 1, y2 + 1, getBackColor() + val << 24); // bottom
+        Color color = new Color(getBackColor());
+        color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 0xaa);
+        drawBorders(x1, y1, x2, y2, color.getColor());
     }
 
     /**
@@ -139,7 +188,7 @@ public abstract class GuiComponent extends Gui {
                             adapter.accept(event);
                         }
                     }
-                    if ((isHovered() || isButtonHeld()) && button != -1) {
+                    if (button != -1) {
                         if (Mouse.getEventButtonState()) {
                             // button pressed
                             event.event = GuiMouseEvent.PRESSED;
@@ -473,6 +522,26 @@ public abstract class GuiComponent extends Gui {
      */
     public boolean isButtonHeld() {
         return buttonHeld;
+    }
+
+    /**
+     * Sets the caption which is shown when the mouse is hovering over this
+     * component.
+     *
+     * @param caption The new caption
+     */
+    public void setCaption(String caption) {
+        this.caption = caption;
+    }
+
+    /**
+     * Gets the caption which is shown when the mouse is hovering over this
+     * component.
+     *
+     * @return The caption
+     */
+    public String getCaption() {
+        return caption;
     }
 
 }
