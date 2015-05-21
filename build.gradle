@@ -9,50 +9,25 @@ buildscript {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+        maven {
+            // for the vanilla plugin
+            name = "minecrell"
+            url = "http://repo.minecrell.net/snapshots"
+        }
     }
-    dependencies.classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+    dependencies {
+        classpath 'net.minecrell:VanillaGradle:1.0.1-SNAPSHOT'
+    }
 }
+apply plugin: 'net.minecrell.vanilla.base'
 
-apply plugin: 'forge'
+apply from: file('gradle/minecraft.gradle')
 
 group = "mnm.mods"
 archivesBaseName = "MnM-Utils"
 version = "$versionMajor.$versionMinor.$versionRevision"
 
-configurations.compile {
-    exclude group: "org.scala-lang"
-    exclude group: "org.scala-lang.plugins"
-    exclude group: "com.typesafe"
-    exclude group: "com.typesafe.akka"
-}
-
-minecraft {
-    version = "$mcversion-$fmlversion"
-    runDir = "run"
-
-    replace "@VERSION":project.version
-}
-reobf.setSrgMcp()
-
-processResources{
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-    inputs.property "revision", project.versionBuild
-
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info', 'litemod.json'
-
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version, 'revision':project.versionBuild
-    }
-
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info', 'litemod.json'
-    }
-}
+dependencies.compile 'com.google.code.findbugs:jsr305:3.0.0'
 jar.manifest.attributes "ModType":"FML,LiteLoader"
 
 task jarDev(type:Jar){
