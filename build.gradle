@@ -27,7 +27,7 @@ group = "mnm.mods"
 archivesBaseName = "MnM-Utils"
 version = "$versionMajor.$versionMinor.$versionRevision"
 
-dependencies.compile 'com.google.code.findbugs:jsr305:3.0.0'
+dependencies.compile 'com.google.code.findbugs:jsr305:2.0.2'
 jar.manifest.attributes "ModType":"FML,LiteLoader"
 
 task jarDev(type:Jar){
