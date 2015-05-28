@@ -1,6 +1,6 @@
 minecraft {
     version = mcversion + (plugins.hasPlugin('forge') ? '-recommended' : '')
-    mappings = "stable_15"
+    mappings = "stable_16"
     runDir = "run"
 }
 reobf.setSrgMcp()
