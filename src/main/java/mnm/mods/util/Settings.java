@@ -3,8 +3,10 @@ package mnm.mods.util;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 
@@ -52,11 +54,11 @@ public abstract class Settings {
      *
      * <pre>
      * public SettingValue&lt;MyClassList&gt; myList = new SettingValue&lt;MyClassList&gt;(new MyClassList());
-     * 
+     *
      * public Settings() {
      *     registerSetting(&quot;myList&quot;, myList);
      * }
-     * 
+     *
      * public static class MyClassList extends ArrayList&lt;MyClass&gt; {
      *     private static final long serialVersionUID = 0L;
      * }
@@ -121,12 +123,22 @@ public abstract class Settings {
         for (Entry<String, SettingValue<Object>> value : settings.entrySet()) {
             try {
                 if (input.has(value.getKey())) {
-                    Class<? extends Object> type = value.getValue().getDefaultValue().getClass();
+                    Class<?> type = value.getValue().getDefaultValue().getClass();
+                    // prevent class cast error by reducing to interface
+                    if (List.class.isAssignableFrom(type)) {
+                        type = List.class;
+                    } else if (Set.class.isAssignableFrom(type)) {
+                        type = Set.class;
+                    }
                     value.getValue().setValue(gson.fromJson(input.get(value.getKey()), type));
                 }
             } catch (Exception e) {
                 logger.warn("Failed to load setting: " + value.getKey() + ". Using defaults.", e);
             }
         }
+    }
+
+    protected static <T> SettingValue<T> setting(T t) {
+        return SettingValue.value(t);
     }
 }

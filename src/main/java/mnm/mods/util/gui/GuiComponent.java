@@ -50,6 +50,8 @@ public abstract class GuiComponent extends Gui {
     private List<GuiMouseAdapter> mouseAdapters = Lists.newArrayList();
     private List<GuiKeyboardAdapter> keyboardAdapters = Lists.newArrayList();
 
+    private GuiComponent wrapper;
+
     public GuiComponent() {
         this.setBounds(new Rectangle());
         if (this instanceof ActionPerformed) {
@@ -70,6 +72,9 @@ public abstract class GuiComponent extends Gui {
      * @param mouseY The mouse y
      */
     public void drawComponent(int mouseX, int mouseY) {
+        if (wrapper != null) {
+            wrapper.drawComponent(mouseX, mouseY);
+        }
         // draw the caption
         String caption = getCaption();
         if (isHovered() && caption != null && !caption.isEmpty()) {
@@ -134,12 +139,20 @@ public abstract class GuiComponent extends Gui {
     /**
      * Updates the component. Called when it is called on the {@link GuiScreen}.
      */
-    public void updateComponent() {}
+    public void updateComponent() {
+        if (wrapper != null) {
+            wrapper.updateComponent();
+        }
+    }
 
     /**
      * Handles the mouse input and sends it to the mouse and action listeners.
      */
     public void handleMouseInput() {
+        if (wrapper != null) {
+            wrapper.handleMouseInput();
+            return;
+        }
         if (!isEnabled()) {
             this.hovered = false;
             return;
@@ -242,6 +255,10 @@ public abstract class GuiComponent extends Gui {
      * Handles the keyboard input and sends it to the keyboard listeners.
      */
     public void handleKeyboardInput() {
+        if (wrapper != null) {
+            wrapper.handleKeyboardInput();
+            return;
+        }
         int key = Keyboard.getEventKey();
         char character = Keyboard.getEventCharacter();
         long time = Keyboard.getEventNanoseconds();
@@ -255,6 +272,9 @@ public abstract class GuiComponent extends Gui {
      * Called when the screen is closed.
      */
     public void onClosed() {
+        if (wrapper != null) {
+            wrapper.onClosed();
+        }
         this.hovered = false;
         this.entered = false;
         this.buttonHeld = false;
@@ -266,6 +286,10 @@ public abstract class GuiComponent extends Gui {
      * @param bounds The new bounds
      */
     public void setBounds(Rectangle bounds) {
+        if (wrapper != null) {
+            wrapper.setBounds(bounds);
+            return;
+        }
         this.bounds = bounds;
     }
 
@@ -310,6 +334,9 @@ public abstract class GuiComponent extends Gui {
      * @return The current bounds
      */
     public Rectangle getBounds() {
+        if (wrapper != null) {
+            return this.wrapper.getBounds();
+        }
         return this.bounds;
     }
 
@@ -340,6 +367,13 @@ public abstract class GuiComponent extends Gui {
         this.keyboardAdapters.add(keyboard);
     }
 
+    public void wrap(GuiComponent wrap) {
+        if (wrap == this) {
+            return;
+        }
+        this.wrapper = wrap;
+    }
+
     /**
      * Gets the parent of this component. Will return {@code null} until it is
      * added to a panel by being used as the parameter to
@@ -349,6 +383,9 @@ public abstract class GuiComponent extends Gui {
      * @return The parent or null if there is none
      */
     public GuiPanel getParent() {
+        if (wrapper != null) {
+            return wrapper.getParent();
+        }
         return this.parent;
     }
 
@@ -359,6 +396,10 @@ public abstract class GuiComponent extends Gui {
      * @param guiPanel The parent
      */
     void setParent(GuiPanel guiPanel) {
+        if (wrapper != null) {
+            wrapper.setParent(guiPanel);
+            return;
+        }
         this.parent = guiPanel;
     }
 
@@ -381,10 +422,17 @@ public abstract class GuiComponent extends Gui {
     }
 
     public void setMinimumSize(Dimension size) {
+        if (wrapper != null) {
+            wrapper.setMinimumSize(size);
+            return;
+        }
         this.minimumSize = size;
     }
 
     public Dimension getMinimumSize() {
+        if (wrapper != null) {
+            return wrapper.getMinimumSize();
+        }
         return minimumSize;
     }
 
@@ -394,6 +442,10 @@ public abstract class GuiComponent extends Gui {
      * @param scale The scale
      */
     public void setScale(float scale) {
+        if (wrapper != null) {
+            wrapper.setScale(scale);
+            return;
+        }
         this.scale = scale;
     }
 
@@ -403,6 +455,9 @@ public abstract class GuiComponent extends Gui {
      * @return The scale
      */
     public float getScale() {
+        if (wrapper != null) {
+            return wrapper.getScale();
+        }
         return scale;
     }
 
@@ -426,6 +481,9 @@ public abstract class GuiComponent extends Gui {
      * @return The background color
      */
     public int getBackColor() {
+        if (wrapper != null) {
+            return wrapper.getBackColor();
+        }
         int result = backColor;
         if (getParent() != null && result == 0) {
             result = getParent().getBackColor();
@@ -439,6 +497,10 @@ public abstract class GuiComponent extends Gui {
      * @param backColor The new color
      */
     public void setBackColor(int backColor) {
+        if (wrapper != null) {
+            wrapper.setBackColor(backColor);
+            return;
+        }
         this.backColor = backColor;
     }
 
@@ -448,6 +510,9 @@ public abstract class GuiComponent extends Gui {
      * @return The foreground color
      */
     public int getForeColor() {
+        if (wrapper != null) {
+            return wrapper.getForeColor();
+        }
         int result = foreColor;
         if (getParent() != null && result == -1) {
             result = getParent().getForeColor();
@@ -461,6 +526,10 @@ public abstract class GuiComponent extends Gui {
      * @param foreColor The new color
      */
     public void setForeColor(int foreColor) {
+        if (wrapper != null) {
+            wrapper.setForeColor(foreColor);
+            return;
+        }
         this.foreColor = foreColor;
     }
 
@@ -471,6 +540,9 @@ public abstract class GuiComponent extends Gui {
      * @return True if enabled, false if disabled.
      */
     public boolean isEnabled() {
+        if (wrapper != null) {
+            return wrapper.isEnabled();
+        }
         return enabled;
     }
 
@@ -481,6 +553,10 @@ public abstract class GuiComponent extends Gui {
      * @param enabled True for enabled, false for disabled
      */
     public void setEnabled(boolean enabled) {
+        if (wrapper != null) {
+            wrapper.setEnabled(enabled);
+            return;
+        }
         this.enabled = enabled;
     }
 
@@ -491,6 +567,9 @@ public abstract class GuiComponent extends Gui {
      * @return The visibility state
      */
     public boolean isVisible() {
+        if (wrapper != null) {
+            return wrapper.isVisible();
+        }
         return visible;
     }
 
@@ -501,6 +580,10 @@ public abstract class GuiComponent extends Gui {
      * @param visible The visibility state
      */
     public void setVisible(boolean visible) {
+        if (wrapper != null) {
+            wrapper.setVisible(visible);
+            return;
+        }
         if (!visible) {
             this.onClosed();
         }
@@ -513,6 +596,9 @@ public abstract class GuiComponent extends Gui {
      * @return THe hover state
      */
     public boolean isHovered() {
+        if (wrapper != null) {
+            return wrapper.isHovered();
+        }
         return hovered;
     }
 
@@ -521,6 +607,9 @@ public abstract class GuiComponent extends Gui {
      * held.
      */
     public boolean isButtonHeld() {
+        if (wrapper != null) {
+            return wrapper.isButtonHeld();
+        }
         return buttonHeld;
     }
 
@@ -531,6 +620,10 @@ public abstract class GuiComponent extends Gui {
      * @param caption The new caption
      */
     public void setCaption(String caption) {
+        if (wrapper != null) {
+            wrapper.setCaption(caption);
+            return;
+        }
         this.caption = caption;
     }
 
@@ -541,6 +634,9 @@ public abstract class GuiComponent extends Gui {
      * @return The caption
      */
     public String getCaption() {
+        if (wrapper != null) {
+            return wrapper.getCaption();
+        }
         return caption;
     }
 
