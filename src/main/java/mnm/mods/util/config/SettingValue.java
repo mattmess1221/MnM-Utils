@@ -1,4 +1,4 @@
-package mnm.mods.util;
+package mnm.mods.util.config;
 
 /**
  * A wrapper that saves a default value.
@@ -51,7 +51,7 @@ public class SettingValue<T> {
         return new SettingValue<T>(t);
     }
 
-    public static <T extends ISettingObject> SettingObject<T> object(T object) {
+    public static <T> SettingObject<T> object(T object) {
         return new SettingObject<T>(object);
     }
 

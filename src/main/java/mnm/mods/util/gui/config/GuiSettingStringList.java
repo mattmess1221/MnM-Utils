@@ -1,8 +1,11 @@
-package mnm.mods.util.gui;
+package mnm.mods.util.gui.config;
 
 import java.util.List;
 
-import mnm.mods.util.SettingList;
+import mnm.mods.util.config.SettingList;
+import mnm.mods.util.gui.GuiComponent;
+import mnm.mods.util.gui.GuiText;
+import mnm.mods.util.gui.IGuiInput;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;

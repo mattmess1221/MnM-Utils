@@ -1,11 +1,13 @@
-package mnm.mods.util.gui;
+package mnm.mods.util.gui.config;
 
-import mnm.mods.util.Settings;
+import mnm.mods.util.config.SettingsFile;
+import mnm.mods.util.gui.GuiComponent;
+import mnm.mods.util.gui.GuiPanel;
 
 /**
  * Base class for a setting panel.
  */
-public abstract class SettingPanel<T extends Settings> extends GuiPanel {
+public abstract class SettingPanel<T extends SettingsFile> extends GuiPanel {
 
     private String displayString;
 
@@ -34,7 +36,7 @@ public abstract class SettingPanel<T extends Settings> extends GuiPanel {
     }
 
     /**
-     * Gets the {@link Settings} used for this category. Used for loading and
+     * Gets the {@link SettingsFile} used for this category. Used for loading and
      * saving the settings file.
      *
      * @return The settings

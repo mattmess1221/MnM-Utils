@@ -1,6 +1,7 @@
-package mnm.mods.util.gui;
+package mnm.mods.util.gui.config;
 
-import mnm.mods.util.SettingValue;
+import mnm.mods.util.config.SettingValue;
+import mnm.mods.util.gui.GuiCheckbox;
 
 /**
  * A gui input for booleans as a checkbox.

@@ -1,4 +1,4 @@
-package mnm.mods.util;
+package mnm.mods.util.config;
 
 import java.util.Iterator;
 import java.util.List;
