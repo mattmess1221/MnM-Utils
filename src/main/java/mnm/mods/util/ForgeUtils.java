@@ -6,11 +6,9 @@ package mnm.mods.util;
 public final class ForgeUtils {
 
     /**
-     * Detects if FML is on the classpath.<br/>
+     * Detects if FML is on the classpath.<br>
      * Note: This only tells if FML is installed, not if it is actually loaded
      * into LaunchWrapper.
-     *
-     * @see TweakTools#isFMLLoaded()
      */
     public static final boolean FML_INSTALLED = fmlInstalled();
 
