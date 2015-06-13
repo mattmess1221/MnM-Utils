@@ -9,6 +9,7 @@ import mnm.mods.util.gui.events.GuiMouseAdapter;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import net.minecraft.client.gui.GuiTextField;
 
+import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
 /**
@@ -20,6 +21,7 @@ public class GuiText extends GuiComponent implements IGuiInput<String>, IFocusab
         GuiMouseAdapter, GuiKeyboardAdapter {
 
     private GuiTextField textField;
+    private String hint;
 
     public GuiText() {
         this.textField = new GuiTextField(0, mc.fontRendererObj, 0, 0, 0, 0);
@@ -97,7 +99,12 @@ public class GuiText extends GuiComponent implements IGuiInput<String>, IFocusab
     @Override
     public void drawComponent(int mouseX, int mouseY) {
         textField.drawTextBox();
+
         super.drawComponent(mouseX, mouseY);
+        if (isFocused() && !StringUtils.isEmpty(getHint())) {
+            // draw the hint above.
+            drawCaption(getHint(), 1, -5);
+        }
     }
 
     @Override
@@ -114,6 +121,14 @@ public class GuiText extends GuiComponent implements IGuiInput<String>, IFocusab
     @Override
     public void setValue(String value) {
         textField.setText(value);
+    }
+
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
     }
 
     public GuiTextField getTextField() {

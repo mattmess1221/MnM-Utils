@@ -73,25 +73,26 @@ public abstract class GuiComponent extends Gui {
         // draw the caption
         String caption = getCaption();
         if (isHovered() && caption != null && !caption.isEmpty()) {
-            drawCaption(caption, mouseX, mouseY);
+            drawCaptionAtCursor(caption, mouseX, mouseY);
         }
     }
 
-    private void drawCaption(String caption, int mouseX, int mouseY) {
+    protected void drawCaption(String caption, int x, int y) {
         caption = StringEscapeUtils.unescapeJava(caption);
         String[] list = caption.split("\n\r?");
-        Point point = getActualPosition();
 
         int w = 0;
         // find the largest width
         for (String s : list) {
             w = Math.max(w, (int) (mc.fontRendererObj.getStringWidth(s) * getActualScale()));
         }
-        int x = mouseX - point.x + 8;
-        int y = mouseY - point.y - (mc.fontRendererObj.FONT_HEIGHT * list.length);
+        y -= mc.fontRendererObj.FONT_HEIGHT * list.length;
 
+        Point point = getActualPosition();
+        ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         int w2 = w;
-        while (mouseX + w2 + 20 > new ScaledResolution(mc, mc.displayWidth, mc.displayHeight).getScaledWidth()) {
+        int x2 = x;
+        while (x2 - 8 + point.x + w2 + 20 > sr.getScaledWidth()) {
             x--;
             w2--;
         }
@@ -107,6 +108,11 @@ public abstract class GuiComponent extends Gui {
             y += mc.fontRendererObj.FONT_HEIGHT;
         }
         GlStateManager.popMatrix();
+    }
+
+    private void drawCaptionAtCursor(String msg, int mouseX, int mouseY) {
+        Point point = getActualPosition();
+        drawCaption(msg, mouseX - point.x + 8, mouseY - point.y);
     }
 
     protected void drawBorders(int x1, int y1, int x2, int y2, int color) {

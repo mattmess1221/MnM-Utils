@@ -25,6 +25,7 @@ public class GuiButton extends GuiComponent {
     private static final TexturedModal MODAL_DISABLE = new TexturedModal(WIDGETS, 0, 46, 200, 20);
 
     private String text = "";
+    private ResourceLocation sound = new ResourceLocation("gui.button.press");
     public int packedFGColour;
 
     /**
@@ -37,8 +38,7 @@ public class GuiButton extends GuiComponent {
         this.addActionListener(new ActionPerformed() {
             @Override
             public void action(GuiEvent event) {
-                ResourceLocation press = new ResourceLocation("gui.button.press");
-                mc.getSoundHandler().playSound(PositionedSoundRecord.create(press, 1.0F));
+                mc.getSoundHandler().playSound(PositionedSoundRecord.create(getSound(), 1.0F));
             }
         });
     }
@@ -62,6 +62,14 @@ public class GuiButton extends GuiComponent {
      */
     public String getText() {
         return this.text;
+    }
+
+    public void setSound(ResourceLocation sound) {
+        this.sound = sound;
+    }
+
+    public ResourceLocation getSound() {
+        return sound;
     }
 
     @Override
