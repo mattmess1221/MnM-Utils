@@ -27,6 +27,9 @@ group = "mnm.mods"
 archivesBaseName = "MnM-Utils"
 version = "$versionMajor.$versionMinor.$versionRevision"
 
+minecraft {
+    replace "@MCVERSION", project.minecraft.version
+}
 dependencies.compile 'com.google.code.findbugs:jsr305:2.0.1'
 jar.manifest.attributes "ModType":"FML,LiteLoader"
 
