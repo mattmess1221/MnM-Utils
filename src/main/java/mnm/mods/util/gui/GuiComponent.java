@@ -123,8 +123,8 @@ public abstract class GuiComponent extends Gui {
     }
 
     /**
-     * Draws borders around the provided points. Uses the background color with
-     * 0xaa transparency.
+     * Draws borders around the provided points. Uses a brightened background
+     * color with 0xaa transparency.
      *
      * @param x1
      * @param y1
@@ -133,8 +133,19 @@ public abstract class GuiComponent extends Gui {
      */
     protected void drawBorders(int x1, int y1, int x2, int y2) {
         Color color = new Color(getBackColor());
-        color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 0xaa);
+        int r = color.getRed();
+        int g = color.getGreen();
+        int b = color.getBlue();
+        double amt = .75;
+        r += luminance(r, amt);
+        g += luminance(g, amt);
+        b += luminance(b, amt);
+        color = new Color(r, g, b, 0xaa);
         drawBorders(x1, y1, x2, y2, color.getColor());
+    }
+
+    private int luminance(int o, double amt) {
+        return (int) ((255 - o) * amt);
     }
 
     /**
@@ -449,7 +460,7 @@ public abstract class GuiComponent extends Gui {
     }
 
     /**
-     * Gets the foreground color. If it is 0, it returns the parent's.
+     * Gets the foreground color. If it is -1, it returns the parent's.
      *
      * @return The foreground color
      */
