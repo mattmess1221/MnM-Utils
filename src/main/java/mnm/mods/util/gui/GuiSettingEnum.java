@@ -85,6 +85,7 @@ public class GuiSettingEnum<T> extends GuiSetting<T> implements GuiMouseAdapter 
         int xPos = getBounds().width / 2 - mc.fontRendererObj.getStringWidth(string) / 2;
         int yPos = getBounds().height / 2 - 4;
         mc.fontRendererObj.drawString(string, xPos, yPos, getForeColor());
+        drawBorders(0, -1, getBounds().width, getBounds().height + 1);
     }
 
     @Override

@@ -5,6 +5,8 @@ import java.awt.Rectangle;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.logging.log4j.LogManager;
+
 import com.google.common.collect.Maps;
 
 /**
@@ -66,15 +68,18 @@ public class GuiGridLayout implements ILayout {
             h = constraints[3];
         }
         Rectangle rect = new Rectangle(x, y, w, h);
-        checkBoundsIfValid(rect);
-        grid.put(rect, comp);
+        try {
+            checkBoundsIfValid(rect);
+            grid.put(rect, comp);
+        } catch (Exception e) {
+            LogManager.getLogger().catching(e);
+        }
     }
 
-    /*
+    /**
      * Checks if the rectangle is valid. A rectangle is valid if x and y are
      * above 0 and x + width < cols and y + height < rows
      */
-
     private void checkBoundsIfValid(Rectangle b) {
         if (b.x + b.width - 1 > cols || b.y + b.height - 1 > rows || b.x < 0 || b.y < 0) {
             throw new IndexOutOfBoundsException(String.format(
