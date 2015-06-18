@@ -1,6 +1,8 @@
-package mnm.mods.util.gui;
+package mnm.mods.util.gui.config;
 
-import mnm.mods.util.SettingValue;
+import mnm.mods.util.config.SettingValue;
+import mnm.mods.util.gui.GuiText;
+import mnm.mods.util.gui.IFocusable;
 
 /**
  * A Gui input that wraps a {@link GuiText}.

@@ -1,4 +1,4 @@
-package mnm.mods.util;
+package mnm.mods.util.config;
 
 /**
  * A wrapper that saves a default value.
@@ -8,7 +8,7 @@ package mnm.mods.util;
 public class SettingValue<T> {
 
     private final T defaultValue;
-    private T value;
+    protected T value;
 
     /**
      * Creates a new setting value with the given default value.
@@ -45,5 +45,21 @@ public class SettingValue<T> {
      */
     public T getValue() {
         return this.value;
+    }
+
+    public static <T> SettingValue<T> value(T t) {
+        return new SettingValue<T>(t);
+    }
+
+    public static <T> SettingObject<T> object(T object) {
+        return new SettingObject<T>(object);
+    }
+
+    public static <T> SettingList<T> list(Iterable<T> coll) {
+        return new SettingList<T>(coll);
+    }
+
+    public static <T> SettingList<T> list(T... t) {
+        return new SettingList<T>(t);
     }
 }

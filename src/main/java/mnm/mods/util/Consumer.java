@@ -1,6 +1,5 @@
 package mnm.mods.util;
 
-
 /**
  * Recreation of java 8's {@link java.util.function.Consumer}
  *

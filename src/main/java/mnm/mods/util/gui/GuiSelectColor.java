@@ -4,7 +4,8 @@ import java.math.BigInteger;
 
 import mnm.mods.util.Color;
 import mnm.mods.util.Consumer;
-import mnm.mods.util.SettingValue;
+import mnm.mods.util.config.SettingValue;
+import mnm.mods.util.gui.config.GuiSettingString;
 import mnm.mods.util.gui.events.ActionPerformed;
 import mnm.mods.util.gui.events.GuiEvent;
 import mnm.mods.util.gui.events.GuiKeyboardAdapter;

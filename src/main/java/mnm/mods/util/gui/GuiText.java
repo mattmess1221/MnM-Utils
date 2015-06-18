@@ -93,6 +93,7 @@ public class GuiText extends GuiComponent implements IGuiInput<String>, IFocusab
 
     @Override
     public void updateComponent() {
+        super.updateComponent();
         textField.updateCursorCounter();
     }
 

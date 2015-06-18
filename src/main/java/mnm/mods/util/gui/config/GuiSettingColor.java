@@ -1,10 +1,11 @@
-package mnm.mods.util.gui;
+package mnm.mods.util.gui.config;
 
 import java.awt.Rectangle;
 
 import mnm.mods.util.Color;
 import mnm.mods.util.Consumer;
-import mnm.mods.util.SettingValue;
+import mnm.mods.util.config.SettingValue;
+import mnm.mods.util.gui.GuiSelectColor;
 import mnm.mods.util.gui.events.ActionPerformed;
 import mnm.mods.util.gui.events.GuiEvent;
 import net.minecraft.client.gui.Gui;

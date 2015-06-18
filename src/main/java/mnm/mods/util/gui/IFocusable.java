@@ -1,5 +1,7 @@
 package mnm.mods.util.gui;
 
+import mnm.mods.util.gui.config.GuiSettingString;
+
 /**
  * Applied to a {@link GuiComponent} extending class to make it focusable.
  * Currently implemented in {@link GuiText} and {@link GuiSettingString}.

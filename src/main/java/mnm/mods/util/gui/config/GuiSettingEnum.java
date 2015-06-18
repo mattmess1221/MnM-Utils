@@ -1,8 +1,8 @@
-package mnm.mods.util.gui;
+package mnm.mods.util.gui.config;
 
 import java.util.Arrays;
 
-import mnm.mods.util.SettingValue;
+import mnm.mods.util.config.SettingValue;
 import mnm.mods.util.gui.events.GuiMouseAdapter;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import net.minecraft.client.gui.Gui;
