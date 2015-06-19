@@ -7,7 +7,7 @@ import mnm.mods.util.gui.GuiPanel;
 /**
  * Base class for a setting panel.
  */
-public abstract class SettingPanel<T extends SettingsFile> extends GuiPanel {
+public abstract class SettingPanel<T extends SettingsFile<?>> extends GuiPanel {
 
     private String displayString;
 
