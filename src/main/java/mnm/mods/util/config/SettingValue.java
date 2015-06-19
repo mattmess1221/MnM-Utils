@@ -47,19 +47,4 @@ public class SettingValue<T> {
         return this.value;
     }
 
-    public static <T> SettingValue<T> value(T t) {
-        return new SettingValue<T>(t);
-    }
-
-    public static <T> SettingObject<T> object(T object) {
-        return new SettingObject<T>(object);
-    }
-
-    public static <T> SettingList<T> list(Iterable<T> coll) {
-        return new SettingList<T>(coll);
-    }
-
-    public static <T> SettingList<T> list(T... t) {
-        return new SettingList<T>(t);
-    }
 }
