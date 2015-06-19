@@ -93,6 +93,8 @@ public class SettingObject<T> extends SettingValue<T> {
                             type = List.class;
                         } else if (Set.class.isAssignableFrom(type)) {
                             type = Set.class;
+                        } else if (Map.class.isAssignableFrom(type)) {
+                            type = Map.class;
                         }
                         value.setValue(gson.fromJson(elem, type));
                     } else if (value instanceof SettingObject) {
