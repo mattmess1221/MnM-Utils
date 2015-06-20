@@ -6,14 +6,14 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-public class SettingList<T> extends SettingValue<List<T>> implements Iterable<T> {
+public class SettingList<T> extends SettingSubtype<List<T>, T> implements Iterable<T> {
 
-    public SettingList(T... t) {
-        this(Lists.newArrayList(t));
+    public SettingList(Class<T> type, T... t) {
+        this(type, Lists.newArrayList(t));
     }
 
-    public SettingList(Iterable<T> coll) {
-        super(list_(coll));
+    public SettingList(Class<T> type, Iterable<T> coll) {
+        super(type, list_(coll));
     }
 
     private static <T> List<T> list_(Iterable<T> ts) {

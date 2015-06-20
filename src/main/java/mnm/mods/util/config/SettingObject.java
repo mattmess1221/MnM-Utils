@@ -1,11 +1,13 @@
 package mnm.mods.util.config;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang3.reflect.TypeUtils;
 import org.apache.logging.log4j.LogManager;
 
 import com.google.common.collect.Maps;
@@ -78,25 +80,21 @@ public class SettingObject<T> extends SettingValue<T> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected final void loadSetting(JsonObject input, Gson gson) {
         findSettings();
         for (Entry<String, SettingValue<?>> entry : settings.entrySet()) {
             try {
                 if (input.has(entry.getKey())) {
-                    @SuppressWarnings("unchecked")
                     SettingValue<Object> value = (SettingValue<Object>) entry.getValue();
                     JsonElement elem = input.get(entry.getKey());
                     if (value.getDefaultValue() != null) {
                         Class<?> type = value.getDefaultValue().getClass();
-                        // prevent class cast error by reducing to interface
-                        if (List.class.isAssignableFrom(type)) {
-                            type = List.class;
-                        } else if (Set.class.isAssignableFrom(type)) {
-                            type = Set.class;
-                        } else if (Map.class.isAssignableFrom(type)) {
-                            type = Map.class;
+                        Type type1 = type;
+                        if (value instanceof SettingSubtype<?, ?>) {
+                            type1 = findActualType((SettingSubtype<?, T>) value, type);
                         }
-                        value.setValue(gson.fromJson(elem, type));
+                        value.setValue(gson.fromJson(elem, type1));
                     } else if (value instanceof SettingObject) {
                         ((SettingObject<?>) value).loadSetting(elem.getAsJsonObject(), gson);
                     }
@@ -105,6 +103,19 @@ public class SettingObject<T> extends SettingValue<T> {
                 LogManager.getLogger().warn("Failed to load setting: " + entry.getKey() + ". Using defaults.", e);
             }
         }
+    }
+
+    private static Type findActualType(SettingSubtype<?, ?> value, Class<?> itemType) {
+        // prevent class cast error by reducing to interface
+        Type type = null;
+        if (List.class.isAssignableFrom(itemType)) {
+            type = TypeUtils.parameterize(List.class, value.getType());
+        } else if (Set.class.isAssignableFrom(itemType)) {
+            type = TypeUtils.parameterize(Set.class, value.getType());
+        } else if (Map.class.isAssignableFrom(itemType)) {
+            type = TypeUtils.parameterize(Map.class, String.class, value.getType());
+        }
+        return type;
     }
 
     private void findSettings() {
@@ -132,15 +143,15 @@ public class SettingObject<T> extends SettingValue<T> {
         return new SettingValue<T>(t);
     }
 
-    public static <T> SettingMap<T> map() {
-        return new SettingMap<T>();
+    public static <T> SettingMap<T> map(Class<T> type) {
+        return new SettingMap<T>(type);
     }
 
-    public static <T> SettingList<T> list(Iterable<T> coll) {
-        return new SettingList<T>(coll);
+    public static <T> SettingList<T> list(Class<T> type, Iterable<T> coll) {
+        return new SettingList<T>(type, coll);
     }
 
-    public static <T> SettingList<T> list(T... t) {
-        return new SettingList<T>(t);
+    public static <T> SettingList<T> list(Class<T> type, T... t) {
+        return new SettingList<T>(type, t);
     }
 }
