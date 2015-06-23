@@ -6,10 +6,11 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 
-import mnm.mods.util.LogHelper;
 import mnm.mods.util.MnmUtils;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
@@ -19,6 +20,8 @@ import com.google.gson.Gson;
  * @author Matthew
  */
 public class UpdateChecker extends Thread {
+
+    private static final Logger logger = LogManager.getLogger("Updates");
 
     private final UpdateRequest request;
     private final double version;
@@ -40,7 +43,7 @@ public class UpdateChecker extends Thread {
             response = new Gson().fromJson(reader, UpdateResponse.class);
         } catch (IOException e) {
             // failure
-            LogHelper.getLogger().warn("Update check failed.", e);
+            logger.warn("Update check failed.", e);
             response = new UpdateResponse(false);
         } finally {
             IOUtils.closeQuietly(reader);
@@ -50,7 +53,7 @@ public class UpdateChecker extends Thread {
         if (isOutdated()) {
             notifyUser();
         } else {
-            LogHelper.getLogger("Updates").info("Update check for " + request.getModId() + " finished. None found.");
+            logger.info("Update check for " + request.getModId() + " finished. None found.");
         }
     }
 
@@ -62,7 +65,7 @@ public class UpdateChecker extends Thread {
         String channel = "Updates";
         String message = "A new version of " + request.getModId() + " is available.  "
                 + response.update.version + " - " + response.update.changes;
-        LogHelper.getLogger(channel).info(message);
+        LogManager.getLogger(channel).info(message);
         MnmUtils.getInstance().getChatProxy().addToChat(channel, message);
     }
 }

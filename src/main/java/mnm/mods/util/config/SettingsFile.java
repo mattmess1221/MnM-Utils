@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import mnm.mods.util.LogHelper;
-
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,7 +23,7 @@ import com.google.gson.JsonObject;
  */
 public abstract class SettingsFile<T extends SettingsFile<T>> extends SettingObject<T> {
 
-    private static final LogHelper logger = LogHelper.getLogger();
+    private static final Logger logger = LogManager.getLogger();
 
     private final Gson gson;
     private final File file;
