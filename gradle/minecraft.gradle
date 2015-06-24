@@ -1,21 +1,27 @@
 minecraft {
-    version = mcversion + (plugins.hasPlugin('forge') ? '-recommended' : '')
+    version = '1.8' + (plugins.hasPlugin('forge') ? '-recommended' : '')
     mappings = "stable_16"
     runDir = "run"
 }
 reobf.setSrgMcp()
 processResources {
     // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-    inputs.property "revision", versionBuild
+    def map = [
+        version:project.version,
+        mcversion:project.minecraft.version,
+        revision:null
+    ]
+    if (ext.has('rev')) {
+       map.revision = project.rev
+    }
+    inputs.properties map
 
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info','litemod.json'
 
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version, 'revision':versionBuild
+        // replace
+        expand map
     }
 
     // copy everything else, thats not the mcmod.info
