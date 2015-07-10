@@ -55,6 +55,11 @@ public class SettingList<T> extends SettingSubtype<List<T>, T> implements Iterab
         return ImmutableList.copyOf(value);
     }
 
+    @Override
+    public void setValue(List<T> val) {
+        super.setValue(Lists.newArrayList(val));
+    }
+
     /**
      * Returns an immutable list of the defaults.
      *

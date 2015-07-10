@@ -12,12 +12,16 @@ import com.google.common.base.Splitter;
 
 public class GuiSettingStringList extends GuiSetting<List<String>> {
 
-    public GuiSettingStringList(SettingList<String> setting, char split) {
-        super(setting, new GuiStringList(split));
+    public GuiSettingStringList(SettingList<String> setting, String split, String join) {
+        super(setting, new GuiStringList(split, join));
+    }
+
+    public GuiSettingStringList(SettingList<String> setting, String split) {
+        this(setting, split, split);
     }
 
     public GuiSettingStringList(SettingList<String> setting) {
-        this(setting, ' ');
+        this(setting, ",", ", ");
     }
 
     @Override
@@ -37,22 +41,24 @@ public class GuiSettingStringList extends GuiSetting<List<String>> {
     public static class GuiStringList extends GuiComponent implements IGuiInput<List<String>> {
 
         private GuiText text;
-        private char split;
+        private String split;
+        private String join;
 
-        public GuiStringList(char split) {
+        public GuiStringList(String split, String join) {
             this.text = new GuiText();
             this.split = split;
+            this.join = join;
             wrap(text);
         }
 
         @Override
         public List<String> getValue() {
-            return Splitter.on(split).omitEmptyStrings().splitToList(text.getValue());
+            return Splitter.on(split).omitEmptyStrings().trimResults().splitToList(text.getValue());
         }
 
         @Override
         public void setValue(List<String> value) {
-            text.setValue(Joiner.on(split).skipNulls().join(value));
+            text.setValue(Joiner.on(join).skipNulls().join(value));
         }
     }
 }
