@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import com.google.common.collect.Lists;
 
@@ -78,7 +79,10 @@ public abstract class GuiComponent extends Gui {
         // draw the caption
         String caption = getCaption();
         if (isHovered() && caption != null && !caption.isEmpty()) {
+            GlStateManager.pushMatrix();
+            GL11.glDisable(GL11.GL_SCISSOR_TEST);
             drawCaptionAtCursor(caption, mouseX, mouseY);
+            GlStateManager.popMatrix();
         }
     }
 
@@ -191,7 +195,7 @@ public abstract class GuiComponent extends Gui {
                 if (!isHovered()) {
                     this.entered = true;
                 }
-                this.hovered = true;
+                this.hovered = true && parent == null ? true : parent.isHovered();
             } else {
                 if (!isHovered()) {
                     this.entered = false;
