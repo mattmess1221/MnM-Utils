@@ -42,6 +42,10 @@ public abstract class SettingsFile<T extends SettingsFile<T>> extends SettingObj
         this.gson = builder.create();
     }
 
+    public File getFile() {
+        return file;
+    }
+
     /**
      * Called before the {@link Gson} object is created in order to allow
      * customization of it.
