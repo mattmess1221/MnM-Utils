@@ -20,17 +20,16 @@ buildscript {
     }
 }
 apply plugin: 'net.minecrell.vanilla.base'
-apply from: file('gradle/minecraft.gradle')
 
 group = "mnm.mods"
 archivesBaseName = "MnM-Utils"
-version = "0.2.0"
-ext.rev = '2'
+version = "0.3.0"
+ext.rev = '3'
 def bnum = System.env.BUILD_ID
 if (bnum != null) {
   version += "-SNAPSHOT-$bnum"
 }
-
+apply from: file('gradle/minecraft.gradle')
 minecraft {
     replace "@MCVERSION", project.minecraft.version
 }

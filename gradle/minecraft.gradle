@@ -9,11 +9,9 @@ processResources {
     def map = [
         version:project.version,
         mcversion:project.minecraft.version,
-        revision:null
+        revision:project.rev
     ]
-    if (ext.has('rev')) {
-       map.revision = project.rev
-    }
+
     inputs.properties map
 
     // replace stuff in mcmod.info, nothing else
