@@ -75,8 +75,8 @@ public class GuiText extends GuiComponent implements IGuiInput<String>, IFocusab
             bkgnd = textField.getEnableBackgroundDrawing();
         }
         textField = new GuiTextField(0, mc.fontRendererObj, 0, 0, width, height);
-        textField.setText(text);
         textField.setMaxStringLength(max);
+        textField.setText(text);
         textField.setEnableBackgroundDrawing(bkgnd);
     }
 
