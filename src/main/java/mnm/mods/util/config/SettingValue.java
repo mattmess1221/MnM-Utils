@@ -44,6 +44,9 @@ public class SettingValue<T> {
      * @return The current value
      */
     public T getValue() {
+        if (value == null) {
+            return getDefaultValue();
+        }
         return this.value;
     }
 
