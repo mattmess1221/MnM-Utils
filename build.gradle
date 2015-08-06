@@ -23,8 +23,8 @@ apply plugin: 'net.minecrell.vanilla.base'
 
 group = "mnm.mods"
 archivesBaseName = "MnM-Utils"
-version = "0.3.0"
-ext.rev = '3'
+version = "0.3.1"
+ext.rev = '4'
 def bnum = System.env.BUILD_ID
 if (bnum != null) {
   version += "-SNAPSHOT-$bnum"
