@@ -15,7 +15,7 @@ import net.minecraft.client.resources.I18n;
  * @author Matthew
  * @param <T> The type
  */
-public class GuiSettingEnum<T> extends GuiSetting<T> implements GuiMouseAdapter {
+public class GuiSettingEnum<T> extends GuiSetting<T>implements GuiMouseAdapter {
 
     private T value;
 

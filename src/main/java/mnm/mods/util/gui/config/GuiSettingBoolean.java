@@ -2,29 +2,21 @@ package mnm.mods.util.gui.config;
 
 import mnm.mods.util.config.SettingValue;
 import mnm.mods.util.gui.GuiCheckbox;
+import mnm.mods.util.gui.config.GuiSetting.GuiSettingWrapped;
 
 /**
  * A gui input for booleans as a checkbox.
  *
  * @author Matthew
  */
-public class GuiSettingBoolean extends GuiSetting<Boolean> {
+public class GuiSettingBoolean extends GuiSettingWrapped<Boolean, GuiCheckbox> {
 
     public GuiSettingBoolean(SettingValue<Boolean> setting) {
         super(setting, new GuiCheckbox());
     }
 
-    @Override
-    public Boolean getValue() {
-        return getCheckbox().getValue();
-    }
-
-    @Override
-    public void setValue(Boolean b) {
-        getCheckbox().setValue(b);
-    }
-
+    @Deprecated
     public GuiCheckbox getCheckbox() {
-        return (GuiCheckbox) getInput();
+        return getInput();
     }
 }

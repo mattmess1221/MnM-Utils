@@ -6,11 +6,12 @@ import mnm.mods.util.config.SettingList;
 import mnm.mods.util.gui.GuiComponent;
 import mnm.mods.util.gui.GuiText;
 import mnm.mods.util.gui.IGuiInput;
+import mnm.mods.util.gui.config.GuiSetting.GuiSettingWrapped;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 
-public class GuiSettingStringList extends GuiSetting<List<String>> {
+public class GuiSettingStringList extends GuiSettingWrapped<List<String>, GuiSettingStringList.GuiStringList> {
 
     public GuiSettingStringList(SettingList<String> setting, String split, String join) {
         super(setting, new GuiStringList(split, join));
@@ -24,18 +25,9 @@ public class GuiSettingStringList extends GuiSetting<List<String>> {
         this(setting, ",", ", ");
     }
 
-    @Override
-    public List<String> getValue() {
-        return getList().getValue();
-    }
-
-    @Override
-    public void setValue(List<String> value) {
-        getList().setValue(value);
-    }
-
+    @Deprecated
     public GuiStringList getList() {
-        return (GuiStringList) getInput();
+        return getInput();
     }
 
     public static class GuiStringList extends GuiComponent implements IGuiInput<List<String>> {
@@ -59,6 +51,10 @@ public class GuiSettingStringList extends GuiSetting<List<String>> {
         @Override
         public void setValue(List<String> value) {
             text.setValue(Joiner.on(join).skipNulls().join(value));
+        }
+
+        public GuiText getText() {
+            return text;
         }
     }
 }

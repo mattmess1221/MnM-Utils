@@ -3,13 +3,14 @@ package mnm.mods.util.gui.config;
 import mnm.mods.util.config.SettingValue;
 import mnm.mods.util.gui.GuiText;
 import mnm.mods.util.gui.IFocusable;
+import mnm.mods.util.gui.config.GuiSetting.GuiSettingWrapped;
 
 /**
  * A Gui input that wraps a {@link GuiText}.
  *
  * @author Matthew
  */
-public class GuiSettingString extends GuiSetting<String> implements IFocusable {
+public class GuiSettingString extends GuiSettingWrapped<String, GuiText> implements IFocusable {
 
     public GuiSettingString(SettingValue<String> setting) {
         super(setting, new GuiText());
@@ -17,25 +18,16 @@ public class GuiSettingString extends GuiSetting<String> implements IFocusable {
 
     @Override
     public boolean isFocused() {
-        return getTextField().isFocused();
+        return getInput().isFocused();
     }
 
     @Override
     public void setFocused(boolean focus) {
-        getTextField().setFocused(focus);
+        getInput().setFocused(focus);
     }
 
-    @Override
-    public String getValue() {
-        return getSetting().getValue();
-    }
-
-    @Override
-    public void setValue(String value) {
-        getSetting().setValue(value);
-    }
-
+    @Deprecated
     public GuiText getTextField() {
-        return (GuiText) getInput();
+        return getInput();
     }
 }

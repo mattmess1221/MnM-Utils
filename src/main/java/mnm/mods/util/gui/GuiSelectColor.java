@@ -82,12 +82,12 @@ public class GuiSelectColor extends GuiPanel {
         this.addComponent(selected, new int[] { 14, 4, 6, 3 });
 
         string = new GuiSettingString(new SettingValue<String>(""));
-        string.getTextField().getTextField().setMaxStringLength(8);
+        string.getInput().getTextField().setMaxStringLength(8);
         string.addKeyboardAdapter(new GuiKeyboardAdapter() {
             @Override
             public void accept(GuiKeyboardEvent event) {
                 if (string.isFocused() && event.key == Keyboard.KEY_RETURN) {
-                    String hex = string.getTextField().getTextField().getText();
+                    String hex = string.getValue();
                     if (hex.matches("^[0-9a-fA-F]{1,8}$")) { // valid hex
                         int c = new BigInteger(hex, 16).intValue();
                         setColor(new Color(c));
@@ -153,7 +153,7 @@ public class GuiSelectColor extends GuiPanel {
             sliderBlue.setBase(color);
             sliderAlpha.setBase(color);
 
-            string.getTextField().getTextField().setText(Integer.toHexString(color.getColor()));
+            string.setValue(Integer.toHexString(color.getColor()));
         }
     }
 }

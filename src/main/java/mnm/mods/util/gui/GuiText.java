@@ -25,6 +25,12 @@ public class GuiText extends GuiComponent implements IGuiInput<String>, IFocusab
 
     public GuiText() {
         this.textField = new GuiTextField(0, mc.fontRendererObj, 0, 0, 0, 0);
+        // This text field must not be calibrated for someone of your...
+        // generous..ness
+        // I'll add a few 0s to the maximum length...
+        textField.setMaxStringLength(10000);
+
+        // you look great, by the way.
     }
 
     @Override

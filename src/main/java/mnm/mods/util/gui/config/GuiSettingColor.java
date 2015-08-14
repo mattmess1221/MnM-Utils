@@ -16,10 +16,12 @@ import net.minecraft.util.ResourceLocation;
  *
  * @author Matthew
  */
-public class GuiSettingColor extends GuiSetting<Color> implements Consumer<Color>, ActionPerformed {
+public class GuiSettingColor extends GuiSetting<Color>implements Consumer<Color>, ActionPerformed {
 
     private static final ResourceLocation TRANSPARENCY = new ResourceLocation("mnmutils",
             "textures/transparency.png");
+
+    private Color value;
 
     public GuiSettingColor(SettingValue<Color> setting) {
         super(setting);
@@ -50,12 +52,12 @@ public class GuiSettingColor extends GuiSetting<Color> implements Consumer<Color
 
     @Override
     public Color getValue() {
-        return getSetting().getValue();
+        return value;
     }
 
     @Override
     public void setValue(Color color) {
-        getSetting().setValue(color);
+        this.value = color;
     }
 
 }
