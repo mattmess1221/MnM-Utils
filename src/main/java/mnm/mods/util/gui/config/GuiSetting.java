@@ -17,6 +17,7 @@ public abstract class GuiSetting<T> extends GuiComponent implements IGuiInput<T>
 
     public GuiSetting(SettingValue<T> setting) {
         this.setting = setting;
+        this.setValue(setting.getValue());
     }
 
     /**
@@ -52,15 +53,13 @@ public abstract class GuiSetting<T> extends GuiComponent implements IGuiInput<T>
     public static class GuiSettingWrapped<T, Wrapper extends IGuiInput<T>> extends GuiSetting<T> {
 
         private final Wrapper input;
-        
+
         public GuiSettingWrapped(SettingValue<T> setting, Wrapper input) {
             super(setting);
             this.input = input;
+            this.input.setValue(setting.getValue());
             if (input instanceof GuiComponent) {
                 wrap((GuiComponent) input);
-            }
-            if (input != null) {
-                this.setValue(setting.getValue());
             }
         }
 
@@ -75,11 +74,15 @@ public abstract class GuiSetting<T> extends GuiComponent implements IGuiInput<T>
 
         @Override
         public T getValue() {
+
             return getInput().getValue();
         }
 
         @Override
         public void setValue(T value) {
+            if (getInput() == null) {
+                return;
+            }
             getInput().setValue(value);
         }
 
