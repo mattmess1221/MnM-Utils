@@ -153,7 +153,7 @@ public abstract class GuiComponent extends Gui {
         drawBorders(x1, y1, x2, y2, color.getColor());
     }
 
-    private int luminance(int o, double amt) {
+    private static int luminance(int o, double amt) {
         return (int) ((255 - o) * amt);
     }
 

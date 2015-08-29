@@ -5,8 +5,7 @@ import java.util.Random;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Represents a color and provides an easy way to convert to and from html color
- * codes.
+ * Represents a color and provides an easy way to convert to and from html color codes.
  */
 public class Color {
 
@@ -49,8 +48,7 @@ public class Color {
     }
 
     /**
-     * Gets the html hex color code of this color usable by Minecraft's
-     * {@link net.minecraft.client.gui.Gui}.
+     * Gets the html hex color code of this color usable by Minecraft's {@link net.minecraft.client.gui.Gui}.
      *
      * @return The html hex code.
      */
@@ -99,8 +97,8 @@ public class Color {
     }
 
     /**
-     * Convenience method for getting the html code for a RGBA color. Creates a
-     * new object and calls {@link Color#getColor()}.
+     * Convenience method for getting the html code for a RGBA color. Creates a new object and calls
+     * {@link Color#getColor()}.
      *
      * @param red The red value
      * @param green The green value
@@ -122,13 +120,27 @@ public class Color {
     }
 
     @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + alpha;
+        result = prime * result + blue;
+        result = prime * result + green;
+        result = prime * result + red;
+        return result;
+    }
+
+    @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Color) {
-            Color color = (Color) obj;
-            return color.alpha == alpha && color.red == red && color.green == green
-                    && color.blue == blue;
-        }
-        return false;
+        if (this == obj)
+            return true;
+        if (obj == null || !(obj instanceof Color))
+            return false;
+        Color other = (Color) obj;
+        return alpha == other.alpha
+                && blue == other.blue
+                && green == other.green
+                && red == other.red;
     }
 
 }
