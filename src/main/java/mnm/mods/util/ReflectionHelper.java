@@ -19,11 +19,12 @@ public final class ReflectionHelper {
      * @throws IllegalAccessException
      * @throws NoSuchFieldException
      */
-    public static Object getFieldValue(Class<?> cl, Object obj, String fieldName)
+    @SuppressWarnings("unchecked")
+    public static <C, T> T getFieldValue(Class<C> cl, C obj, String fieldName)
             throws IllegalAccessException, NoSuchFieldException {
         Field fd = cl.getDeclaredField(fieldName);
         fd.setAccessible(true);
-        return fd.get(obj);
+        return (T) fd.get(obj);
     }
 
     /**
@@ -37,7 +38,7 @@ public final class ReflectionHelper {
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
-    public static Object getFieldValue(Class<?> cl, Object obj, String[] fieldNames)
+    public static <C, T> T getFieldValue(Class<C> cl, C obj, String[] fieldNames)
             throws NoSuchFieldException, IllegalAccessException {
         NoSuchFieldException latest = new NoSuchFieldException("This shouldn't happen");
         for (String fieldName : fieldNames) {
@@ -62,7 +63,7 @@ public final class ReflectionHelper {
      * @throws IllegalArgumentException
      * @throws IllegalAccessException
      */
-    public static void setFieldValue(Class<?> cl, Object obj, Object value, String fieldName)
+    public static <C, T> void setFieldValue(Class<C> cl, C obj, T value, String fieldName)
             throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Field fd = cl.getDeclaredField(fieldName);
         fd.setAccessible(true);
@@ -81,7 +82,7 @@ public final class ReflectionHelper {
      * @throws IllegalArgumentException
      * @throws IllegalAccessException
      */
-    public static void setFieldValue(Class<?> cl, Object obj, Object value, String[] fieldNames)
+    public static <C, T> void setFieldValue(Class<C> cl, C obj, T value, String[] fieldNames)
             throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         NoSuchFieldException latest = new NoSuchFieldException("This shouldn't happen");
         for (String fieldName : fieldNames) {
@@ -108,12 +109,13 @@ public final class ReflectionHelper {
      * @throws IllegalAccessException
      * @throws InvocationTargetException
      */
-    public static Object invokeMethod(Class<?> cl, Object obj, String methodName, Object[] args)
+    @SuppressWarnings("unchecked")
+    public static <C, T> T invokeMethod(Class<C> cl, C obj, String methodName, Object[] args)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         Class<?>[] parameterTypes = getParameterTypes(args);
         Method md = cl.getDeclaredMethod(methodName, parameterTypes);
         md.setAccessible(true);
-        return md.invoke(obj, args);
+        return (T) md.invoke(obj, args);
     }
 
     /**
@@ -129,7 +131,7 @@ public final class ReflectionHelper {
      * @throws IllegalAccessException
      * @throws InvocationTargetException
      */
-    public static Object invokeMethod(Class<?> cl, Object obj, String[] methodNames, Object[] args)
+    public static <C, T> T invokeMethod(Class<C> cl, C obj, String[] methodNames, Object[] args)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         NoSuchMethodException latest = new NoSuchMethodException("This shouldn't happen");
         for (String methodName : methodNames) {
