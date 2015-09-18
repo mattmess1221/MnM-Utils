@@ -5,9 +5,27 @@ import java.util.Random;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Represents a color and provides an easy way to convert to and from html color codes.
+ * Represents a color and provides an easy way to convert to and from html color
+ * codes. A few default colors have been provided.
  */
 public class Color {
+
+    public static final Color BLACK = new Color(0xff000000);
+    public static final Color DARK_BLUE = new Color(0xff0000aa);
+    public static final Color DARK_GREEN = new Color(0xff00aa00);
+    public static final Color DARK_AQUA = new Color(0xff00aaaa);
+    public static final Color DARK_RED = new Color(0xffaa0000);
+    public static final Color DARK_PURPLE = new Color(0xffaa00aa);
+    public static final Color GOLD = new Color(0xffffaa00);
+    public static final Color GRAY = new Color(0xffaaaaaa);
+    public static final Color DARK_GRAY = new Color(0xff555555);
+    public static final Color BLUE = new Color(0xff5555ff);
+    public static final Color GREEN = new Color(0xff55ff55);
+    public static final Color AQUA = new Color(0xff55ffff);
+    public static final Color RED = new Color(0xffff5555);
+    public static final Color LIGHT_PURPLE = new Color(0xffff55ff);
+    public static final Color YELLOW = new Color(0xffffff55);
+    public static final Color WHITE = new Color(0xffffffff);
 
     private static Random random = new Random();
 
@@ -48,7 +66,8 @@ public class Color {
     }
 
     /**
-     * Gets the html hex color code of this color usable by Minecraft's {@link net.minecraft.client.gui.Gui}.
+     * Gets the html hex color code of this color usable by Minecraft's
+     * {@link net.minecraft.client.gui.Gui}.
      *
      * @return The html hex code.
      */
@@ -97,8 +116,8 @@ public class Color {
     }
 
     /**
-     * Convenience method for getting the html code for a RGBA color. Creates a new object and calls
-     * {@link Color#getColor()}.
+     * Convenience method for getting the html code for a RGBA color. Creates a
+     * new object and calls {@link Color#getColor()}.
      *
      * @param red The red value
      * @param green The green value
@@ -142,5 +161,4 @@ public class Color {
                 && green == other.green
                 && red == other.red;
     }
-
 }
