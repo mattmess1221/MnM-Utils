@@ -1,5 +1,6 @@
 package mnm.mods.util.update;
 
+@Deprecated
 public class UpdateRequest {
 
     private static final String DEFAULT_URL = "https://raw.githubusercontent.com/killjoy1221/Version/master";
@@ -22,6 +23,11 @@ public class UpdateRequest {
 
     public String getModId() {
         return modId;
+    }
+
+    @Override
+    public String toString() {
+        return getUrl() + "/" + getModId();
     }
 
 }

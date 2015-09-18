@@ -1,13 +1,16 @@
 package mnm.mods.util;
 
+import mnm.mods.util.update.UpdateChecker;
+
 public class MnmUtils {
 
     private static MnmUtils instance;
 
     private IChatProxy chatProxy = new DefaultChatProxy();
 
-    private MnmUtils() {}
-
+    private MnmUtils() {
+        UpdateChecker.runUpdateChecks();
+    }
     public static MnmUtils getInstance() {
         if (instance == null) {
             instance = new MnmUtils();
