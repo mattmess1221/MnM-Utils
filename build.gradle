@@ -1,26 +1,10 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-        maven {
-            // for the vanilla plugin
-            name = "minecrell"
-            url = "http://repo.minecrell.net/snapshots"
-        }
-    }
-    dependencies {
-        classpath 'net.minecrell:VanillaGradle:1.0.2-SNAPSHOT'
-    }
+try {
+plugins {
+	id 'net.minecraftforge.gradle.tweaker-client' version '2.0.1'
 }
-apply plugin: 'net.minecrell.vanilla.base'
-
+}catch(Exception e) {
+	apply plugin: 'net.minecraftforge.gradle.tweaker-client'
+}
 group = "mnm.mods"
 archivesBaseName = "MnM-Utils"
 version = "0.3.1"

@@ -1,29 +1,29 @@
 minecraft {
-    version = '1.8' + (plugins.hasPlugin('forge') ? '-recommended' : '')
+    version = '1.8' + (plugins.hasPlugin('net.minecraftforge.gradle.forge') ? '-11.14.3.1514' : '')
     mappings = "stable_16"
     runDir = "run"
+	if (plugins.hasPlugin('net.minecraftforge.gradle.tweaker-client'))
+		tweakClass = 'net.minecraft.launchwrapper.VanillaTweaker'
 }
-reobf.setSrgMcp()
 processResources {
-    // this will ensure that this task is redone when the versions change.
     def map = [
         version:project.version,
         mcversion:project.minecraft.version,
         revision:project.rev
     ]
+	def tokens = ['mcmod.info', 'litemod.json', 'update.json']
 
+    // this will ensure that this task is redone when the versions change.
     inputs.properties map
-
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info','litemod.json'
-
+        include tokens
         // replace
         expand map
     }
 
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info','litemod.json'
+        exclude tokens
     }
 }
