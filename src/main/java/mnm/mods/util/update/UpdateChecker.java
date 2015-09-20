@@ -68,8 +68,8 @@ public class UpdateChecker extends Thread {
     }
 
     private void notifyUser() {
-        String channel = "Updates";
-        String message = "A new version of " + data.getName() + " is available.  "
+        String channel = data.getName();
+        String message = "A new version is available.  "
                 + response.update.version + " - " + response.update.changes;
         LogManager.getLogger(channel).info(message);
         MnmUtils.getInstance().getChatProxy().addToChat(channel, message);
