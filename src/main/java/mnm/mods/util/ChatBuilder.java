@@ -3,6 +3,7 @@ package mnm.mods.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import mnm.mods.util.text.FancyChatComponent;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatComponentScore;
@@ -12,6 +13,7 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
+//TODO Move to text package
 public final class ChatBuilder {
 
     private IChatComponent chat;
@@ -52,6 +54,23 @@ public final class ChatBuilder {
             current.getChatStyle().setObfuscated(false);
         }
         return this;
+    }
+
+    public ChatBuilder underline(Color color) {
+        asFancy().getFancyStyle().setUnderline(color);
+        return this;
+    }
+
+    public ChatBuilder highlight(Color color) {
+        asFancy().getFancyStyle().setHighlight(color);
+        return this;
+    }
+
+    private FancyChatComponent asFancy() {
+        if (!(current instanceof FancyChatComponent)) {
+            current = new FancyChatComponent(current);
+        }
+        return (FancyChatComponent) current;
     }
 
     public ChatBuilder click(ClickEvent event) {
@@ -128,15 +147,30 @@ public final class ChatBuilder {
      * @return
      */
     public ChatBuilder append(IChatComponent chat) {
+
         if (isTranslation) {
             translationArgs.add(chat);
         } else if (this.chat == null) {
             this.chat = chat;
-        } else if (this.chat != current && current != null) {
+        } else if (this.chat != current && current != null && !(this.chat instanceof FancyChatComponent && ((FancyChatComponent) this.chat).getChat() == current
+                || this.current instanceof FancyChatComponent && ((FancyChatComponent) current).getChat() == this.chat
+                || this.current instanceof FancyChatComponent && this.chat instanceof FancyChatComponent
+                        && ((FancyChatComponent) this.chat).getChat() == ((FancyChatComponent) this.current).getChat())) {
+            // XXX: logic is complex
             this.chat.appendSibling(current);
         }
         current = chat;
         return this;
+    }
+
+    public int size() {
+        if (chat == null)
+            return 0;
+        int size = chat.getSiblings().size() + 1;
+        if (current != null) {
+            size++;
+        }
+        return size;
     }
 
     /**
@@ -148,7 +182,10 @@ public final class ChatBuilder {
         if (isTranslation) {
             throw new IllegalStateException("There is an unfinished translation in progress.");
         }
-        return append(null).chat;
+        IChatComponent chat = append(null).chat;
+        if (chat == null)
+            chat = new ChatComponentText("");
+        return chat;
     }
 
     public static enum Selector {
