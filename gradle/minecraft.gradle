@@ -1,5 +1,6 @@
+def forge = 'net.minecraftforge.gradle.forge'
 minecraft {
-    version = '1.8' + (plugins.hasPlugin('net.minecraftforge.gradle.forge') ? '-11.14.3.1514' : '')
+    version = '1.8' + (plugins.hasPlugin(forge) ? '-11.14.3.1514' : '')
     mappings = "snapshot_20150919"
     runDir = "run"
 	if (plugins.hasPlugin('net.minecraftforge.gradle.tweaker-client'))
@@ -26,4 +27,8 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude tokens
     }
+}
+// remove the manifest after fg adds the TweakClass attribute
+afterEvaluate {
+	jar.manifest.attributes.remove 'TweakClass'
 }
