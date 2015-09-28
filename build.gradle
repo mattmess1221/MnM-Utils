@@ -1,18 +1,24 @@
-try {
-plugins {
-	id 'net.minecraftforge.gradle.tweaker-client' version '2.0.1'
+buildscript {
+	repositories {
+		jcenter()
+		maven {
+			name = "forge"
+			url = "http://files.minecraftforge.net/maven"
+		}
+	}
+	dependencies {
+		classpath 'net.minecraftforge.gradle:ForgeGradle:2.0-SNAPSHOT'
+	}
 }
-}catch(Exception e) {
-	apply plugin: 'net.minecraftforge.gradle.tweaker-client'
-}
+apply plugin: 'net.minecraftforge.gradle.tweaker-client'
+
 group = "mnm.mods"
 archivesBaseName = "MnM-Utils"
-version = "0.3.1"
+version = "0.3-SNAPSHOT.$System.env.BUILD_ID"
+//version = "0.3.1"
+
 ext.rev = '4'
-def bnum = System.env.BUILD_ID
-if (bnum != null) {
-  version += "-SNAPSHOT-$bnum"
-}
+
 apply from: file('gradle/minecraft.gradle')
 minecraft {
     replace "@MCVERSION", project.minecraft.version
@@ -20,8 +26,17 @@ minecraft {
 dependencies.compile 'com.google.code.findbugs:jsr305:2.0.1'
 jar.manifest.attributes "ModType":"FML,LiteLoader"
 
-task jarDev(type:Jar) {
+task jarSrg(type:Jar) {
     from sourceSets.main.output
-    classifier "dev"
+    classifier "srg"
 }
-artifacts.archives jarDev
+artifacts.archives jarSrg
+
+// waiting on ForgeGradle#268 (https://github.com/MinecraftForge/ForgeGradle/pull/268)
+/*
+reobf {
+	jarSrg {
+		setSrgSrg()
+	}
+}
+*/
