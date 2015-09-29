@@ -32,6 +32,7 @@ task jarSrg(type:Jar) {
 }
 artifacts.archives jarSrg
 
+tasks.findAll {it.name.contains 'make' }*.enabled = false
 // waiting on ForgeGradle#268 (https://github.com/MinecraftForge/ForgeGradle/pull/268)
 /*
 reobf {
