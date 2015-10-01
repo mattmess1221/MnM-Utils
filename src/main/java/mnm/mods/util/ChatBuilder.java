@@ -16,7 +16,7 @@ import net.minecraft.util.IChatComponent;
 //TODO Move to text package
 public final class ChatBuilder {
 
-    private IChatComponent chat;
+    private IChatComponent chat = new ChatComponentText("");
     private IChatComponent current;
 
     private boolean isTranslation;
@@ -150,13 +150,7 @@ public final class ChatBuilder {
 
         if (isTranslation) {
             translationArgs.add(chat);
-        } else if (this.chat == null) {
-            this.chat = chat;
-        } else if (this.chat != current && current != null && !(this.chat instanceof FancyChatComponent && ((FancyChatComponent) this.chat).getChat() == current
-                || this.current instanceof FancyChatComponent && ((FancyChatComponent) current).getChat() == this.chat
-                || this.current instanceof FancyChatComponent && this.chat instanceof FancyChatComponent
-                        && ((FancyChatComponent) this.chat).getChat() == ((FancyChatComponent) this.current).getChat())) {
-            // XXX: logic is complex
+        } else if (current != null) {
             this.chat.appendSibling(current);
         }
         current = chat;
@@ -164,9 +158,7 @@ public final class ChatBuilder {
     }
 
     public int size() {
-        if (chat == null)
-            return 0;
-        int size = chat.getSiblings().size() + 1;
+        int size = chat.getSiblings().size();
         if (current != null) {
             size++;
         }
@@ -183,8 +175,6 @@ public final class ChatBuilder {
             throw new IllegalStateException("There is an unfinished translation in progress.");
         }
         IChatComponent chat = append(null).chat;
-        if (chat == null)
-            chat = new ChatComponentText("");
         return chat;
     }
 
