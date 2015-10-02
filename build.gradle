@@ -21,11 +21,13 @@ ext.rev = '4'
 
 apply from: file('gradle/minecraft.gradle')
 minecraft {
-    replace "@MCVERSION", project.minecraft.version
+    replace "@MCVERSION@", project.minecraft.version
 }
-dependencies.compile 'com.google.code.findbugs:jsr305:2.0.1'
-jar.manifest.attributes "ModType":"FML,LiteLoader"
-
+dependencies {
+    compile 'com.google.code.findbugs:jsr305:2.0.1'
+    deobfCompile 'com.mumfrey:liteloader:1.8-SNAPSHOT:srg'
+}
+jar.extension 'litemod'
 task jarSrg(type:Jar) {
     from sourceSets.main.output
     classifier "srg"
