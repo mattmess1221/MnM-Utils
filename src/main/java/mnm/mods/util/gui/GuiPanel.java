@@ -48,9 +48,6 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
             overlay.drawComponent(mouseX, mouseY);
             return;
         }
-        if (layout != null) {
-            layout.layoutComponents(this);
-        }
         for (GuiComponent gc : components) {
             if (gc.isVisible()) {
                 GlStateManager.pushMatrix();
@@ -71,6 +68,9 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
         super.updateComponent();
         for (GuiComponent comp : this) {
             comp.updateComponent();
+        }
+        if (layout != null) {
+            layout.layoutComponents(this);
         }
         if (this.overlay != null) {
             overlay.updateComponent();
