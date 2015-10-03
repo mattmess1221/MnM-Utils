@@ -133,6 +133,7 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
                 layout.addComponent(guiComponent, constraints);
             }
         }
+        updateComponent();
     }
 
     /**
@@ -147,6 +148,7 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
         }
         components.clear();
         setOverlay(null);
+        updateComponent();
     }
 
     /**
@@ -159,6 +161,7 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
         if (layout != null) {
             layout.removeComponent(guiComp);
         }
+        updateComponent();
     }
 
     /**
