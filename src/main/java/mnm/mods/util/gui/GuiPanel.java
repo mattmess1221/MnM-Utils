@@ -132,8 +132,10 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
             if (layout != null) {
                 layout.addComponent(guiComponent, constraints);
             }
+            if (getParent() != null) {
+                updateComponent();
+            }
         }
-        updateComponent();
     }
 
     /**
