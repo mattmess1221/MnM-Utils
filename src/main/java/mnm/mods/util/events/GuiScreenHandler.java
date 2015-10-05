@@ -4,25 +4,32 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 
-import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 import com.mumfrey.liteloader.transformers.event.EventInfo;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
-public class GuiScreenHandler {
+public class GuiScreenHandler implements ScreenHandler {
 
-    private static Map<Class<? extends GuiScreen>, Function<? extends GuiScreen, GuiScreen>> screens = Maps.newHashMap();
-
+    private static GuiScreenHandler instance;
     private static boolean eventRunning;
+
+    private Map<Class<? extends GuiScreen>, IScreenRedirect<?>> screens = Maps.newHashMap();
+
+    public GuiScreenHandler() {
+        if (instance != null) {
+            throw new UnsupportedOperationException("GuiScreenHandler is already initialzied.");
+        }
+        instance = this;
+    }
 
     public static void onDisplayGui(EventInfo<Minecraft> event, GuiScreen screen) {
         if (eventRunning)
             return;
         try {
             eventRunning = true;
-            if (screen != null && handleScreen(screen)) {
+            if (screen != null && instance.handleScreen(screen)) {
                 event.cancel();
             }
         } catch (Throwable ex) {
@@ -32,11 +39,11 @@ public class GuiScreenHandler {
         }
     }
 
-    private static <T extends GuiScreen> boolean handleScreen(T screen) {
+    private <T extends GuiScreen> boolean handleScreen(T screen) {
         @SuppressWarnings("unchecked")
-        Function<T, GuiScreen> func = (Function<T, GuiScreen>) screens.get(screen.getClass());
+        IScreenRedirect<T> func = (IScreenRedirect<T>) screens.get(screen.getClass());
         if (func != null) {
-            GuiScreen screen2 = func.apply(screen);
+            GuiScreen screen2 = func.redirect(screen);
             if (screen != screen2) {
                 Minecraft.getMinecraft().displayGuiScreen(screen2);
                 return true;
@@ -45,7 +52,8 @@ public class GuiScreenHandler {
         return false;
     }
 
-    public static <From extends GuiScreen> void addHandler(Class<From> screen, Function<From, GuiScreen> func) {
+    @Override
+    public <T extends GuiScreen> void addHandler(Class<T> screen, IScreenRedirect<T> func) {
         screens.put(screen, func);
     }
 }
