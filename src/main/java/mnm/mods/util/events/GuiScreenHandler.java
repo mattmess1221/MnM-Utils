@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.mumfrey.liteloader.transformers.event.EventInfo;
 
@@ -41,9 +42,9 @@ public class GuiScreenHandler implements ScreenHandler {
 
     private <T extends GuiScreen> boolean handleScreen(T screen) {
         @SuppressWarnings("unchecked")
-        IScreenRedirect<T> func = (IScreenRedirect<T>) screens.get(screen.getClass());
-        if (func != null) {
-            GuiScreen screen2 = func.redirect(screen);
+        Optional<IScreenRedirect<T>> func = getScreen((Class<T>) screen.getClass());
+        if (func.isPresent()) {
+            GuiScreen screen2 = func.get().redirect(screen);
             if (screen != screen2) {
                 Minecraft.getMinecraft().displayGuiScreen(screen2);
                 return true;
@@ -53,7 +54,13 @@ public class GuiScreenHandler implements ScreenHandler {
     }
 
     @Override
-    public <T extends GuiScreen> void addHandler(Class<T> screen, IScreenRedirect<T> func) {
+    public <T extends GuiScreen> void addScreen(Class<T> screen, IScreenRedirect<T> func) {
         screens.put(screen, func);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends GuiScreen> Optional<IScreenRedirect<T>> getScreen(Class<T> cl) {
+        return Optional.fromNullable((IScreenRedirect<T>) screens.get(cl));
     }
 }
