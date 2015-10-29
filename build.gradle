@@ -1,17 +1,9 @@
-buildscript {
-	repositories {
-		jcenter()
-		maven {
-			name = "forge"
-			url = "http://files.minecraftforge.net/maven"
-		}
+if (rootProject != project)
+	apply plugin: 'net.minecraftforge.gradle.tweaker-client'
+else
+	plugins {
+		id 'net.minecraftforge.gradle.tweaker-client' version '2.0.2'
 	}
-	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:2.0-SNAPSHOT'
-	}
-}
-apply plugin: 'net.minecraftforge.gradle.tweaker-client'
-
 group = "mnm.mods"
 archivesBaseName = "MnM-Utils"
 version = "0.3-SNAPSHOT.$System.env.BUILD_ID"
@@ -34,12 +26,10 @@ task jarSrg(type:Jar) {
 }
 artifacts.archives jarSrg
 
-tasks.findAll {it.name.contains 'make' }*.enabled = false
-// waiting on ForgeGradle#268 (https://github.com/MinecraftForge/ForgeGradle/pull/268)
-/*
+tasks.findAll { 'make' in it.name }*.enabled = false
+
 reobf {
 	jarSrg {
-		setSrgSrg()
+		useSrgSrg()
 	}
 }
-*/
