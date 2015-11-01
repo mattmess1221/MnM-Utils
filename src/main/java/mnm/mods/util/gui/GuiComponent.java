@@ -179,10 +179,7 @@ public abstract class GuiComponent extends Gui {
             return;
         }
         if (mc.currentScreen != null) {
-            int mouseX = Mouse.getX() * mc.currentScreen.width / mc.displayWidth;
-            int mouseY = mc.currentScreen.height - Mouse.getY() * mc.currentScreen.height
-                    / mc.displayHeight - 1;
-            Point point = new Point(mouseX, mouseY);
+            Point point = scalePoint(new Point(Mouse.getX(), Mouse.getY()));
 
             int button = Mouse.getEventButton();
             int scroll = Mouse.getEventDWheel();
@@ -190,8 +187,8 @@ public abstract class GuiComponent extends Gui {
 
             float scale = getActualScale();
 
-            if (mouseX > actual.x && mouseX < actual.x + getBounds().width * scale
-                    && mouseY > actual.y && mouseY < actual.y + getBounds().height * scale) {
+            if (point.x > actual.x && point.x < actual.x + getBounds().width * scale
+                    && point.y > actual.y && point.y < actual.y + getBounds().height * scale) {
                 if (!isHovered()) {
                     this.entered = true;
                 }
@@ -659,6 +656,13 @@ public abstract class GuiComponent extends Gui {
             return wrapper.getCaption();
         }
         return caption;
+    }
+
+    protected static Point scalePoint(Point point) {
+        Minecraft mc = Minecraft.getMinecraft();
+        int x = point.x * mc.currentScreen.width / mc.displayWidth;
+        int y = mc.currentScreen.height - point.y * mc.currentScreen.height / mc.displayHeight - 1;
+        return new Point(x, y);
     }
 
 }

@@ -17,7 +17,7 @@ minecraft {
 }
 dependencies {
     compile 'com.google.code.findbugs:jsr305:2.0.1'
-    deobfCompile 'com.mumfrey:liteloader:1.8-SNAPSHOT:srg'
+    deobfCompile 'com.mumfrey:liteloader:1.8-SNAPSHOT:srgnames'
 }
 jar.extension 'litemod'
 task jarSrg(type:Jar) {

@@ -30,7 +30,7 @@ public class GuiScreenHandler implements ScreenHandler {
             return;
         try {
             eventRunning = true;
-            if (screen != null && instance.handleScreen(screen)) {
+            if (screen != null && instance != null && instance.handleScreen(screen)) {
                 event.cancel();
             }
         } catch (Throwable ex) {
