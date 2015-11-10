@@ -89,6 +89,12 @@ public class GuiText extends GuiComponent implements IGuiInput<String>, GuiMouse
     }
 
     @Override
+    public void setFocused(boolean focused) {
+        super.setFocused(focused);
+        textField.setFocused(focused);
+    }
+
+    @Override
     public void updateComponent() {
         super.updateComponent();
         textField.updateCursorCounter();
