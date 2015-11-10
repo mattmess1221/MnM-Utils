@@ -16,8 +16,7 @@ import net.minecraft.client.gui.GuiTextField;
  *
  * @author Matthew
  */
-public class GuiText extends GuiComponent implements IGuiInput<String>, IFocusable,
-        GuiMouseAdapter, GuiKeyboardAdapter {
+public class GuiText extends GuiComponent implements IGuiInput<String>, GuiMouseAdapter, GuiKeyboardAdapter {
 
     private GuiTextField textField;
     private String hint;
@@ -85,14 +84,8 @@ public class GuiText extends GuiComponent implements IGuiInput<String>, IFocusab
     }
 
     @Override
-    public void setFocused(boolean focus) {
-        textField.setFocused(focus);
-        Keyboard.enableRepeatEvents(focus);
-    }
-
-    @Override
-    public boolean isFocused() {
-        return textField.isFocused();
+    public boolean isFocusable() {
+        return true;
     }
 
     @Override

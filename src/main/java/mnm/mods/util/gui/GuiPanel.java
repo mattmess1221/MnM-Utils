@@ -202,12 +202,12 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
     }
 
     /**
-     * Unfocuses all components in this panel that implement {@link IFocusable}.
+     * Unfocuses all components in this panel that are focusable.
      */
     public void unfocusAll() {
         for (GuiComponent comp : components) {
-            if (comp instanceof IFocusable) {
-                ((IFocusable) comp).setFocused(false);
+            if (comp.isFocusable()) {
+                comp.setFocused(false);
             } else if (comp instanceof GuiPanel) {
                 ((GuiPanel) comp).unfocusAll();
             }

@@ -33,8 +33,9 @@ public abstract class GuiComponent extends Gui {
 
     private boolean enabled = true;
     private boolean visible = true;
-    private boolean hovered = false;
-    private boolean entered = false;
+    private boolean hovered;
+    private boolean entered;
+    private boolean focused;
     private boolean buttonHeld;
 
     protected Minecraft mc = Minecraft.getMinecraft();
@@ -409,6 +410,15 @@ public abstract class GuiComponent extends Gui {
         return this.parent;
     }
 
+    public GuiPanel getRootPanel() {
+        GuiPanel panel = getParent();
+        for (;;) {
+            if (panel.getParent() == null)
+                return panel;
+            panel = panel.getParent();
+        }
+    }
+
     /**
      * Sets the parent of this component. Should only be used by
      * {@link GuiPanel}.
@@ -681,6 +691,46 @@ public abstract class GuiComponent extends Gui {
             return wrapper.getCaption();
         }
         return caption;
+    }
+
+    /**
+     * Gets the current focus of this component.
+     *
+     * @return The focus
+     */
+    public boolean isFocused() {
+        return focused;
+    }
+
+    /**
+     * Sets the component's focus
+     *
+     * @param focus The focus value
+     */
+    public void setFocused(boolean focused) {
+        // check if is focusable
+        if (isFocusable()) {
+            if (focused) {
+                // unfocus everything before focusing this one
+                GuiPanel root = getRootPanel();
+                if (root != null) {
+                    root.unfocusAll();
+                }
+            }
+            this.focused = focused;
+        }
+        // otherwise ignore
+    }
+
+    /**
+     * Denotes if this is focusable. Override to change.
+     *
+     * @return Whether this is focusable
+     */
+    @SuppressWarnings("deprecation")
+    public boolean isFocusable() {
+        // return false; check for IFocusable for compatibility
+        return this instanceof IFocusable;
     }
 
     protected static Point scalePoint(Point point) {

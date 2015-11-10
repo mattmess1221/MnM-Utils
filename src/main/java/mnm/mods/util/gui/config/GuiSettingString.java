@@ -2,7 +2,6 @@ package mnm.mods.util.gui.config;
 
 import mnm.mods.util.config.SettingValue;
 import mnm.mods.util.gui.GuiText;
-import mnm.mods.util.gui.IFocusable;
 import mnm.mods.util.gui.config.GuiSetting.GuiSettingWrapped;
 
 /**
@@ -10,20 +9,15 @@ import mnm.mods.util.gui.config.GuiSetting.GuiSettingWrapped;
  *
  * @author Matthew
  */
-public class GuiSettingString extends GuiSettingWrapped<String, GuiText> implements IFocusable {
+public class GuiSettingString extends GuiSettingWrapped<String, GuiText> {
 
     public GuiSettingString(SettingValue<String> setting) {
         super(setting, new GuiText());
     }
 
     @Override
-    public boolean isFocused() {
-        return getInput().isFocused();
-    }
-
-    @Override
-    public void setFocused(boolean focus) {
-        getInput().setFocused(focus);
+    public boolean isFocusable() {
+        return true;
     }
 
     @Deprecated

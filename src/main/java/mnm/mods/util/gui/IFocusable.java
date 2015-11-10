@@ -7,7 +7,9 @@ import mnm.mods.util.gui.config.GuiSettingString;
  * Currently implemented in {@link GuiText} and {@link GuiSettingString}.
  *
  * @author Matthew
+ * @deprecated Functionality is built into {@link GuiComponent}.
  */
+@Deprecated
 public interface IFocusable {
 
     /**
