@@ -412,6 +412,9 @@ public abstract class GuiComponent extends Gui {
 
     public GuiPanel getRootPanel() {
         GuiPanel panel = getParent();
+        if (panel == null) {
+            return this instanceof GuiPanel ? (GuiPanel) this : null;
+        }
         for (;;) {
             if (panel.getParent() == null)
                 return panel;
