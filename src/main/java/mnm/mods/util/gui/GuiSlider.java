@@ -60,20 +60,20 @@ public class GuiSlider extends GuiComponent implements GuiMouseAdapter, IGuiInpu
 
     @Override
     public void accept(GuiMouseEvent event) {
-        if (event.position.x < getActualPosition().x
-                || event.position.y < getActualPosition().y
-                || event.position.x > getActualPosition().x + getBounds().width
-                || event.position.y > getActualPosition().y + getBounds().height) {
+        if (event.position.x < 0
+                || event.position.y < 0
+                || event.position.x > getBounds().width
+                || event.position.y > getBounds().height) {
             return;
         }
         if ((event.event == GuiMouseEvent.CLICKED || event.event == GuiMouseEvent.DRAGGED)
                 && Mouse.isButtonDown(0)) {
             double val;
             if (vertical) {
-                int y = event.position.y - getActualPosition().y;
+                int y = event.position.y;
                 val = Math.abs((double) y / (double) getBounds().height - 1);
             } else {
-                int x = event.position.x - getActualPosition().x;
+                int x = event.position.x;
                 val = (double) x / (double) getBounds().width;
             }
             setValue(val);

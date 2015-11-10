@@ -1,16 +1,15 @@
 package mnm.mods.util.gui;
 
-import java.awt.Point;
 import java.awt.Rectangle;
+
+import org.apache.commons.lang3.StringUtils;
+import org.lwjgl.input.Keyboard;
 
 import mnm.mods.util.gui.events.GuiKeyboardAdapter;
 import mnm.mods.util.gui.events.GuiKeyboardEvent;
 import mnm.mods.util.gui.events.GuiMouseAdapter;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import net.minecraft.client.gui.GuiTextField;
-
-import org.apache.commons.lang3.StringUtils;
-import org.lwjgl.input.Keyboard;
 
 /**
  * A gui component that wraps {@link GuiTextField}.
@@ -37,10 +36,9 @@ public class GuiText extends GuiComponent implements IGuiInput<String>, IFocusab
     public void accept(GuiMouseEvent event) {
         if (event.event == GuiMouseEvent.CLICKED) {
             setFocused(true);
-            // it's vanilla at (0,0) so subtract the current pos.
-            Point pos = getActualPosition();
-            int x = event.position.x - pos.x;
-            int y = event.position.y - pos.y;
+
+            int x = event.position.x;
+            int y = event.position.y;
             // send to text field.
             textField.mouseClicked(x, y, 0);
         }

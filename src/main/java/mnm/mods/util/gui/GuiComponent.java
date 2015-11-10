@@ -183,16 +183,14 @@ public abstract class GuiComponent extends Gui {
 
             int button = Mouse.getEventButton();
             int scroll = Mouse.getEventDWheel();
-            Point actual = getActualPosition();
+            Rectangle actual = getActualBounds();
 
-            float scale = getActualScale();
-
-            if (point.x > actual.x && point.x < actual.x + getBounds().width * scale
-                    && point.y > actual.y && point.y < actual.y + getBounds().height * scale) {
+            if (point.x >= actual.x && point.x <= actual.x + actual.width
+                    && point.y >= actual.y && point.y <= actual.y + actual.height) {
                 if (!isHovered()) {
                     this.entered = true;
                 }
-                this.hovered = true && parent == null ? true : parent.isHovered();
+                this.hovered = parent == null ? true : parent.isHovered();
             } else {
                 if (!isHovered()) {
                     this.entered = false;
@@ -203,6 +201,10 @@ public abstract class GuiComponent extends Gui {
                 this.buttonHeld = (true);
 
             }
+            float scale = getActualScale();
+            // adjust for position and scale
+            point.x = (int) ((point.x - actual.x) / scale);
+            point.y = (int) ((point.y - actual.y) / scale);
             GuiMouseEvent event = new GuiMouseEvent(this, GuiMouseEvent.RAW, point, button, scroll);
             for (GuiMouseAdapter adapter : mouseAdapters) {
                 event.event = GuiMouseEvent.RAW;
