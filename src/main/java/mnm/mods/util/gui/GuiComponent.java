@@ -5,6 +5,13 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.List;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
+import com.google.common.collect.Lists;
+
 import mnm.mods.util.Color;
 import mnm.mods.util.gui.events.ActionPerformed;
 import mnm.mods.util.gui.events.GuiKeyboardAdapter;
@@ -16,13 +23,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
-import com.google.common.collect.Lists;
 
 /**
  * The base class for all gui components.
@@ -450,9 +450,18 @@ public abstract class GuiComponent extends Gui {
     }
 
     public Rectangle getActualBounds() {
-        Point p = getActualPosition();
-        Dimension d = getActualSize();
-        return new Rectangle(p, d);
+        Rectangle b = new Rectangle(getBounds());
+        float scale = getActualScale();
+        b.x *= scale;
+        b.y *= scale;
+        b.width *= scale;
+        b.height *= scale;
+        if (getParent() != null) {
+            Rectangle b1 = getParent().getActualBounds();
+            b.x += b1.x;
+            b.y += b1.y;
+        }
+        return b;
     }
 
     public void setMinimumSize(Dimension size) {
