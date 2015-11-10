@@ -439,6 +439,20 @@ public abstract class GuiComponent extends Gui {
         return point;
     }
 
+    public Dimension getActualSize() {
+        float scale = getActualScale();
+        Dimension d = new Dimension(getBounds().getSize());
+        d.height *= scale;
+        d.width *= scale;
+        return d;
+    }
+
+    public Rectangle getActualBounds() {
+        Point p = getActualPosition();
+        Dimension d = getActualSize();
+        return new Rectangle(p, d);
+    }
+
     public void setMinimumSize(Dimension size) {
         if (wrapper != null) {
             wrapper.setMinimumSize(size);
