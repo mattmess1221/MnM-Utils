@@ -1,10 +1,13 @@
-def forge = 'net.minecraftforge.gradle.forge'
 minecraft {
-    version = '1.8' + (plugins.hasPlugin(forge) ? '-11.14.3.1514' : '')
-    mappings = "snapshot_20150919"
-    runDir = "run"
+	if (project == forge)
+		version = "1.8.8-$forgever"
+	else
+		version = '1.8.8'
+	mappings = 'snapshot_20151122'
+	runDir = rootProject.file('run')
+
 	if (plugins.hasPlugin('net.minecraftforge.gradle.tweaker-client'))
-		tweakClass = 'net.minecraft.launchwrapper.VanillaTweaker'
+		tweakClass = 'com.mumfrey.liteloader.launch.LiteLoaderTweaker'
 }
 processResources {
     def map = [

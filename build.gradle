@@ -1,22 +1,32 @@
-if (rootProject != project)
-	apply plugin: 'net.minecraftforge.gradle.tweaker-client'
-else
-	plugins {
-		id 'net.minecraftforge.gradle.tweaker-client' version '2.0.2'
+buildscript {
+	repositories {
+		jcenter()
+		maven {
+			name 'forge'
+			url 'http://files.minecraftforge.net/maven'
+		}
 	}
+	dependencies.classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+}
+apply plugin: 'net.minecraftforge.gradle.tweaker-client'
+
 group = "mnm.mods"
 archivesBaseName = "MnM-Utils"
 version = "0.3-SNAPSHOT.$System.env.BUILD_ID"
 //version = "0.3.1"
 
-ext.rev = '4'
+ext.rev = '5'
 
 apply from: file('gradle/minecraft.gradle')
 minecraft {
+	version = '1.8.8'
     replace "@MCVERSION@", project.minecraft.version
 }
+repositories.flatDir {
+	dir '../flat'
+}
 dependencies {
-    compile 'com.google.code.findbugs:jsr305:2.0.1'
+//    compile 'com.google.code.findbugs:jsr305:2.0.1'
     deobfCompile 'com.mumfrey:liteloader:1.8-SNAPSHOT:srgnames'
 }
 jar.extension 'litemod'

@@ -99,7 +99,7 @@ public abstract class GuiComponent extends Gui {
         y -= mc.fontRendererObj.FONT_HEIGHT * list.length;
 
         Point point = getActualPosition();
-        ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+        ScaledResolution sr = new ScaledResolution(mc);
         int w2 = w;
         int x2 = x;
         while (x2 - 8 + point.x + w2 + 20 > sr.getScaledWidth()) {
