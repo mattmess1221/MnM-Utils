@@ -5,17 +5,22 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
-import java.util.Enumeration;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import com.mumfrey.liteloader.LiteMod;
+import com.mumfrey.liteloader.core.LiteLoader;
 
 import mnm.mods.util.MnmUtils;
+import mnm.mods.util.text.ChatBuilder;
+import mnm.mods.util.text.IChatBuilder;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.util.IChatComponent;
 
 /**
  * Update checker for several mods.
@@ -26,84 +31,71 @@ public class UpdateChecker extends Thread {
 
     private static final Logger logger = LogManager.getLogger("Updates");
 
-    private VersionData data;
-    private UpdateResponse response;
+    private VersionData[] data;
 
-    @Deprecated
-    public UpdateChecker(UpdateRequest request, double version) {
-        this.data = new VersionData(request.getModId(), "old", request.getUrl(), version);
-    }
-
-    public UpdateChecker(VersionData data) {
+    public UpdateChecker(VersionData[] data) {
+        super("Update Checker");
         this.data = data;
     }
 
     @Override
     public void run() {
+        for (VersionData data : this.data) {
+            runCheck(data);
+        }
+
+    }
+
+    private void runCheck(VersionData data) {
         InputStream in = null;
         Reader reader = null;
+        UpdateResponse response;
         try {
-            URL url = new URL(data.getUrl());
+            URL url = new URL(data.getUpdateUrl());
             in = url.openStream();
             reader = new InputStreamReader(in);
             response = new Gson().fromJson(reader, UpdateResponse.class);
         } catch (IOException e) {
             // failure
             logger.warn("Update check failed.", e);
-            response = new UpdateResponse(false);
+            return;
         } finally {
             IOUtils.closeQuietly(reader);
             IOUtils.closeQuietly(in);
         }
 
-        if (isOutdated()) {
-            notifyUser();
+        if (data.isOutdated(response.update.revision)) {
+            notifyUser(data, response);
         } else {
             logger.info("Update check for " + data.getName() + " finished. None found.");
         }
     }
 
-    private boolean isOutdated() {
-        return response.isSuccess() && response.update.revision > data.getRevision();
-    }
-
-    private void notifyUser() {
-        String channel = data.getName();
-        String message = "A new version is available.  "
-                + response.update.version + " - " + response.update.changes;
-        LogManager.getLogger(channel).info(message);
-        MnmUtils.getInstance().getChatProxy().addToChat(channel, message);
+    private void notifyUser(VersionData data, UpdateResponse response) {
+        IChatBuilder builder = new ChatBuilder()
+                .translation("update.available")
+                .text(data.getName()).next();
+        if (data.getUrl() != null)
+            builder = builder
+                    .translation("update.clickhere").end()
+                    .click(new ClickEvent(ClickEvent.Action.OPEN_URL, data.getUrl())).next();
+        IChatComponent msg = builder
+                .text(response.update.version).next()
+                .text(response.update.changes).end().build();
+        LogManager.getLogger("Updates").info(msg.getUnformattedText());
+        MnmUtils.getInstance().getChatProxy().addToChat("Updates", msg);
     }
 
     public static void runUpdateChecks() {
-        try {
-            Enumeration<URL> urls = ClassLoader.getSystemResources("update.json");
-            runChecks(urls);
-        } catch (IOException e) {
-            logger.warn("Unable to run update checker");
-        }
-    }
 
-    private static void runChecks(Enumeration<URL> urls) {
-        while (urls.hasMoreElements()) {
-            URL url = urls.nextElement();
-            if (url == null) {
-                continue;
-            }
-            try {
-                runCheck(Resources.toString(url, Charsets.UTF_8));
-            } catch (Exception io) {
-                logger.warn("Error while parsing url " + url, io);
-            }
+        List<VersionData> list = Lists.newArrayList();
+        for (LiteMod mod : LiteLoader.getInstance().getLoadedMods()) {
+            VersionData data = VersionData.fromLiteMod(mod);
+            if (data != null)
+                list.add(data);
         }
-    }
-
-    private static void runCheck(String update) {
-        VersionData data = new Gson().fromJson(update, VersionData.class);
-        if (data.getRevision() == 0) {
-            logger.debug(data.getName() + " had invalid revision");
-            return;
+        if (!list.isEmpty()) {
+            new UpdateChecker(list.toArray(new VersionData[0])).start();
         }
-        new UpdateChecker(data).start();
     }
 }
