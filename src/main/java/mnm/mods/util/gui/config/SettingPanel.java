@@ -7,7 +7,7 @@ import mnm.mods.util.gui.GuiPanel;
 /**
  * Base class for a setting panel.
  */
-public abstract class SettingPanel<T extends SettingsFile<?>> extends GuiPanel {
+public abstract class SettingPanel<T extends SettingsFile> extends GuiPanel {
 
     private String displayString;
 
@@ -36,8 +36,8 @@ public abstract class SettingPanel<T extends SettingsFile<?>> extends GuiPanel {
     }
 
     /**
-     * Gets the {@link SettingsFile} used for this category. Used for loading and
-     * saving the settings file.
+     * Gets the {@link SettingsFile} used for this category. Used for loading
+     * and saving the settings file.
      *
      * @return The settings
      */
@@ -64,16 +64,4 @@ public abstract class SettingPanel<T extends SettingsFile<?>> extends GuiPanel {
             }
         }
     }
-
-    /**
-     * Resets all the settings to their defaults.
-     */
-    public void setDefault() {
-        for (GuiComponent comp : this) {
-            if (comp instanceof GuiSetting) {
-                ((GuiSetting<?>) comp).setDefault();
-            }
-        }
-    }
-
 }

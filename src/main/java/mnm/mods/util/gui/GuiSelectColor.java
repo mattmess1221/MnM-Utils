@@ -4,7 +4,7 @@ import java.math.BigInteger;
 
 import mnm.mods.util.Color;
 import mnm.mods.util.Consumer;
-import mnm.mods.util.config.SettingValue;
+import mnm.mods.util.config.Value;
 import mnm.mods.util.gui.config.GuiSettingString;
 import mnm.mods.util.gui.events.ActionPerformed;
 import mnm.mods.util.gui.events.GuiEvent;
@@ -81,7 +81,7 @@ public class GuiSelectColor extends GuiPanel {
         this.addComponent(current, new int[] { 14, 1, 6, 3 });
         this.addComponent(selected, new int[] { 14, 4, 6, 3 });
 
-        string = new GuiSettingString(new SettingValue<String>(""));
+        string = new GuiSettingString(new Value<String>(""));
         string.getInput().getTextField().setMaxStringLength(8);
         string.addKeyboardAdapter(new GuiKeyboardAdapter() {
             @Override

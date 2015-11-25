@@ -2,26 +2,26 @@ package mnm.mods.util.gui.config;
 
 import java.util.List;
 
-import mnm.mods.util.config.SettingList;
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
+
+import mnm.mods.util.config.ValueList;
 import mnm.mods.util.gui.GuiComponent;
 import mnm.mods.util.gui.GuiText;
 import mnm.mods.util.gui.IGuiInput;
 import mnm.mods.util.gui.config.GuiSetting.GuiSettingWrapped;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
-
 public class GuiSettingStringList extends GuiSettingWrapped<List<String>, GuiSettingStringList.GuiStringList> {
 
-    public GuiSettingStringList(SettingList<String> setting, String split, String join) {
+    public GuiSettingStringList(ValueList<String> setting, String split, String join) {
         super(setting, new GuiStringList(split, join));
     }
 
-    public GuiSettingStringList(SettingList<String> setting, String split) {
+    public GuiSettingStringList(ValueList<String> setting, String split) {
         this(setting, split, split);
     }
 
-    public GuiSettingStringList(SettingList<String> setting) {
+    public GuiSettingStringList(ValueList<String> setting) {
         this(setting, ",", ", ");
     }
 

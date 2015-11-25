@@ -1,6 +1,6 @@
 package mnm.mods.util.gui.config;
 
-import mnm.mods.util.config.SettingValue;
+import mnm.mods.util.config.Value;
 import mnm.mods.util.gui.GuiText;
 import mnm.mods.util.gui.config.GuiSetting.GuiSettingWrapped;
 
@@ -11,7 +11,7 @@ import mnm.mods.util.gui.config.GuiSetting.GuiSettingWrapped;
  */
 public class GuiSettingString extends GuiSettingWrapped<String, GuiText> {
 
-    public GuiSettingString(SettingValue<String> setting) {
+    public GuiSettingString(Value<String> setting) {
         super(setting, new GuiText());
     }
 
@@ -20,8 +20,4 @@ public class GuiSettingString extends GuiSettingWrapped<String, GuiText> {
         return true;
     }
 
-    @Deprecated
-    public GuiText getTextField() {
-        return getInput();
-    }
 }

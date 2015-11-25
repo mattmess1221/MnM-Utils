@@ -2,7 +2,7 @@ package mnm.mods.util.gui.config;
 
 import java.util.Arrays;
 
-import mnm.mods.util.config.SettingValue;
+import mnm.mods.util.config.Value;
 import mnm.mods.util.gui.events.GuiMouseAdapter;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import net.minecraft.client.gui.Gui;
@@ -24,18 +24,18 @@ public class GuiSettingEnum<T> extends GuiSetting<T>implements GuiMouseAdapter {
     private String[] names;
     private int selected;
 
-    public GuiSettingEnum(SettingValue<T> setting, T[] values, String[] names) {
+    public GuiSettingEnum(Value<T> setting, T[] values, String[] names) {
         this(setting, values);
         this.names = names;
-        select(Arrays.binarySearch(values, setting.getValue()));
+        select(Arrays.binarySearch(values, setting.get()));
     }
 
-    public GuiSettingEnum(SettingValue<T> setting, T[] values) {
+    public GuiSettingEnum(Value<T> setting, T[] values) {
         super(setting);
         this.values = values;
         selected = getCurrentPosition();
 
-        select(Arrays.binarySearch(values, setting.getValue()));
+        select(Arrays.binarySearch(values, setting.get()));
         setBackColor(0xff666666);
     }
 
@@ -54,7 +54,7 @@ public class GuiSettingEnum<T> extends GuiSetting<T>implements GuiMouseAdapter {
 
     private int getCurrentPosition() {
         int pos = -1;
-        T value = getSetting().getValue();
+        T value = getSetting().get();
         for (int i = 0; i < this.values.length && pos < 0; i++) {
             if (values[i].equals(value)) {
                 pos = i;

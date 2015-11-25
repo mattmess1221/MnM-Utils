@@ -1,6 +1,6 @@
 package mnm.mods.util.gui.config;
 
-import mnm.mods.util.config.SettingValue;
+import mnm.mods.util.config.Value;
 import mnm.mods.util.gui.GuiCheckbox;
 import mnm.mods.util.gui.config.GuiSetting.GuiSettingWrapped;
 
@@ -11,12 +11,7 @@ import mnm.mods.util.gui.config.GuiSetting.GuiSettingWrapped;
  */
 public class GuiSettingBoolean extends GuiSettingWrapped<Boolean, GuiCheckbox> {
 
-    public GuiSettingBoolean(SettingValue<Boolean> setting) {
+    public GuiSettingBoolean(Value<Boolean> setting) {
         super(setting, new GuiCheckbox());
-    }
-
-    @Deprecated
-    public GuiCheckbox getCheckbox() {
-        return getInput();
     }
 }

@@ -1,6 +1,6 @@
 package mnm.mods.util.gui.config;
 
-import mnm.mods.util.config.SettingValue;
+import mnm.mods.util.config.Value;
 import mnm.mods.util.gui.GuiNumericUpDown;
 import mnm.mods.util.gui.config.GuiSetting.GuiSettingWrapped;
 
@@ -14,13 +14,8 @@ import mnm.mods.util.gui.config.GuiSetting.GuiSettingWrapped;
  */
 public abstract class GuiSettingNumber<T extends Number> extends GuiSettingWrapped<T, GuiNumericUpDown<T>> {
 
-    private GuiSettingNumber(SettingValue<T> setting, GuiNumericUpDown<T> input) {
+    private GuiSettingNumber(Value<T> setting, GuiNumericUpDown<T> input) {
         super(setting, input);
-    }
-
-    @Deprecated
-    public GuiNumericUpDown<T> getNumUpDown() {
-        return getInput();
     }
 
     /**
@@ -30,7 +25,7 @@ public abstract class GuiSettingNumber<T extends Number> extends GuiSettingWrapp
      */
     public static class GuiSettingInt extends GuiSettingNumber<Integer> {
 
-        public GuiSettingInt(SettingValue<Integer> setting) {
+        public GuiSettingInt(Value<Integer> setting) {
             super(setting, new GuiNumericUpDown.IntUpDown());
         }
     }
@@ -42,7 +37,7 @@ public abstract class GuiSettingNumber<T extends Number> extends GuiSettingWrapp
      */
     public static class GuiSettingDouble extends GuiSettingNumber<Double> {
 
-        public GuiSettingDouble(SettingValue<Double> setting) {
+        public GuiSettingDouble(Value<Double> setting) {
             super(setting, new GuiNumericUpDown.DoubleUpDown());
         }
     }

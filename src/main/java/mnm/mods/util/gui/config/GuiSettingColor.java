@@ -4,7 +4,7 @@ import java.awt.Rectangle;
 
 import mnm.mods.util.Color;
 import mnm.mods.util.Consumer;
-import mnm.mods.util.config.SettingValue;
+import mnm.mods.util.config.Value;
 import mnm.mods.util.gui.GuiSelectColor;
 import mnm.mods.util.gui.events.ActionPerformed;
 import mnm.mods.util.gui.events.GuiEvent;
@@ -23,7 +23,7 @@ public class GuiSettingColor extends GuiSetting<Color>implements Consumer<Color>
 
     private Color value;
 
-    public GuiSettingColor(SettingValue<Color> setting) {
+    public GuiSettingColor(Value<Color> setting) {
         super(setting);
     }
 
