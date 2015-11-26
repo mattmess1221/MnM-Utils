@@ -15,7 +15,7 @@ processResources {
         mcversion:project.minecraft.version,
         revision:project.rev
     ]
-	def tokens = ['litemod.json', 'update.json']
+	def tokens = ['litemod.json']
 
     // this will ensure that this task is redone when the versions change.
     inputs.properties map
