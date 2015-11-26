@@ -2,20 +2,19 @@ package mnm.mods.util.gui;
 
 import java.math.BigInteger;
 
+import org.lwjgl.input.Keyboard;
+
+import com.google.common.eventbus.Subscribe;
+
 import mnm.mods.util.Color;
 import mnm.mods.util.Consumer;
 import mnm.mods.util.config.Value;
 import mnm.mods.util.gui.config.GuiSettingString;
-import mnm.mods.util.gui.events.ActionPerformed;
 import mnm.mods.util.gui.events.GuiEvent;
-import mnm.mods.util.gui.events.GuiKeyboardAdapter;
 import mnm.mods.util.gui.events.GuiKeyboardEvent;
-import mnm.mods.util.gui.events.GuiMouseAdapter;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumChatFormatting;
-
-import org.lwjgl.input.Keyboard;
 
 /**
  * A gui used to select a color.
@@ -47,8 +46,8 @@ public class GuiSelectColor extends GuiPanel {
         this.callback = callback_;
         this.current.setForeColor(color.getColor());
         this.selected.setForeColor(color.getColor());
-        this.current.addMouseAdapter(new GuiMouseAdapter() {
-            @Override
+        this.current.getBus().register(new Object() {
+            @Subscribe
             public void accept(GuiMouseEvent event) {
                 if (event.event == GuiMouseEvent.CLICKED) {
                     Color color = new Color(current.getForeColor());
@@ -58,33 +57,23 @@ public class GuiSelectColor extends GuiPanel {
         });
         this.setLayout(new GuiGridLayout(20, 20));
 
-        this.addComponent(sliderRed = new GuiSliderColor(color.getRed() / 255D, true,
-                GuiSliderColor.Model.RED, color), new int[] { 1, 1, 2, 10 });
-        this.addComponent(sliderGreen = new GuiSliderColor(color.getGreen() / 255D, true,
-                GuiSliderColor.Model.GREEN, color), new int[] { 4, 1, 2, 10 });
-        this.addComponent(sliderBlue = new GuiSliderColor(color.getBlue() / 255D, true,
-                GuiSliderColor.Model.BLUE, color), new int[] { 7, 1, 2, 10 });
-        this.addComponent(sliderAlpha = new GuiSliderColor(color.getAlpha() / 255D, true,
-                GuiSliderColor.Model.ALPHA, color), new int[] { 10, 1, 2, 10 });
+        this.addComponent(sliderRed = new GuiSliderColor(color.getRed() / 255D, true, GuiSliderColor.Model.RED, color), new int[] { 1, 1, 2, 10 });
+        this.addComponent(sliderGreen = new GuiSliderColor(color.getGreen() / 255D, true, GuiSliderColor.Model.GREEN, color), new int[] { 4, 1, 2, 10 });
+        this.addComponent(sliderBlue = new GuiSliderColor(color.getBlue() / 255D, true, GuiSliderColor.Model.BLUE, color), new int[] { 7, 1, 2, 10 });
+        this.addComponent(sliderAlpha = new GuiSliderColor(color.getAlpha() / 255D, true, GuiSliderColor.Model.ALPHA, color), new int[] { 10, 1, 2, 10 });
 
-        this.addComponent(new GuiLabel(EnumChatFormatting.RED + I18n.format("colors.red"), 300),
-                new int[] { 1, 12 });
-        this.addComponent(
-                new GuiLabel(EnumChatFormatting.GREEN + I18n.format("colors.green"), 300),
-                new int[] { 4, 12 });
-        this.addComponent(new GuiLabel(EnumChatFormatting.BLUE + I18n.format("colors.blue"), 300),
-                new int[] { 7, 12 });
-        this.addComponent(
-                new GuiLabel(EnumChatFormatting.WHITE + I18n.format("colors.alpha"), 300),
-                new int[] { 10, 12 });
+        this.addComponent(new GuiLabel(EnumChatFormatting.RED + I18n.format("colors.red"), 300), new int[] { 1, 12 });
+        this.addComponent(new GuiLabel(EnumChatFormatting.GREEN + I18n.format("colors.green"), 300), new int[] { 4, 12 });
+        this.addComponent(new GuiLabel(EnumChatFormatting.BLUE + I18n.format("colors.blue"), 300), new int[] { 7, 12 });
+        this.addComponent(new GuiLabel(EnumChatFormatting.WHITE + I18n.format("colors.alpha"), 300), new int[] { 10, 12 });
 
         this.addComponent(current, new int[] { 14, 1, 6, 3 });
         this.addComponent(selected, new int[] { 14, 4, 6, 3 });
 
         string = new GuiSettingString(new Value<String>(""));
         string.getInput().getTextField().setMaxStringLength(8);
-        string.addKeyboardAdapter(new GuiKeyboardAdapter() {
-            @Override
+        string.getBus().register(new Object() {
+            @Subscribe
             public void accept(GuiKeyboardEvent event) {
                 if (string.isFocused() && event.key == Keyboard.KEY_RETURN) {
                     String hex = string.getValue();
@@ -98,8 +87,8 @@ public class GuiSelectColor extends GuiPanel {
         this.addComponent(string, new int[] { 14, 8, 6, 2 });
 
         GuiButton random = new GuiButton(I18n.format("createWorld.customize.custom.randomize"));
-        random.addActionListener(new ActionPerformed() {
-            @Override
+        random.getBus().register(new Object() {
+            @Subscribe
             public void action(GuiEvent event) {
                 setColor(Color.random());
             }
@@ -107,8 +96,8 @@ public class GuiSelectColor extends GuiPanel {
         this.addComponent(random, new int[] { 13, 11, 8, 2 });
 
         GuiButton cancel = new GuiButton(I18n.format("gui.cancel"));
-        cancel.addActionListener(new ActionPerformed() {
-            @Override
+        cancel.getBus().register(new Object() {
+            @Subscribe
             public void action(GuiEvent event) {
                 // Close
                 getParent().setOverlay(null);
@@ -116,8 +105,8 @@ public class GuiSelectColor extends GuiPanel {
         });
         this.addComponent(cancel, new int[] { 13, 13, 4, 2 });
         GuiButton apply = new GuiButton(I18n.format("gui.done"));
-        apply.addActionListener(new ActionPerformed() {
-            @Override
+        apply.getBus().register(new Object() {
+            @Subscribe
             public void action(GuiEvent event) {
                 callback.apply(GuiSelectColor.this.color);
             }

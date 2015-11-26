@@ -2,12 +2,13 @@ package mnm.mods.util.gui.config;
 
 import java.awt.Rectangle;
 
+import com.google.common.eventbus.Subscribe;
+
 import mnm.mods.util.Color;
 import mnm.mods.util.Consumer;
 import mnm.mods.util.config.Value;
 import mnm.mods.util.gui.GuiSelectColor;
-import mnm.mods.util.gui.events.ActionPerformed;
-import mnm.mods.util.gui.events.GuiEvent;
+import mnm.mods.util.gui.events.ActionPerformedEvent;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.ResourceLocation;
 
@@ -16,7 +17,7 @@ import net.minecraft.util.ResourceLocation;
  *
  * @author Matthew
  */
-public class GuiSettingColor extends GuiSetting<Color>implements Consumer<Color>, ActionPerformed {
+public class GuiSettingColor extends GuiSetting<Color> implements Consumer<Color> {
 
     private static final ResourceLocation TRANSPARENCY = new ResourceLocation("mnmutils",
             "textures/transparency.png");
@@ -27,8 +28,8 @@ public class GuiSettingColor extends GuiSetting<Color>implements Consumer<Color>
         super(setting);
     }
 
-    @Override
-    public void action(GuiEvent event) {
+    @Subscribe
+    public void selectColor(ActionPerformedEvent event) {
         getParent().setOverlay(new GuiSelectColor(GuiSettingColor.this, getValue()));
     }
 

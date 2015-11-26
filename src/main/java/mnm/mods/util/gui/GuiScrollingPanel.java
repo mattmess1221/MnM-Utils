@@ -6,8 +6,9 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import com.google.common.eventbus.Subscribe;
+
 import mnm.mods.util.gui.BorderLayout.Position;
-import mnm.mods.util.gui.events.GuiMouseAdapter;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import net.minecraft.client.gui.Gui;
 
@@ -16,7 +17,7 @@ import net.minecraft.client.gui.Gui;
  *
  * @author Matthew
  */
-public class GuiScrollingPanel extends GuiPanel implements GuiMouseAdapter {
+public class GuiScrollingPanel extends GuiPanel {
 
     private GuiPanel panel;
 
@@ -36,16 +37,15 @@ public class GuiScrollingPanel extends GuiPanel implements GuiMouseAdapter {
         Rectangle rect = getBounds();
 
         glEnable(GL_SCISSOR_TEST);
-        glScissor(actual.x * 2, mc.displayHeight - rect.height * 2 - actual.y * 2,
-                rect.width * 2, rect.height * 2);
+        glScissor(actual.x * 2, mc.displayHeight - rect.height * 2 - actual.y * 2, rect.width * 2, rect.height * 2);
 
         super.drawComponent(mouseX, mouseY);
 
         glDisable(GL_SCISSOR_TEST);
     }
 
-    @Override
-    public void accept(GuiMouseEvent event) {
+    @Subscribe
+    public void scroll(GuiMouseEvent event) {
         if (event.event == GuiMouseEvent.SCROLLED) {
             Rectangle rect = panel.getBounds();
             rect.y += event.scroll / 12;

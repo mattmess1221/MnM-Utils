@@ -3,16 +3,17 @@ package mnm.mods.util.gui;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
+import org.lwjgl.opengl.GL11;
+
+import com.google.common.eventbus.Subscribe;
+
 import mnm.mods.util.TexturedModal;
-import mnm.mods.util.gui.events.ActionPerformed;
-import mnm.mods.util.gui.events.GuiEvent;
+import mnm.mods.util.gui.events.ActionPerformedEvent;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
 
 /**
  * A {@link net.minecraft.client.gui.GuiButton} for the GuiComponent system.
@@ -35,12 +36,11 @@ public class GuiButton extends GuiComponent {
      */
     public GuiButton(String text) {
         this.setText(text);
-        this.addActionListener(new ActionPerformed() {
-            @Override
-            public void action(GuiEvent event) {
-                mc.getSoundHandler().playSound(PositionedSoundRecord.create(getSound(), 1.0F));
-            }
-        });
+    }
+
+    @Subscribe
+    public void onClick(ActionPerformedEvent action) {
+        mc.getSoundHandler().playSound(PositionedSoundRecord.create(getSound(), 1.0F));
     }
 
     /**

@@ -1,19 +1,20 @@
 package mnm.mods.util.gui;
 
-import mnm.mods.util.gui.events.GuiMouseAdapter;
+import org.lwjgl.input.Mouse;
+
+import com.google.common.eventbus.Subscribe;
+
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.input.Mouse;
 
 /**
  * A slider for double values. Click and drag or scroll to change the value.
  *
  * @author Matthew
  */
-public class GuiSlider extends GuiComponent implements GuiMouseAdapter, IGuiInput<Double> {
+public class GuiSlider extends GuiComponent implements IGuiInput<Double> {
 
     private static final ResourceLocation TRANSPARENCY = new ResourceLocation("mnmutils",
             "textures/transparency.png");
@@ -58,8 +59,8 @@ public class GuiSlider extends GuiComponent implements GuiMouseAdapter, IGuiInpu
         return String.format("%%%.0f", getValue() * 100);
     }
 
-    @Override
-    public void accept(GuiMouseEvent event) {
+    @Subscribe
+    public void moveSlider(GuiMouseEvent event) {
         if (event.position.x < 0
                 || event.position.y < 0
                 || event.position.x > getBounds().width

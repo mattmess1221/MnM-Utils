@@ -1,7 +1,8 @@
 package mnm.mods.util.gui;
 
-import mnm.mods.util.gui.events.ActionPerformed;
-import mnm.mods.util.gui.events.GuiEvent;
+import com.google.common.eventbus.Subscribe;
+
+import mnm.mods.util.gui.events.ActionPerformedEvent;
 import net.minecraft.client.gui.Gui;
 
 /**
@@ -9,7 +10,7 @@ import net.minecraft.client.gui.Gui;
  *
  * @author Matthew
  */
-public class GuiCheckbox extends GuiComponent implements ActionPerformed, IGuiInput<Boolean> {
+public class GuiCheckbox extends GuiComponent implements IGuiInput<Boolean> {
 
     private boolean value;
 
@@ -54,8 +55,8 @@ public class GuiCheckbox extends GuiComponent implements ActionPerformed, IGuiIn
         this.value = value;
     }
 
-    @Override
-    public void action(GuiEvent event) {
+    @Subscribe
+    public void onClick(ActionPerformedEvent event) {
         setValue(!getValue());
     }
 }

@@ -6,11 +6,11 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import mnm.mods.util.gui.events.GuiMouseAdapter;
+import com.google.common.collect.Lists;
+import com.google.common.eventbus.Subscribe;
+
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import net.minecraft.client.renderer.GlStateManager;
-
-import com.google.common.collect.Lists;
 
 /**
  * A component that can contain multiple components.
@@ -25,20 +25,17 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
     private GuiComponent overlay;
 
     public GuiPanel(ILayout layout) {
-        this();
         setLayout(layout);
     }
 
-    public GuiPanel() {
+    public GuiPanel() {}
+
+    @Subscribe
+    public void unfocus(GuiMouseEvent event) {
         // Unfocuses all focusable on click
-        this.addMouseAdapter(new GuiMouseAdapter() {
-            @Override
-            public void accept(GuiMouseEvent event) {
-                if (event.event == GuiMouseEvent.CLICKED) {
-                    unfocusAll();
-                }
-            }
-        });
+        if (event.event == GuiMouseEvent.CLICKED) {
+            unfocusAll();
+        }
     }
 
     @Override

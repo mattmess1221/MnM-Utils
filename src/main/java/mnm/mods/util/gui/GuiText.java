@@ -5,9 +5,9 @@ import java.awt.Rectangle;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
-import mnm.mods.util.gui.events.GuiKeyboardAdapter;
+import com.google.common.eventbus.Subscribe;
+
 import mnm.mods.util.gui.events.GuiKeyboardEvent;
-import mnm.mods.util.gui.events.GuiMouseAdapter;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import net.minecraft.client.gui.GuiTextField;
 
@@ -16,7 +16,7 @@ import net.minecraft.client.gui.GuiTextField;
  *
  * @author Matthew
  */
-public class GuiText extends GuiComponent implements IGuiInput<String>, GuiMouseAdapter, GuiKeyboardAdapter {
+public class GuiText extends GuiComponent implements IGuiInput<String> {
 
     private GuiTextField textField;
     private String hint;
@@ -31,8 +31,8 @@ public class GuiText extends GuiComponent implements IGuiInput<String>, GuiMouse
         // you look great, by the way.
     }
 
-    @Override
-    public void accept(GuiMouseEvent event) {
+    @Subscribe
+    public void textboxClick(GuiMouseEvent event) {
         if (event.event == GuiMouseEvent.CLICKED) {
             setFocused(true);
 
@@ -43,8 +43,8 @@ public class GuiText extends GuiComponent implements IGuiInput<String>, GuiMouse
         }
     }
 
-    @Override
-    public void accept(GuiKeyboardEvent event) {
+    @Subscribe
+    public void textboxType(GuiKeyboardEvent event) {
         if (Keyboard.isKeyDown(event.key)) {
             textField.textboxKeyTyped(event.character, event.key);
         }

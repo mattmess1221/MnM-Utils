@@ -2,8 +2,9 @@ package mnm.mods.util.gui.config;
 
 import java.util.Arrays;
 
+import com.google.common.eventbus.Subscribe;
+
 import mnm.mods.util.config.Value;
-import mnm.mods.util.gui.events.GuiMouseAdapter;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
@@ -15,7 +16,7 @@ import net.minecraft.client.resources.I18n;
  * @author Matthew
  * @param <T> The type
  */
-public class GuiSettingEnum<T> extends GuiSetting<T>implements GuiMouseAdapter {
+public class GuiSettingEnum<T> extends GuiSetting<T> {
 
     private T value;
 
@@ -39,8 +40,8 @@ public class GuiSettingEnum<T> extends GuiSetting<T>implements GuiMouseAdapter {
         setBackColor(0xff666666);
     }
 
-    @Override
-    public void accept(GuiMouseEvent event) {
+    @Subscribe
+    public void activate(GuiMouseEvent event) {
         if (event.event == GuiMouseEvent.CLICKED) {
             if (event.button == 0) {
                 // Left click, go forward

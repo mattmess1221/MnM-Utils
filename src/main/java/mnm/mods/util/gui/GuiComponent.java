@@ -3,20 +3,17 @@ package mnm.mods.util.gui;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.util.List;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import com.google.common.collect.Lists;
+import com.google.common.eventbus.EventBus;
 
 import mnm.mods.util.Color;
-import mnm.mods.util.gui.events.ActionPerformed;
-import mnm.mods.util.gui.events.GuiKeyboardAdapter;
+import mnm.mods.util.gui.events.ActionPerformedEvent;
 import mnm.mods.util.gui.events.GuiKeyboardEvent;
-import mnm.mods.util.gui.events.GuiMouseAdapter;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -48,23 +45,13 @@ public abstract class GuiComponent extends Gui {
     private float scale = 1;
     private String caption;
 
-    private List<ActionPerformed> actionListeners = Lists.newArrayList();
-    private List<GuiMouseAdapter> mouseAdapters = Lists.newArrayList();
-    private List<GuiKeyboardAdapter> keyboardAdapters = Lists.newArrayList();
+    private EventBus bus = new EventBus(getClass().getName());
 
     private GuiComponent wrapper;
 
     public GuiComponent() {
         this.setBounds(new Rectangle());
-        if (this instanceof ActionPerformed) {
-            addActionListener((ActionPerformed) this);
-        }
-        if (this instanceof GuiMouseAdapter) {
-            addMouseAdapter((GuiMouseAdapter) this);
-        }
-        if (this instanceof GuiKeyboardAdapter) {
-            addKeyboardAdapter((GuiKeyboardAdapter) this);
-        }
+        this.getBus().register(this);
     }
 
     /**
@@ -207,67 +194,64 @@ public abstract class GuiComponent extends Gui {
             point.x = (int) ((point.x - actual.x) / scale);
             point.y = (int) ((point.y - actual.y) / scale);
             GuiMouseEvent event = new GuiMouseEvent(this, GuiMouseEvent.RAW, point, button, scroll);
-            for (GuiMouseAdapter adapter : mouseAdapters) {
-                event.event = GuiMouseEvent.RAW;
-                adapter.accept(event);
+            event.event = GuiMouseEvent.RAW;
+            getBus().post(event);
 
-                if (isHovered() || isButtonHeld()) {
-                    if (Mouse.getEventDX() != 0 && Mouse.getEventDY() != 0) {
-                        // mouse moved
-                        event.event = GuiMouseEvent.MOVED;
-                        adapter.accept(event);
-                        if (isButtonHeld()) {
-                            // mouse dragged
-                            event.event = GuiMouseEvent.DRAGGED;
-                            adapter.accept(event);
-                        }
+            if (isHovered() || isButtonHeld()) {
+                if (Mouse.getEventDX() != 0 && Mouse.getEventDY() != 0) {
+                    // mouse moved
+                    event.event = GuiMouseEvent.MOVED;
+                    getBus().post(event);
+                    if (isButtonHeld()) {
+                        // mouse dragged
+                        event.event = GuiMouseEvent.DRAGGED;
+                        getBus().post(event);
                     }
-                    if (button != -1) {
-                        if (Mouse.getEventButtonState()) {
-                            // button pressed
-                            event.event = GuiMouseEvent.PRESSED;
-                            adapter.accept(event);
-                        } else if (!Mouse.getEventButtonState()) {
-                            // button released
-                            event.event = GuiMouseEvent.RELEASED;
-                            adapter.accept(event);
-                            if (isButtonHeld() && isHovered()) {
-                                // button clicked
-                                event.event = GuiMouseEvent.CLICKED;
-                                adapter.accept(event);
-                            }
-                            this.buttonHeld = false;
+                }
+                if (button != -1) {
+                    if (Mouse.getEventButtonState()) {
+                        // button pressed
+                        event.event = GuiMouseEvent.PRESSED;
+                        getBus().post(event);
+                    } else if (!Mouse.getEventButtonState()) {
+                        // button released
+                        event.event = GuiMouseEvent.RELEASED;
+                        getBus().post(event);
+                        if (isButtonHeld() && isHovered()) {
+                            // button clicked
+                            event.event = GuiMouseEvent.CLICKED;
+                            getBus().post(event);
                         }
+                        this.buttonHeld = false;
                     }
+                }
 
-                    if (isHovered()) {
-                        if (entered) {
-                            // mouse entered
-                            event.event = GuiMouseEvent.ENTERED;
-                            adapter.accept(event);
-                        } else {
-                            // mouse left
-                            event.event = GuiMouseEvent.HOVERED;
-                            adapter.accept(event);
-                        }
+                if (isHovered()) {
+                    if (entered) {
+                        // mouse entered
+                        event.event = GuiMouseEvent.ENTERED;
+                        getBus().post(event);
                     } else {
-                        if (entered) {
-                            event.event = GuiMouseEvent.EXITED;
-                            adapter.accept(event);
-                        }
+                        // mouse left
+                        event.event = GuiMouseEvent.HOVERED;
+                        getBus().post(event);
                     }
-                    if (scroll != 0) {
-                        // wheel moved
-                        event.event = GuiMouseEvent.SCROLLED;
-                        adapter.accept(event);
+                } else {
+                    if (entered) {
+                        event.event = GuiMouseEvent.EXITED;
+                        getBus().post(event);
                     }
+                }
+                if (scroll != 0) {
+                    // wheel moved
+                    event.event = GuiMouseEvent.SCROLLED;
+                    getBus().post(event);
                 }
             }
+
             if (isHovered() && button == 0 && !Mouse.getEventButtonState()) {
                 // left button released
-                for (ActionPerformed action : actionListeners) {
-                    action.action(event);
-                }
+                getBus().post(new ActionPerformedEvent(this));
             }
         }
     }
@@ -284,9 +268,7 @@ public abstract class GuiComponent extends Gui {
         char character = Keyboard.getEventCharacter();
         long time = Keyboard.getEventNanoseconds();
         GuiKeyboardEvent event = new GuiKeyboardEvent(this, key, character, time);
-        for (GuiKeyboardAdapter adapter : keyboardAdapters) {
-            adapter.accept(event);
-        }
+        getBus().post(event);
     }
 
     /**
@@ -362,30 +344,15 @@ public abstract class GuiComponent extends Gui {
     }
 
     /**
-     * Adds an action listener to the list.
+     * Gets the event bus used for the gui events for this component. This
+     * replaces the listener interfaces previously used. They should easily port
+     * over by adding a {@link com.google.common.eventbus.Subscribe} annotation
+     * to the method.
      *
-     * @param actionPerformed The listener
+     * @return The event bus
      */
-    public void addActionListener(ActionPerformed actionPerformed) {
-        this.actionListeners.add(actionPerformed);
-    }
-
-    /**
-     * Adds a mouse adapter to the list.
-     *
-     * @param mouse The adapter
-     */
-    public void addMouseAdapter(GuiMouseAdapter mouse) {
-        this.mouseAdapters.add(mouse);
-    }
-
-    /**
-     * Adds a keyboard adapter to the list.
-     *
-     * @param keyboard The adapter
-     */
-    public void addKeyboardAdapter(GuiKeyboardAdapter keyboard) {
-        this.keyboardAdapters.add(keyboard);
+    public EventBus getBus() {
+        return bus;
     }
 
     public void wrap(GuiComponent wrap) {

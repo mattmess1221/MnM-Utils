@@ -3,8 +3,9 @@ package mnm.mods.util.gui;
 import java.awt.Rectangle;
 import java.text.NumberFormat;
 
-import mnm.mods.util.gui.events.ActionPerformed;
-import mnm.mods.util.gui.events.GuiEvent;
+import com.google.common.eventbus.Subscribe;
+
+import mnm.mods.util.gui.events.ActionPerformedEvent;
 
 /**
  * Input for numbers, also known as a slider. Use {@link DoubleUpDown} for
@@ -155,7 +156,7 @@ public abstract class GuiNumericUpDown<T extends Number> extends GuiPanel implem
         this.value = value;
     }
 
-    private class UpDown extends GuiButton implements ActionPerformed {
+    private class UpDown extends GuiButton {
 
         private int direction;
 
@@ -173,8 +174,8 @@ public abstract class GuiNumericUpDown<T extends Number> extends GuiPanel implem
             return bounds;
         }
 
-        @Override
-        public void action(GuiEvent event) {
+        @Subscribe
+        public void action(ActionPerformedEvent event) {
             increment(direction);
         }
     }
