@@ -1,8 +1,9 @@
 package mnm.mods.util.gui;
 
+import mnm.mods.util.text.FancyFontRenderer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 
 /**
@@ -12,24 +13,36 @@ import net.minecraft.util.IChatComponent;
  */
 public class GuiLabel extends GuiComponent {
 
-    private static FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
-    private String string;
+    private FancyFontRenderer fr;
+    private IChatComponent string;
     private float angle;
 
+    public GuiLabel() {
+        this.fr = new FancyFontRenderer(Minecraft.getMinecraft().fontRendererObj);
+    }
+
     /**
-     * Creates a label from an chat component.
+     * Creates a label from a chat component.
      *
      * @param chat The text
      */
     public GuiLabel(IChatComponent chat) {
-        this(chat.getFormattedText(), 0);
+        this();
+        this.string = chat;
+    }
+
+    public GuiLabel(IChatComponent string, float angle) {
+        this(string);
+        this.angle = angle % 360;
     }
 
     /**
      * Creates a label from a string
      *
      * @param string The string
+     * @deprecated Use {@link #GuiLabel(IChatComponent)}
      */
+    @Deprecated
     public GuiLabel(String string) {
         this(string, 0);
     }
@@ -40,14 +53,15 @@ public class GuiLabel extends GuiComponent {
      * @param string The string
      * @param angle The angle
      */
+    @Deprecated
     public GuiLabel(String string, float angle) {
-        this.string = string;
-        this.angle = angle % 360;
+        this(new ChatComponentText(string), 0);
     }
 
     @Override
     public void drawComponent(int mouseX, int mouseY) {
-
+        if (string == null)
+            return;
         GlStateManager.pushMatrix();
         GlStateManager.rotate(angle, 0, 0, angle);
         if (angle < 180) {
@@ -56,12 +70,8 @@ public class GuiLabel extends GuiComponent {
             GlStateManager.translate(-angle / 15, angle / 40, 0);
         }
 
-        int y = getBounds().height / 2 - fr.FONT_HEIGHT / 2;
-        String[] split = getString().split("\r?\n");
-        for (String s : split) {
-            fr.drawString(s, 0, y, getForeColor());
-            y += fr.FONT_HEIGHT;
-        }
+        fr.drawChat(string, getBounds().x, getBounds().y, true);
+
         GlStateManager.popMatrix();
         super.drawComponent(mouseX, mouseY);
     }
@@ -71,7 +81,7 @@ public class GuiLabel extends GuiComponent {
      *
      * @param string The string
      */
-    public void setString(String string) {
+    public void setString(IChatComponent string) {
         this.string = string;
     }
 
@@ -80,7 +90,7 @@ public class GuiLabel extends GuiComponent {
      *
      * @return The string
      */
-    public String getString() {
+    public IChatComponent getString() {
         return string;
     }
 

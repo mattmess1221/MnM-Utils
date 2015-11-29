@@ -5,7 +5,10 @@ import java.text.NumberFormat;
 
 import com.google.common.eventbus.Subscribe;
 
+import mnm.mods.util.Color;
 import mnm.mods.util.gui.events.ActionPerformedEvent;
+import mnm.mods.util.text.ChatBuilder;
+import net.minecraft.util.IChatComponent;
 
 /**
  * Input for numbers, also known as a slider. Use {@link DoubleUpDown} for
@@ -37,10 +40,10 @@ public abstract class GuiNumericUpDown<T extends Number> extends GuiPanel implem
             };
             rect.setForeColor(0xff000000);
             text.addComponent(rect);
-            GuiLabel label = new GuiLabel("") {
+            GuiLabel label = new GuiLabel() {
                 @Override
-                public String getString() {
-                    return format.format(getValue());
+                public IChatComponent getString() {
+                    return new ChatBuilder().text(format.format(getValue())).build();
                 }
             };
             label.setPosition(5, 7);

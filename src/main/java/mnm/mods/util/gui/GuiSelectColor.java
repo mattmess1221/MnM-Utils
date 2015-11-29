@@ -13,6 +13,7 @@ import mnm.mods.util.gui.config.GuiSettingString;
 import mnm.mods.util.gui.events.GuiEvent;
 import mnm.mods.util.gui.events.GuiKeyboardEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent;
+import mnm.mods.util.text.ChatBuilder;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -62,10 +63,22 @@ public class GuiSelectColor extends GuiPanel {
         this.addComponent(sliderBlue = new GuiSliderColor(color.getBlue() / 255D, true, GuiSliderColor.Model.BLUE, color), new int[] { 7, 1, 2, 10 });
         this.addComponent(sliderAlpha = new GuiSliderColor(color.getAlpha() / 255D, true, GuiSliderColor.Model.ALPHA, color), new int[] { 10, 1, 2, 10 });
 
-        this.addComponent(new GuiLabel(EnumChatFormatting.RED + I18n.format("colors.red"), 300), new int[] { 1, 12 });
-        this.addComponent(new GuiLabel(EnumChatFormatting.GREEN + I18n.format("colors.green"), 300), new int[] { 4, 12 });
-        this.addComponent(new GuiLabel(EnumChatFormatting.BLUE + I18n.format("colors.blue"), 300), new int[] { 7, 12 });
-        this.addComponent(new GuiLabel(EnumChatFormatting.WHITE + I18n.format("colors.alpha"), 300), new int[] { 10, 12 });
+        this.addComponent(new GuiLabel(new ChatBuilder()
+                .quickTranslate("colors.red")
+                .format(EnumChatFormatting.RED)
+                .build(), 300), new int[] { 1, 12 });
+        this.addComponent(new GuiLabel(new ChatBuilder()
+                .quickTranslate("chat.green")
+                .format(EnumChatFormatting.GREEN)
+                .build(), 300), new int[] { 4, 12 });
+        this.addComponent(new GuiLabel(new ChatBuilder()
+                .quickTranslate("colors.blue")
+                .format(EnumChatFormatting.BLUE)
+                .build(), 300), new int[] { 7, 12 });
+        this.addComponent(new GuiLabel(new ChatBuilder()
+                .quickTranslate("colors.alpha")
+                .format(EnumChatFormatting.WHITE)
+                .build(), 300), new int[] { 10, 12 });
 
         this.addComponent(current, new int[] { 14, 1, 6, 3 });
         this.addComponent(selected, new int[] { 14, 4, 6, 3 });
