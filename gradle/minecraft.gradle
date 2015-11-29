@@ -3,7 +3,7 @@ minecraft {
 		version = "1.8.8-$forgever"
 	else
 		version = '1.8.8'
-	mappings = 'snapshot_20151122'
+	mappings = 'snapshot_20151128'
 	runDir = rootProject.file('run')
 
 	if (plugins.hasPlugin('net.minecraftforge.gradle.tweaker-client'))
