@@ -51,7 +51,7 @@ public class GuiSelectColor extends GuiPanel {
             @Subscribe
             public void accept(GuiMouseEvent event) {
                 if (event.event == GuiMouseEvent.CLICKED) {
-                    Color color = new Color(current.getForeColor());
+                    Color color = Color.of(current.getForeColor());
                     setColor(color);
                 }
             }
@@ -92,7 +92,7 @@ public class GuiSelectColor extends GuiPanel {
                     String hex = string.getValue();
                     if (hex.matches("^[0-9a-fA-F]{1,8}$")) { // valid hex
                         int c = new BigInteger(hex, 16).intValue();
-                        setColor(new Color(c));
+                        setColor(Color.of(c));
                     }
                 }
             }
@@ -145,7 +145,7 @@ public class GuiSelectColor extends GuiPanel {
         int b = (int) (sliderBlue.getValue() * 255);
         int a = (int) (sliderAlpha.getValue() * 255);
 
-        Color color = new Color(r, g, b, a);
+        Color color = Color.of(r, g, b, a);
         if (!color.equals(this.color)) {
             this.color = color;
             selected.setForeColor(color.getColor());

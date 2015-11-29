@@ -129,7 +129,7 @@ public abstract class GuiComponent extends Gui {
      * @param y2
      */
     protected void drawBorders(int x1, int y1, int x2, int y2) {
-        Color color = new Color(getBackColor());
+        Color color = Color.of(getBackColor());
         int r = color.getRed();
         int g = color.getGreen();
         int b = color.getBlue();
@@ -137,7 +137,7 @@ public abstract class GuiComponent extends Gui {
         r += luminance(r, amt);
         g += luminance(g, amt);
         b += luminance(b, amt);
-        color = new Color(r, g, b, 0xaa);
+        color = Color.of(r, g, b, 0xaa);
         drawBorders(x1, y1, x2, y2, color.getColor());
     }
 

@@ -10,22 +10,22 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Color {
 
-    public static final Color BLACK = new Color(0xff000000);
-    public static final Color DARK_BLUE = new Color(0xff0000aa);
-    public static final Color DARK_GREEN = new Color(0xff00aa00);
-    public static final Color DARK_AQUA = new Color(0xff00aaaa);
-    public static final Color DARK_RED = new Color(0xffaa0000);
-    public static final Color DARK_PURPLE = new Color(0xffaa00aa);
-    public static final Color GOLD = new Color(0xffffaa00);
-    public static final Color GRAY = new Color(0xffaaaaaa);
-    public static final Color DARK_GRAY = new Color(0xff555555);
-    public static final Color BLUE = new Color(0xff5555ff);
-    public static final Color GREEN = new Color(0xff55ff55);
-    public static final Color AQUA = new Color(0xff55ffff);
-    public static final Color RED = new Color(0xffff5555);
-    public static final Color LIGHT_PURPLE = new Color(0xffff55ff);
-    public static final Color YELLOW = new Color(0xffffff55);
-    public static final Color WHITE = new Color(0xffffffff);
+    public static final Color BLACK = of(0xff000000);
+    public static final Color DARK_BLUE = of(0xff0000aa);
+    public static final Color DARK_GREEN = of(0xff00aa00);
+    public static final Color DARK_AQUA = of(0xff00aaaa);
+    public static final Color DARK_RED = of(0xffaa0000);
+    public static final Color DARK_PURPLE = of(0xffaa00aa);
+    public static final Color GOLD = of(0xffffaa00);
+    public static final Color GRAY = of(0xffaaaaaa);
+    public static final Color DARK_GRAY = of(0xff555555);
+    public static final Color BLUE = of(0xff5555ff);
+    public static final Color GREEN = of(0xff55ff55);
+    public static final Color AQUA = of(0xff55ffff);
+    public static final Color RED = of(0xffff5555);
+    public static final Color LIGHT_PURPLE = of(0xffff55ff);
+    public static final Color YELLOW = of(0xffffff55);
+    public static final Color WHITE = of(0xffffffff);
 
     private static Random random = new Random();
 
@@ -43,7 +43,7 @@ public class Color {
      *
      * @param hexColor The html color code
      */
-    public Color(int hexColor) {
+    private Color(int hexColor) {
         this.alpha = hexColor >> 24 & 255;
         this.red = hexColor >> 16 & 255;
         this.green = hexColor >> 8 & 255;
@@ -58,7 +58,7 @@ public class Color {
      * @param blue Blue color
      * @param alpha Transparency
      */
-    public Color(int red, int green, int blue, int alpha) {
+    private Color(int red, int green, int blue, int alpha) {
         this.red = red % 256;
         this.green = green % 256;
         this.blue = blue % 256;
@@ -126,7 +126,7 @@ public class Color {
      * @return The hexadecimal representation of this color.
      */
     public static int getColor(int red, int green, int blue, int alpha) {
-        return new Color(red, green, blue, alpha).getColor();
+        return of(red, green, blue, alpha).getColor();
     }
 
     /**
@@ -135,7 +135,15 @@ public class Color {
      * @return A random color
      */
     public static Color random() {
-        return new Color(random.nextInt());
+        return of(random.nextInt());
+    }
+
+    public static Color of(int hexColor) {
+        return new Color(hexColor);
+    }
+
+    public static Color of(int red, int green, int blue, int alpha) {
+        return new Color(red, green, blue, alpha);
     }
 
     @Override
