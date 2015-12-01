@@ -14,7 +14,7 @@ import net.minecraft.util.IChatComponent;
 public class GuiLabel extends GuiComponent {
 
     private FancyFontRenderer fr;
-    private IChatComponent string;
+    private IChatComponent text;
     private float angle;
 
     public GuiLabel() {
@@ -28,12 +28,7 @@ public class GuiLabel extends GuiComponent {
      */
     public GuiLabel(IChatComponent chat) {
         this();
-        this.string = chat;
-    }
-
-    public GuiLabel(IChatComponent string, float angle) {
-        this(string);
-        this.angle = angle % 360;
+        this.text = chat;
     }
 
     /**
@@ -55,12 +50,13 @@ public class GuiLabel extends GuiComponent {
      */
     @Deprecated
     public GuiLabel(String string, float angle) {
-        this(new ChatComponentText(string), 0);
+        this(new ChatComponentText(string));
+        setAngle(angle);
     }
 
     @Override
     public void drawComponent(int mouseX, int mouseY) {
-        if (string == null)
+        if (text == null)
             return;
         GlStateManager.pushMatrix();
         GlStateManager.rotate(angle, 0, 0, angle);
@@ -70,19 +66,23 @@ public class GuiLabel extends GuiComponent {
             GlStateManager.translate(-angle / 15, angle / 40, 0);
         }
 
-        fr.drawChat(string, getBounds().x, getBounds().y, true);
+        fr.drawChat(text, getBounds().x, getBounds().y, getForeColor(), true);
 
         GlStateManager.popMatrix();
         super.drawComponent(mouseX, mouseY);
     }
 
+    public void setText(String text) {
+        setText(new ChatComponentText(text));
+    }
+
     /**
      * Sets the string of this label
      *
-     * @param string The string
+     * @param text The string
      */
-    public void setString(IChatComponent string) {
-        this.string = string;
+    public void setText(IChatComponent text) {
+        this.text = text;
     }
 
     /**
@@ -90,8 +90,16 @@ public class GuiLabel extends GuiComponent {
      *
      * @return The string
      */
-    public IChatComponent getString() {
-        return string;
+    public IChatComponent getText() {
+        return text;
+    }
+
+    public float getAngle() {
+        return angle;
+    }
+
+    public void setAngle(float angle) {
+        this.angle = angle;
     }
 
 }

@@ -4,12 +4,23 @@ import mnm.mods.util.Color;
 
 public class FancyChatStyle {
 
+    private Color color;
     private Color underline;
     private Color highlight;
 
+    public Color getColor() {
+        if (underline == null)
+            return Color.WHITE;
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
     public Color getUnderline() {
         if (underline == null)
-            underline = new Color(0);
+            return Color.of(0);
         return underline;
     }
 
@@ -19,7 +30,7 @@ public class FancyChatStyle {
 
     public Color getHighlight() {
         if (highlight == null)
-            highlight = new Color(0);
+            return Color.of(0);
         return highlight;
     }
 
@@ -36,7 +47,7 @@ public class FancyChatStyle {
 
     @Override
     public String toString() {
-        return String.format("FancyStyle{underline=%s, hightlight=%s}", underline, highlight);
+        return String.format("FancyStyle{color=%s, underline=%s, hightlight=%s}", color, underline, highlight);
     }
 
 }

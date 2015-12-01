@@ -42,6 +42,12 @@ public abstract class AbstractChatBuilder implements IChatBuilder {
     }
 
     @Override
+    public IChatBuilder color(Color color) {
+        asFancy().getFancyStyle().setColor(color);
+        return this;
+    }
+
+    @Override
     public IChatBuilder underline(Color color) {
         asFancy().getFancyStyle().setUnderline(color);
         return this;
@@ -105,6 +111,11 @@ public abstract class AbstractChatBuilder implements IChatBuilder {
     @Override
     public IChatBuilder translation(String key) {
         return new TranslationBuilder(this, key);
+    }
+
+    @Override
+    public IChatBuilder quickTranslate(String key) {
+        return translation(key).end();
     }
 
 }

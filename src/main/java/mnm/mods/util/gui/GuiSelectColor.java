@@ -63,22 +63,26 @@ public class GuiSelectColor extends GuiPanel {
         this.addComponent(sliderBlue = new GuiSliderColor(color.getBlue() / 255D, true, GuiSliderColor.Model.BLUE, color), new int[] { 7, 1, 2, 10 });
         this.addComponent(sliderAlpha = new GuiSliderColor(color.getAlpha() / 255D, true, GuiSliderColor.Model.ALPHA, color), new int[] { 10, 1, 2, 10 });
 
-        this.addComponent(new GuiLabel(new ChatBuilder()
-                .quickTranslate("colors.red")
-                .format(EnumChatFormatting.RED)
-                .build(), 300), new int[] { 1, 12 });
-        this.addComponent(new GuiLabel(new ChatBuilder()
-                .quickTranslate("chat.green")
-                .format(EnumChatFormatting.GREEN)
-                .build(), 300), new int[] { 4, 12 });
-        this.addComponent(new GuiLabel(new ChatBuilder()
-                .quickTranslate("colors.blue")
-                .format(EnumChatFormatting.BLUE)
-                .build(), 300), new int[] { 7, 12 });
-        this.addComponent(new GuiLabel(new ChatBuilder()
-                .quickTranslate("colors.alpha")
-                .format(EnumChatFormatting.WHITE)
-                .build(), 300), new int[] { 10, 12 });
+        GuiLabel label;
+
+        label = new GuiLabel();
+        label.setText(new ChatBuilder().quickTranslate("colors.red").format(EnumChatFormatting.RED).build());
+        label.setAngle(300);
+        this.addComponent(label, new int[] { 1, 12 });
+
+        label = new GuiLabel();
+        label.setText(new ChatBuilder().quickTranslate("chat.green").format(EnumChatFormatting.GREEN).build());
+        label.setAngle(300);
+        this.addComponent(label, new int[] { 4, 12 });
+
+        label = new GuiLabel();
+        label.setText(new ChatBuilder().quickTranslate("colors.blue").format(EnumChatFormatting.BLUE).build());
+        label.setAngle(300);
+        this.addComponent(label, new int[] { 7, 12 });
+
+        label = new GuiLabel();
+        label.setText(new ChatBuilder().quickTranslate("colors.alpha").format(EnumChatFormatting.WHITE).build());
+        this.addComponent(label, new int[] { 10, 12 });
 
         this.addComponent(current, new int[] { 14, 1, 6, 3 });
         this.addComponent(selected, new int[] { 14, 4, 6, 3 });

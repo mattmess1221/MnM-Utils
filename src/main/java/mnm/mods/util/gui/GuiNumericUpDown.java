@@ -5,7 +5,6 @@ import java.text.NumberFormat;
 
 import com.google.common.eventbus.Subscribe;
 
-import mnm.mods.util.Color;
 import mnm.mods.util.gui.events.ActionPerformedEvent;
 import mnm.mods.util.text.ChatBuilder;
 import net.minecraft.util.IChatComponent;
@@ -42,7 +41,7 @@ public abstract class GuiNumericUpDown<T extends Number> extends GuiPanel implem
             text.addComponent(rect);
             GuiLabel label = new GuiLabel() {
                 @Override
-                public IChatComponent getString() {
+                public IChatComponent getText() {
                     return new ChatBuilder().text(format.format(getValue())).build();
                 }
             };

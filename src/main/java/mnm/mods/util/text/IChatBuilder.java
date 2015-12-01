@@ -16,6 +16,8 @@ public interface IChatBuilder {
      */
     IChatBuilder format(EnumChatFormatting f);
 
+    IChatBuilder color(Color color);
+
     IChatBuilder underline(Color color);
 
     IChatBuilder highlight(Color color);
@@ -43,6 +45,16 @@ public interface IChatBuilder {
      * @return A translation builder
      */
     IChatBuilder translation(String key);
+
+    /**
+     * Quickly translates the given key with zero arguments or formatting.
+     * Immidiently ends the translation. Same as calling
+     * {@code translation(key).end()}
+     *
+     * @param key
+     * @return
+     */
+    IChatBuilder quickTranslate(String key);
 
     /**
      * Used for builders that build multiple chats.

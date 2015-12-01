@@ -1,9 +1,5 @@
 package mnm.mods.util.text;
 
-import java.util.List;
-
-import com.google.common.collect.Lists;
-
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.IChatComponent;
@@ -16,13 +12,10 @@ public class FancyFontRenderer extends Gui {
         this.fontRenderer = fr;
     }
 
-    public void drawChat(IChatComponent chat, int x, int y, boolean shadow) {
+    public void drawChat(IChatComponent chat, int x, int y, int color, boolean shadow) {
 
         int x1 = x;
-        List<IChatComponent> list = (chat.getSiblings());
-        list = Lists.newArrayList(list);
-        list.add(0, chat);
-        for (IChatComponent c : list) {
+        for (IChatComponent c : chat) {
             if (c instanceof FancyChatComponent) {
                 FancyChatComponent fcc = (FancyChatComponent) c;
                 int length = fontRenderer.getStringWidth(c.getUnformattedText());
@@ -32,7 +25,7 @@ public class FancyFontRenderer extends Gui {
 
             x1 += fontRenderer.getStringWidth(c.getUnformattedTextForChat());
         }
-        fontRenderer.drawString(chat.getFormattedText(), x, y, -1, shadow);
+        fontRenderer.drawString(chat.getFormattedText(), x, y, color, shadow);
     }
 
 }
