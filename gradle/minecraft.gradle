@@ -1,3 +1,13 @@
+def doCmd(s) {
+	try {
+		s.execute(null, file('.')).text.trim()
+	} catch(e) {
+		[text:'null']
+	}
+}
+ext.gitRevision = doCmd('git rev-list --count HEAD')
+ext.gitHash = doCmd('git rev-parse --short HEAD')
+
 minecraft {
 	if (project == forge)
 		version = "1.8.8-$forgever"
@@ -10,28 +20,34 @@ minecraft {
 		tweakClass = 'com.mumfrey.liteloader.launch.LiteLoaderTweaker'
 }
 processResources {
-    def map = [
-        version:project.version,
-        mcversion:project.minecraft.version,
-        revision:project.rev
-    ]
+	def map = [
+		version:project.version,
+		mcversion:project.minecraft.version,
+		revision:project.gitRevision
+	]
 	def tokens = ['litemod.json']
 
-    // this will ensure that this task is redone when the versions change.
-    inputs.properties map
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include tokens
-        // replace
-        expand map
-    }
+	// this will ensure that this task is redone when the versions change.
+	inputs.properties map
+	// replace stuff in mcmod.info, nothing else
+	from(sourceSets.main.resources.srcDirs) {
+		include tokens
+		// replace
+		expand map
+	}
 
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude tokens
-    }
+	// copy everything else, thats not the mcmod.info
+	from(sourceSets.main.resources.srcDirs) {
+		exclude tokens
+	}
 }
-// remove the manifest after fg adds the TweakClass attribute
 afterEvaluate {
+	// remove the manifest after fg adds the TweakClass attribute
 	jar.manifest.attributes.remove 'TweakClass'
+	tasks.withType(Jar){
+		exclude 'dummyThing'
+		manifest {
+			attributes 'Implementation-Version': "$version (git $gitHash)"
+		}
+	}
 }
