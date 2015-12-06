@@ -10,6 +10,7 @@ import com.google.common.eventbus.Subscribe;
 
 import mnm.mods.util.gui.BorderLayout.Position;
 import mnm.mods.util.gui.events.GuiMouseEvent;
+import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
 import net.minecraft.client.gui.Gui;
 
 /**
@@ -46,9 +47,9 @@ public class GuiScrollingPanel extends GuiPanel {
 
     @Subscribe
     public void scroll(GuiMouseEvent event) {
-        if (event.event == GuiMouseEvent.SCROLLED) {
+        if (event.getEvent() == MouseEvent.SCROLL) {
             Rectangle rect = panel.getBounds();
-            rect.y += event.scroll / 12;
+            rect.y += event.getScroll() / 12;
 
             Rectangle prect = panel.getParent().getBounds();
             Dimension dim = panel.getMinimumSize();

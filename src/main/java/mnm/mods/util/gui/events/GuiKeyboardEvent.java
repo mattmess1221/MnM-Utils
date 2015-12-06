@@ -14,22 +14,34 @@ public class GuiKeyboardEvent extends GuiEvent {
     /**
      * The character typed
      */
-    public final char character;
+    private final char character;
     /**
      * The key code typed
      *
      * @see Keyboard
      */
-    public final int key;
+    private final int key;
     /**
      * The time in miliseconds the key was held for.
      */
-    public final long time;
+    private final long time;
 
     public GuiKeyboardEvent(GuiComponent component, int key, char character, long time) {
         super(component);
         this.key = key;
         this.character = character;
         this.time = time;
+    }
+
+    public char getCharacter() {
+        return character;
+    }
+
+    public int getKey() {
+        return key;
+    }
+
+    public long getTime() {
+        return time;
     }
 }

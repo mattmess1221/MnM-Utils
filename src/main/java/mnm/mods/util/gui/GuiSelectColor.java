@@ -13,6 +13,7 @@ import mnm.mods.util.gui.config.GuiSettingString;
 import mnm.mods.util.gui.events.GuiEvent;
 import mnm.mods.util.gui.events.GuiKeyboardEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent;
+import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
 import mnm.mods.util.text.ChatBuilder;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumChatFormatting;
@@ -50,7 +51,7 @@ public class GuiSelectColor extends GuiPanel {
         this.current.getBus().register(new Object() {
             @Subscribe
             public void accept(GuiMouseEvent event) {
-                if (event.event == GuiMouseEvent.CLICKED) {
+                if (event.getEvent() == MouseEvent.CLICK) {
                     Color color = Color.of(current.getForeColor());
                     setColor(color);
                 }
@@ -92,7 +93,7 @@ public class GuiSelectColor extends GuiPanel {
         string.getBus().register(new Object() {
             @Subscribe
             public void accept(GuiKeyboardEvent event) {
-                if (string.isFocused() && event.key == Keyboard.KEY_RETURN) {
+                if (string.isFocused() && event.getKey() == Keyboard.KEY_RETURN) {
                     String hex = string.getValue();
                     if (hex.matches("^[0-9a-fA-F]{1,8}$")) { // valid hex
                         int c = new BigInteger(hex, 16).intValue();

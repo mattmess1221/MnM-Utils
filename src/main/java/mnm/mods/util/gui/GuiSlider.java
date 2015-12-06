@@ -5,6 +5,7 @@ import org.lwjgl.input.Mouse;
 import com.google.common.eventbus.Subscribe;
 
 import mnm.mods.util.gui.events.GuiMouseEvent;
+import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -61,26 +62,26 @@ public class GuiSlider extends GuiComponent implements IGuiInput<Double> {
 
     @Subscribe
     public void moveSlider(GuiMouseEvent event) {
-        if (event.position.x < 0
-                || event.position.y < 0
-                || event.position.x > getBounds().width
-                || event.position.y > getBounds().height) {
+        if (event.getMouseX() < 0
+                || event.getMouseY() < 0
+                || event.getMouseX() > getBounds().width
+                || event.getMouseY() > getBounds().height) {
             return;
         }
-        if ((event.event == GuiMouseEvent.CLICKED || event.event == GuiMouseEvent.DRAGGED)
+        if ((event.getEvent() == MouseEvent.CLICK || event.getEvent() == MouseEvent.DRAG)
                 && Mouse.isButtonDown(0)) {
             double val;
             if (vertical) {
-                int y = event.position.y;
+                int y = event.getMouseY();
                 val = Math.abs((double) y / (double) getBounds().height - 1);
             } else {
-                int x = event.position.x;
+                int x = event.getMouseX();
                 val = (double) x / (double) getBounds().width;
             }
             setValue(val);
         }
-        if (event.event == GuiMouseEvent.SCROLLED) {
-            setValue(getValue() + event.scroll / 7360D);
+        if (event.getEvent() == MouseEvent.SCROLL) {
+            setValue(getValue() + event.getScroll() / 7360D);
         }
     }
 

@@ -9,6 +9,7 @@ import com.google.common.eventbus.Subscribe;
 
 import mnm.mods.util.gui.events.GuiKeyboardEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent;
+import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
 import net.minecraft.client.gui.GuiTextField;
 
 /**
@@ -33,11 +34,11 @@ public class GuiText extends GuiComponent implements IGuiInput<String> {
 
     @Subscribe
     public void textboxClick(GuiMouseEvent event) {
-        if (event.event == GuiMouseEvent.CLICKED) {
+        if (event.getEvent() == MouseEvent.CLICK) {
             setFocused(true);
 
-            int x = event.position.x;
-            int y = event.position.y;
+            int x = event.getMouseX();
+            int y = event.getMouseY();
             // send to text field.
             textField.mouseClicked(x, y, 0);
         }
@@ -45,8 +46,8 @@ public class GuiText extends GuiComponent implements IGuiInput<String> {
 
     @Subscribe
     public void textboxType(GuiKeyboardEvent event) {
-        if (Keyboard.isKeyDown(event.key)) {
-            textField.textboxKeyTyped(event.character, event.key);
+        if (Keyboard.isKeyDown(event.getKey())) {
+            textField.textboxKeyTyped(event.getCharacter(), event.getKey());
         }
     }
 

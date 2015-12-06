@@ -15,6 +15,7 @@ import mnm.mods.util.Color;
 import mnm.mods.util.gui.events.ActionPerformedEvent;
 import mnm.mods.util.gui.events.GuiKeyboardEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent;
+import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
@@ -167,14 +168,18 @@ public abstract class GuiComponent extends Gui {
             return;
         }
         if (mc.currentScreen != null) {
+            float scale = getActualScale();
             Point point = scalePoint(new Point(Mouse.getX(), Mouse.getY()));
+            Rectangle actual = getActualBounds();
+            // adjust for position and scale
+            int x = (int) ((point.x - actual.x) / scale);
+            int y = (int) ((point.y - actual.y) / scale);
 
             int button = Mouse.getEventButton();
             int scroll = Mouse.getEventDWheel();
-            Rectangle actual = getActualBounds();
 
-            if (point.x >= actual.x && point.x <= actual.x + actual.width
-                    && point.y >= actual.y && point.y <= actual.y + actual.height) {
+            if (x >= actual.x && x <= actual.x + actual.width
+                    && y >= actual.y && y <= actual.y + actual.height) {
                 if (!isHovered()) {
                     this.entered = true;
                 }
@@ -189,38 +194,28 @@ public abstract class GuiComponent extends Gui {
                 this.buttonHeld = (true);
 
             }
-            float scale = getActualScale();
-            // adjust for position and scale
-            point.x = (int) ((point.x - actual.x) / scale);
-            point.y = (int) ((point.y - actual.y) / scale);
-            GuiMouseEvent event = new GuiMouseEvent(this, GuiMouseEvent.RAW, point, button, scroll);
-            event.event = GuiMouseEvent.RAW;
-            getBus().post(event);
+
+            getBus().post(new GuiMouseEvent(this, MouseEvent.RAW, x, y, button, scroll));
 
             if (isHovered() || isButtonHeld()) {
                 if (Mouse.getEventDX() != 0 && Mouse.getEventDY() != 0) {
                     // mouse moved
-                    event.event = GuiMouseEvent.MOVED;
-                    getBus().post(event);
+                    getBus().post(new GuiMouseEvent(this, MouseEvent.MOVE, x, y, button, scroll));
                     if (isButtonHeld()) {
                         // mouse dragged
-                        event.event = GuiMouseEvent.DRAGGED;
-                        getBus().post(event);
+                        getBus().post(new GuiMouseEvent(this, MouseEvent.DRAG, x, y, button, scroll));
                     }
                 }
                 if (button != -1) {
                     if (Mouse.getEventButtonState()) {
                         // button pressed
-                        event.event = GuiMouseEvent.PRESSED;
-                        getBus().post(event);
+                        getBus().post(new GuiMouseEvent(this, MouseEvent.PRESS, x, y, button, scroll));
                     } else if (!Mouse.getEventButtonState()) {
                         // button released
-                        event.event = GuiMouseEvent.RELEASED;
-                        getBus().post(event);
+                        getBus().post(new GuiMouseEvent(this, MouseEvent.RELEASE, x, y, button, scroll));
                         if (isButtonHeld() && isHovered()) {
                             // button clicked
-                            event.event = GuiMouseEvent.CLICKED;
-                            getBus().post(event);
+                            getBus().post(new GuiMouseEvent(this, MouseEvent.CLICK, x, y, button, scroll));
                         }
                         this.buttonHeld = false;
                     }
@@ -229,23 +224,19 @@ public abstract class GuiComponent extends Gui {
                 if (isHovered()) {
                     if (entered) {
                         // mouse entered
-                        event.event = GuiMouseEvent.ENTERED;
-                        getBus().post(event);
+                        getBus().post(new GuiMouseEvent(this, MouseEvent.ENTER, x, y, button, scroll));
                     } else {
                         // mouse left
-                        event.event = GuiMouseEvent.HOVERED;
-                        getBus().post(event);
+                        getBus().post(new GuiMouseEvent(this, MouseEvent.HOVER, x, y, button, scroll));
                     }
                 } else {
                     if (entered) {
-                        event.event = GuiMouseEvent.EXITED;
-                        getBus().post(event);
+                        getBus().post(new GuiMouseEvent(this, MouseEvent.EXIT, x, y, button, scroll));
                     }
                 }
                 if (scroll != 0) {
                     // wheel moved
-                    event.event = GuiMouseEvent.SCROLLED;
-                    getBus().post(event);
+                    getBus().post(new GuiMouseEvent(this, MouseEvent.SCROLL, x, y, button, scroll));
                 }
             }
 

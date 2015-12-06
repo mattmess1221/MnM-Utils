@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
 import mnm.mods.util.gui.events.GuiMouseEvent;
+import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
 import net.minecraft.client.renderer.GlStateManager;
 
 /**
@@ -33,7 +34,7 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
     @Subscribe
     public void unfocus(GuiMouseEvent event) {
         // Unfocuses all focusable on click
-        if (event.event == GuiMouseEvent.CLICKED) {
+        if (event.getEvent() == MouseEvent.CLICK) {
             unfocusAll();
         }
     }

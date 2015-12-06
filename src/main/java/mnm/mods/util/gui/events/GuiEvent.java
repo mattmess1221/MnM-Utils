@@ -9,12 +9,13 @@ import mnm.mods.util.gui.GuiComponent;
  */
 public abstract class GuiEvent {
 
-    /**
-     * The component clicked.
-     */
-    public final GuiComponent component;
+    private GuiComponent component;
 
     public GuiEvent(GuiComponent component) {
         this.component = component;
+    }
+
+    public GuiComponent getComponent() {
+        return component;
     }
 }

@@ -6,6 +6,7 @@ import com.google.common.eventbus.Subscribe;
 
 import mnm.mods.util.config.Value;
 import mnm.mods.util.gui.events.GuiMouseEvent;
+import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
 
@@ -42,11 +43,11 @@ public class GuiSettingEnum<T> extends GuiSetting<T> {
 
     @Subscribe
     public void activate(GuiMouseEvent event) {
-        if (event.event == GuiMouseEvent.CLICKED) {
-            if (event.button == 0) {
+        if (event.getEvent() == MouseEvent.CLICK) {
+            if (event.getButton() == 0) {
                 // Left click, go forward
                 select(selected + 1);
-            } else if (event.button == 1) {
+            } else if (event.getButton() == 1) {
                 // Right click, go backward
                 select(selected - 1);
             }
