@@ -191,7 +191,7 @@ public abstract class GuiComponent extends Gui {
                 if (!isHovered()) {
                     this.entered = true;
                 }
-                this.hovered = parent == null ? true : parent.isHovered();
+                this.hovered = true;
             } else {
                 if (!isHovered()) {
                     this.entered = false;
@@ -655,7 +655,7 @@ public abstract class GuiComponent extends Gui {
         if (wrapper != null) {
             return wrapper.isHovered();
         }
-        return hovered;
+        return hovered && (parent == null ? true : parent.isHovered());
     }
 
     /**
