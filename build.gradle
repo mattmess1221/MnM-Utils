@@ -6,20 +6,24 @@ else
 	}
 group = "mnm.mods"
 archivesBaseName = "MnM-Utils"
-version = "0.3-SNAPSHOT.$System.env.BUILD_ID"
-//version = "0.3.1"
+//version = "0.3-SNAPSHOT.$System.env.BUILD_ID"
+version = "1.0"
 
-ext.rev = '4'
+ext.rev = '10'
 
 apply from: file('gradle/minecraft.gradle')
 minecraft {
     replace "@MCVERSION@", project.minecraft.version
+	replace "@VERSION", project.version
 }
 dependencies {
     compile 'com.google.code.findbugs:jsr305:2.0.1'
     deobfCompile 'com.mumfrey:liteloader:1.8-SNAPSHOT:srgnames'
 }
-jar.extension 'litemod'
+jar {
+	extension 'litemod'
+	appendix "mc$minecraft.version"
+}
 task jarSrg(type:Jar) {
     from sourceSets.main.output
     classifier "srg"
