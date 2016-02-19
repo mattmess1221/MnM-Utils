@@ -9,8 +9,12 @@ buildscript {
 	dependencies.classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
 }
 apply plugin: 'net.minecraftforge.gradle.tweaker-client'
-version = '0.4-SNAPSHOT'
-//version = "0.3.1"
+
+group = "mnm.mods"
+archivesBaseName = "MnM-Utils"
+version = "1.1-SNAPSHOT"
+
+ext.rev = '20'
 
 apply from: file('gradle/minecraft.gradle')
 version += "-b${gitRevision}"
@@ -21,6 +25,7 @@ archivesBaseName = "MnM-Utils"
 minecraft {
 	version = '1.8.8'
     replace "@MCVERSION@", project.minecraft.version
+	replace "@VERSION", project.version
 }
 repositories.flatDir {
 	dir '../flat'
@@ -31,7 +36,7 @@ dependencies {
 }
 jar {
 	extension 'litemod'
-	appendix "mc${minecraft.version}"
+	appendix "mc$minecraft.version"
 }
 task jarSrg(type:Jar) {
     from sourceSets.main.output
@@ -43,6 +48,6 @@ tasks.findAll { 'make' in it.name }*.enabled = false
 
 reobf {
 	jarSrg {
-		useSrgSrg()
+		mappings = 'SEARGE'
 	}
 }

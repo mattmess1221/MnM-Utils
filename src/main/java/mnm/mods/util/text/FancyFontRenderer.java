@@ -12,6 +12,18 @@ public class FancyFontRenderer extends Gui {
         this.fontRenderer = fr;
     }
 
+    public void drawChat(IChatComponent chat, int x, int y) {
+        this.drawChat(chat, x, y, true);
+    }
+
+    public void drawChat(IChatComponent chat, int x, int y, boolean shadow) {
+        drawChat(chat, x, y, -1, shadow);
+    }
+
+    public void drawChat(IChatComponent chat, int x, int y, int color) {
+        this.drawChat(chat, x, y, color, true);
+    }
+
     public void drawChat(IChatComponent chat, int x, int y, int color, boolean shadow) {
 
         int x1 = x;

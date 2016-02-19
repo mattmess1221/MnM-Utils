@@ -114,10 +114,10 @@ public abstract class GuiComponent extends Gui {
     }
 
     protected void drawBorders(int x1, int y1, int x2, int y2, int color) {
-        Gui.drawRect(x1 - 1, y1 - 1, x1, y2, color); // left
-        Gui.drawRect(x1 - 1, y1 - 1, x2 + 1, y1, color); // top
-        Gui.drawRect(x2, y1 - 1, x2 + 1, y2 + 1, color); // right
-        Gui.drawRect(x1 - 1, y2, x2 + 1, y2 + 1, color); // bottom
+        this.drawVerticalLine(x1 - 1, y1 - 1, y2 + 1, color); // left
+        this.drawHorizontalLine(x1 - 1, x2, y1 - 1, color); // top
+        this.drawVerticalLine(x2, y1 - 1, y2 + 1, color); // right
+        this.drawHorizontalLine(x1, x2 - 1, y2, color); // bottom
     }
 
     /**
@@ -183,7 +183,7 @@ public abstract class GuiComponent extends Gui {
                 if (!isHovered()) {
                     this.entered = true;
                 }
-                this.hovered = parent == null ? true : parent.isHovered();
+                this.hovered = true;
             } else {
                 if (!isHovered()) {
                     this.entered = false;
@@ -613,7 +613,7 @@ public abstract class GuiComponent extends Gui {
         if (wrapper != null) {
             return wrapper.isHovered();
         }
-        return hovered;
+        return hovered && (parent == null ? true : parent.isHovered());
     }
 
     /**

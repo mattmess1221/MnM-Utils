@@ -25,7 +25,7 @@ public class GuiScrollingPanel extends GuiPanel {
     public GuiScrollingPanel() {
         super(new BorderLayout());
         this.panel = new GuiPanel();
-        this.panel.setBounds(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+        this.panel.setBounds(0, 0, 100000, 100000);
         GuiPanel panel = new GuiPanel();
         panel.addComponent(this.panel);
         this.addComponent(panel, Position.CENTER);
