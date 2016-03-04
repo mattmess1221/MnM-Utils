@@ -23,16 +23,17 @@ group = "mnm.mods"
 archivesBaseName = "MnM-Utils"
 
 minecraft {
-	version = '1.8.8'
-    replace "@MCVERSION@", project.minecraft.version
+	replace "@MCVERSION@", project.minecraft.version
 	replace "@VERSION", project.version
 }
-repositories.flatDir {
-	dir '../flat'
+repositories {
+	maven {
+		name 'liteloader'
+		url 'http://repo.mumfrey.com/content/repositories/snapshots/'
+	}
 }
 dependencies {
-//    compile 'com.google.code.findbugs:jsr305:2.0.1'
-    deobfCompile 'com.mumfrey:liteloader:1.8-SNAPSHOT:srgnames'
+    deobfCompile 'com.mumfrey:liteloader:1.8.9-SNAPSHOT' // TODO use liteloader plugin
 }
 jar {
 	extension 'litemod'
@@ -48,6 +49,6 @@ tasks.findAll { 'make' in it.name }*.enabled = false
 
 reobf {
 	jarSrg {
-		mappings = 'SEARGE'
+		mappingType = 'SEARGE'
 	}
 }

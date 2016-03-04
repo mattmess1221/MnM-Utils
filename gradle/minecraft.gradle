@@ -9,11 +9,11 @@ ext.gitRevision = doCmd('git rev-list --count HEAD')
 ext.gitHash = doCmd('git rev-parse --short HEAD')
 
 minecraft {
-	if (project == forge)
-		version = "1.8.8-$forgever"
-	else
-		version = '1.8.8'
-	mappings = 'snapshot_20151128'
+	def v = '1.8.9'
+	if ('forgever' in project.properties)
+		v += "-$forgever"
+	version = v
+	mappings = 'stable_22'
 	runDir = rootProject.file('run')
 
 	if (plugins.hasPlugin('net.minecraftforge.gradle.tweaker-client'))
