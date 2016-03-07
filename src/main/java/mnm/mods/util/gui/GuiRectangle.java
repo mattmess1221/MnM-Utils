@@ -22,7 +22,7 @@ public class GuiRectangle extends GuiComponent {
         mc.getTextureManager().bindTexture(TRANSPARENCY);
         Rectangle r = getBounds();
         Gui.drawModalRectWithCustomSizedTexture(0, 0, 0, 0, r.width, r.height, 5, 5);
-        Gui.drawRect(0, 0, getBounds().width, getBounds().height, getForeColor());
+        Gui.drawRect(0, 0, getBounds().width, getBounds().height, getForeColor().getHex());
         GlStateManager.disableBlend();
         super.drawComponent(mouseX, mouseY);
     }

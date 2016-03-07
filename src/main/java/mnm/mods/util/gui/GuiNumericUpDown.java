@@ -5,6 +5,7 @@ import java.text.NumberFormat;
 
 import com.google.common.eventbus.Subscribe;
 
+import mnm.mods.util.Color;
 import mnm.mods.util.gui.events.ActionPerformedEvent;
 import mnm.mods.util.text.ChatBuilder;
 import net.minecraft.util.IChatComponent;
@@ -37,7 +38,7 @@ public abstract class GuiNumericUpDown<T extends Number> extends GuiPanel implem
                     return getParent().getBounds();
                 }
             };
-            rect.setForeColor(0xff000000);
+            rect.setForeColor(Color.WHITE);
             text.addComponent(rect);
             GuiLabel label = new GuiLabel() {
                 @Override
@@ -165,7 +166,7 @@ public abstract class GuiNumericUpDown<T extends Number> extends GuiPanel implem
         public UpDown(String text, int direction) {
             super(text);
             this.direction = direction;
-            setBackColor(0xff666666);
+            setBackColor(Color.DARK_GRAY);
         }
 
         @Override

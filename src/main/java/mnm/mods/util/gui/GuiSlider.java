@@ -53,7 +53,7 @@ public class GuiSlider extends GuiComponent implements IGuiInput<Double> {
     }
 
     protected void drawMid() {
-        Gui.drawRect(1, 1, getBounds().width - 1, getBounds().height - 1, getForeColor());
+        Gui.drawRect(1, 1, getBounds().width - 1, getBounds().height - 1, getForeColor().getHex());
     }
 
     public String getFormattedValue() {

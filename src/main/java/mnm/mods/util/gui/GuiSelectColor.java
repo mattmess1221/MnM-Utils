@@ -46,13 +46,13 @@ public class GuiSelectColor extends GuiPanel {
      */
     public GuiSelectColor(Consumer<Color> callback_, Color color) {
         this.callback = callback_;
-        this.current.setForeColor(color.getColor());
-        this.selected.setForeColor(color.getColor());
+        this.current.setForeColor(color);
+        this.selected.setForeColor(color);
         this.current.getBus().register(new Object() {
             @Subscribe
             public void accept(GuiMouseEvent event) {
                 if (event.getEvent() == MouseEvent.CLICK) {
-                    Color color = Color.of(current.getForeColor());
+                    Color color = current.getForeColor();
                     setColor(color);
                 }
             }
@@ -153,14 +153,14 @@ public class GuiSelectColor extends GuiPanel {
         Color color = Color.of(r, g, b, a);
         if (!color.equals(this.color)) {
             this.color = color;
-            selected.setForeColor(color.getColor());
+            selected.setForeColor(color);
 
             sliderRed.setBase(color);
             sliderGreen.setBase(color);
             sliderBlue.setBase(color);
             sliderAlpha.setBase(color);
 
-            string.setValue(Integer.toHexString(color.getColor()));
+            string.setValue(Integer.toHexString(color.getHex()));
         }
     }
 }

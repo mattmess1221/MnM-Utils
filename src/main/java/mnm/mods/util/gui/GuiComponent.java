@@ -38,8 +38,8 @@ public abstract class GuiComponent extends Gui {
 
     protected Minecraft mc = Minecraft.getMinecraft();
 
-    private int backColor = 0;
-    private int foreColor = -1;
+    private Color backColor;
+    private Color foreColor;
     private GuiPanel parent;
     private Rectangle bounds;
     private Dimension minimumSize = new Dimension();
@@ -102,7 +102,7 @@ public abstract class GuiComponent extends Gui {
         drawBorders(x - 2, y - 2, x + w + 2, y + mc.fontRendererObj.FONT_HEIGHT * list.length + 1,
                 0xccaaaaaa);
         for (String s : list) {
-            mc.fontRendererObj.drawStringWithShadow(s, x, y, getForeColor());
+            mc.fontRendererObj.drawStringWithShadow(s, x, y, getForeColor().getHex());
             y += mc.fontRendererObj.FONT_HEIGHT;
         }
         GlStateManager.popMatrix();
@@ -130,7 +130,7 @@ public abstract class GuiComponent extends Gui {
      * @param y2
      */
     protected void drawBorders(int x1, int y1, int x2, int y2) {
-        Color color = Color.of(getBackColor());
+        Color color = getBackColor();
         int r = color.getRed();
         int g = color.getGreen();
         int b = color.getBlue();
@@ -139,7 +139,7 @@ public abstract class GuiComponent extends Gui {
         g += luminance(g, amt);
         b += luminance(b, amt);
         color = Color.of(r, g, b, 0xaa);
-        drawBorders(x1, y1, x2, y2, color.getColor());
+        drawBorders(x1, y1, x2, y2, color.getHex());
     }
 
     private static int luminance(int o, double amt) {
@@ -494,14 +494,16 @@ public abstract class GuiComponent extends Gui {
      *
      * @return The background color
      */
-    public int getBackColor() {
+    public Color getBackColor() {
         if (wrapper != null) {
             return wrapper.getBackColor();
         }
-        int result = backColor;
-        if (getParent() != null && result == 0) {
+        Color result = backColor;
+        if (getParent() != null && result == null) {
             result = getParent().getBackColor();
         }
+        if (result == null)
+            result = Color.of(0);
         return result;
     }
 
@@ -510,7 +512,7 @@ public abstract class GuiComponent extends Gui {
      *
      * @param backColor The new color
      */
-    public void setBackColor(int backColor) {
+    public void setBackColor(Color backColor) {
         if (wrapper != null) {
             wrapper.setBackColor(backColor);
             return;
@@ -523,14 +525,16 @@ public abstract class GuiComponent extends Gui {
      *
      * @return The foreground color
      */
-    public int getForeColor() {
+    public Color getForeColor() {
         if (wrapper != null) {
             return wrapper.getForeColor();
         }
-        int result = foreColor;
-        if (getParent() != null && result == -1) {
+        Color result = foreColor;
+        if (getParent() != null && result == null) {
             result = getParent().getForeColor();
         }
+        if (result == null)
+            result = Color.WHITE;
         return result;
     }
 
@@ -539,7 +543,7 @@ public abstract class GuiComponent extends Gui {
      *
      * @param foreColor The new color
      */
-    public void setForeColor(int foreColor) {
+    public void setForeColor(Color foreColor) {
         if (wrapper != null) {
             wrapper.setForeColor(foreColor);
             return;

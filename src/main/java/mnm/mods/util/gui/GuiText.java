@@ -7,6 +7,7 @@ import org.lwjgl.input.Keyboard;
 
 import com.google.common.eventbus.Subscribe;
 
+import mnm.mods.util.Color;
 import mnm.mods.util.gui.events.GuiKeyboardEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
@@ -113,8 +114,8 @@ public class GuiText extends GuiComponent implements IGuiInput<String> {
     }
 
     @Override
-    public void setForeColor(int foreColor) {
-        textField.setTextColor(foreColor);
+    public void setForeColor(Color foreColor) {
+        textField.setTextColor(foreColor.getHex());
         super.setForeColor(foreColor);
     }
 

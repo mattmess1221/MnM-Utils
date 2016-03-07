@@ -31,8 +31,8 @@ public class FancyFontRenderer extends Gui {
             if (c instanceof FancyChatComponent) {
                 FancyChatComponent fcc = (FancyChatComponent) c;
                 int length = fontRenderer.getStringWidth(c.getUnformattedText());
-                drawRect(x1, y, x1 + length, y - fontRenderer.FONT_HEIGHT, fcc.getFancyStyle().getHighlight().getColor());
-                drawHorizontalLine(x1, x1 + length, y + fontRenderer.FONT_HEIGHT - 1, fcc.getFancyStyle().getUnderline().getColor());
+                drawRect(x1, y, x1 + length, y - fontRenderer.FONT_HEIGHT, fcc.getFancyStyle().getHighlight().getHex());
+                drawHorizontalLine(x1, x1 + length, y + fontRenderer.FONT_HEIGHT - 1, fcc.getFancyStyle().getUnderline().getHex());
             }
 
             x1 += fontRenderer.getStringWidth(c.getUnformattedTextForChat());

@@ -38,7 +38,7 @@ public class GuiSettingColor extends GuiSetting<Color> implements Consumer<Color
         Rectangle rect = getBounds();
         mc.getTextureManager().bindTexture(TRANSPARENCY);
         Gui.drawModalRectWithCustomSizedTexture(0, 0, 0, 0, rect.width, rect.height, 6, 6);
-        Gui.drawRect(0, 0, rect.width, rect.height, getValue().getColor());
+        Gui.drawRect(0, 0, rect.width, rect.height, getValue().getHex());
         Gui.drawRect(0, 0, rect.width, 1, 0xffaabbcc);
         Gui.drawRect(1, 0, 0, rect.height, 0xffaabbcc);
         Gui.drawRect(rect.width - 1, 0, rect.width, rect.height, 0xffaabbcc);

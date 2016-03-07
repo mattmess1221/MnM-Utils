@@ -71,7 +71,7 @@ public class Color {
      *
      * @return The html hex code.
      */
-    public int getColor() {
+    public int getHex() {
         int alphaI = alpha << 24;
         int redI = red << 16;
         int greenI = green << 8;
@@ -117,7 +117,7 @@ public class Color {
 
     /**
      * Convenience method for getting the html code for a RGBA color. Creates a
-     * new object and calls {@link Color#getColor()}.
+     * new object and calls {@link Color#getHex()}.
      *
      * @param red The red value
      * @param green The green value
@@ -126,7 +126,7 @@ public class Color {
      * @return The hexadecimal representation of this color.
      */
     public static int getColor(int red, int green, int blue, int alpha) {
-        return of(red, green, blue, alpha).getColor();
+        return of(red, green, blue, alpha).getHex();
     }
 
     /**
