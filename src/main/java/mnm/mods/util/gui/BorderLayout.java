@@ -37,12 +37,10 @@ public class BorderLayout implements ILayout {
 
     @Override
     public synchronized void removeComponent(GuiComponent comp) {
-        for (Entry<Position, GuiComponent> component : components.entrySet()) {
-            if (component.getValue().equals(comp)) {
-                components.remove(component.getKey());
-                break;
-            }
-        }
+        components.entrySet().stream()
+                .filter(c -> c.getValue().equals(comp))
+                .findFirst()
+                .ifPresent(c -> components.remove(c.getKey()));
     }
 
     @Override

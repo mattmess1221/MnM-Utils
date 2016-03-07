@@ -18,18 +18,14 @@ public interface Translatable {
     String getUnlocalized();
 
     /**
-     * Translates this string. Should be implemented by doing this.
-     *
-     * <pre>
-     * &#064;Override
-     * public String translate(Object... params) {
-     *     return I18n.format(getUnlocalized(), params);
-     * }
+     * Translates this string.
      *
      * </pre>
      *
      * @param params Translation parameters
      * @return The translated string
      */
-    String translate(Object... params); // TODO default method
+    default String translate(Object... params) {
+        return I18n.format(getUnlocalized(), params);
+    }
 }

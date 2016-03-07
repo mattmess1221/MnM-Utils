@@ -1,11 +1,11 @@
 package mnm.mods.util.gui.config;
 
 import java.awt.Rectangle;
+import java.util.function.Consumer;
 
 import com.google.common.eventbus.Subscribe;
 
 import mnm.mods.util.Color;
-import mnm.mods.util.Consumer;
 import mnm.mods.util.config.Value;
 import mnm.mods.util.gui.GuiSelectColor;
 import mnm.mods.util.gui.events.ActionPerformedEvent;
@@ -46,7 +46,7 @@ public class GuiSettingColor extends GuiSetting<Color> implements Consumer<Color
     }
 
     @Override
-    public void apply(Color input) {
+    public void accept(Color input) {
         setValue(input);
         getParent().setOverlay(null);
     }

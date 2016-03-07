@@ -8,6 +8,9 @@ def doCmd(s) {
 ext.gitRevision = doCmd('git rev-list --count HEAD')
 ext.gitHash = doCmd('git rev-parse --short HEAD')
 
+targetCompatibility = 1.8
+sourceCompatibility = 1.8
+
 minecraft {
 	def v = '1.8.9'
 	if ('forgever' in project.properties)

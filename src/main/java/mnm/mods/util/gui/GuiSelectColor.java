@@ -1,13 +1,13 @@
 package mnm.mods.util.gui;
 
 import java.math.BigInteger;
+import java.util.function.Consumer;
 
 import org.lwjgl.input.Keyboard;
 
 import com.google.common.eventbus.Subscribe;
 
 import mnm.mods.util.Color;
-import mnm.mods.util.Consumer;
 import mnm.mods.util.config.Value;
 import mnm.mods.util.gui.config.GuiSettingString;
 import mnm.mods.util.gui.events.GuiEvent;
@@ -126,7 +126,7 @@ public class GuiSelectColor extends GuiPanel {
         apply.getBus().register(new Object() {
             @Subscribe
             public void action(GuiEvent event) {
-                callback.apply(GuiSelectColor.this.color);
+                callback.accept(GuiSelectColor.this.color);
             }
         });
         this.addComponent(apply, new int[] { 17, 13, 4, 2 });
