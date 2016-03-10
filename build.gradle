@@ -8,7 +8,7 @@ buildscript {
 	}
 	dependencies.classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
 }
-apply plugin: 'net.minecraftforge.gradle.tweaker-client'
+apply plugin: 'net.minecraftforge.gradle.liteloader'
 
 group = "mnm.mods"
 archivesBaseName = "MnM-Utils"
@@ -25,19 +25,6 @@ archivesBaseName = "MnM-Utils"
 minecraft {
 	replace "@MCVERSION@", project.minecraft.version
 	replace "@VERSION", project.version
-}
-repositories {
-	maven {
-		name 'liteloader'
-		url 'http://repo.mumfrey.com/content/repositories/snapshots/'
-	}
-}
-dependencies {
-    deobfCompile 'com.mumfrey:liteloader:1.8.9-SNAPSHOT' // TODO use liteloader plugin
-}
-jar {
-	extension 'litemod'
-	appendix "mc$minecraft.version"
 }
 task jarSrg(type:Jar) {
     from sourceSets.main.output
