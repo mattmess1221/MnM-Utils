@@ -68,7 +68,7 @@ public class GuiSlider extends GuiComponent implements IGuiInput<Double> {
                 || event.getMouseY() > getBounds().height) {
             return;
         }
-        if ((event.getEvent() == MouseEvent.CLICK || event.getEvent() == MouseEvent.DRAG)
+        if ((event.getType() == MouseEvent.CLICK || event.getType() == MouseEvent.DRAG)
                 && Mouse.isButtonDown(0)) {
             double val;
             if (vertical) {
@@ -80,7 +80,7 @@ public class GuiSlider extends GuiComponent implements IGuiInput<Double> {
             }
             setValue(val);
         }
-        if (event.getEvent() == MouseEvent.SCROLL) {
+        if (event.getType() == MouseEvent.SCROLL) {
             setValue(getValue() + event.getScroll() / 7360D);
         }
     }

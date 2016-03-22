@@ -47,7 +47,7 @@ public class GuiScrollingPanel extends GuiPanel {
 
     @Subscribe
     public void scroll(GuiMouseEvent event) {
-        if (event.getEvent() == MouseEvent.SCROLL) {
+        if (event.getType() == MouseEvent.SCROLL) {
             Rectangle rect = panel.getBounds();
             rect.y += event.getScroll() / 12;
 

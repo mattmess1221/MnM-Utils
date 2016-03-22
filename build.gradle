@@ -24,7 +24,7 @@ archivesBaseName = "MnM-Utils"
 
 minecraft {
 	replace "@MCVERSION@", project.minecraft.version
-	replace "@VERSION", project.version
+	replace "@VERSION@", project.version
 }
 task jarSrg(type:Jar) {
     from sourceSets.main.output

@@ -51,7 +51,7 @@ public class GuiSelectColor extends GuiPanel {
         this.current.getBus().register(new Object() {
             @Subscribe
             public void accept(GuiMouseEvent event) {
-                if (event.getEvent() == MouseEvent.CLICK) {
+                if (event.getType() == MouseEvent.CLICK) {
                     Color color = current.getForeColor();
                     setColor(color);
                 }

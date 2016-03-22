@@ -37,8 +37,8 @@ public class ChatBuilder extends AbstractChatBuilder {
     public ChatBuilder append(IChatComponent chat) {
 
         if (current != null) {
-            if (chat == null)
-                chat = current;
+            if (this.chat == null)
+                this.chat = current;
             else
                 this.chat.appendSibling(current);
         }

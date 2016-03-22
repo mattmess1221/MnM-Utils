@@ -34,7 +34,7 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
     @Subscribe
     public void unfocus(GuiMouseEvent event) {
         // Unfocuses all focusable on click
-        if (event.getEvent() == MouseEvent.CLICK) {
+        if (event.getType() == MouseEvent.CLICK) {
             unfocusAll();
         }
     }

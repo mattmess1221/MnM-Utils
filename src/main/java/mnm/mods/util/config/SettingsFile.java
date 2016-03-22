@@ -33,7 +33,7 @@ public abstract class SettingsFile extends ValueObject implements AdvancedExposa
     public File getConfigFile(File configFile, File configFileLocation, String defaultFileName) {
         if (file == null)
             file = new File(configFileLocation, path);
-        return new File(configFileLocation, path);
+        return getFile();
     }
 
     public File getFile() {

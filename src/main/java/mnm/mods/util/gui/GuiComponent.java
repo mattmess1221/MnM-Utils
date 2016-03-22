@@ -32,9 +32,10 @@ public abstract class GuiComponent extends Gui {
     private boolean enabled = true;
     private boolean visible = true;
     private boolean hovered;
-    private boolean entered;
     private boolean focused;
-    private boolean buttonHeld;
+    private int touchValue;
+    private int lastButton;
+    private long lastButtonTime;
 
     protected Minecraft mc = Minecraft.getMinecraft();
 
@@ -180,69 +181,37 @@ public abstract class GuiComponent extends Gui {
 
             if (x >= actual.x && x <= actual.x + actual.width
                     && y >= actual.y && y <= actual.y + actual.height) {
-                if (!isHovered()) {
-                    this.entered = true;
-                }
                 this.hovered = true;
             } else {
-                if (!isHovered()) {
-                    this.entered = false;
-                }
                 this.hovered = false;
-            }
-            if (button != -1 && Mouse.getEventButtonState()) {
-                this.buttonHeld = (true);
-
             }
 
             getBus().post(new GuiMouseEvent(this, MouseEvent.RAW, x, y, button, scroll));
 
-            if (isHovered() || isButtonHeld()) {
-                if (Mouse.getEventDX() != 0 && Mouse.getEventDY() != 0) {
-                    // mouse moved
-                    getBus().post(new GuiMouseEvent(this, MouseEvent.MOVE, x, y, button, scroll));
-                    if (isButtonHeld()) {
-                        // mouse dragged
-                        getBus().post(new GuiMouseEvent(this, MouseEvent.DRAG, x, y, button, scroll));
-                    }
+            if (Mouse.getEventButtonState()) {
+                if (this.mc.gameSettings.touchscreen && this.touchValue++ > 0) {
+                    return;
                 }
-                if (button != -1) {
-                    if (Mouse.getEventButtonState()) {
-                        // button pressed
-                        getBus().post(new GuiMouseEvent(this, MouseEvent.PRESS, x, y, button, scroll));
-                    } else if (!Mouse.getEventButtonState()) {
-                        // button released
-                        getBus().post(new GuiMouseEvent(this, MouseEvent.RELEASE, x, y, button, scroll));
-                        if (isButtonHeld() && isHovered()) {
-                            // button clicked
-                            getBus().post(new GuiMouseEvent(this, MouseEvent.CLICK, x, y, button, scroll));
-                        }
-                        this.buttonHeld = false;
-                    }
-                }
-
+                lastButton = button;
+                lastButtonTime = Minecraft.getSystemTime();
                 if (isHovered()) {
-                    if (entered) {
-                        // mouse entered
-                        getBus().post(new GuiMouseEvent(this, MouseEvent.ENTER, x, y, button, scroll));
-                    } else {
-                        // mouse left
-                        getBus().post(new GuiMouseEvent(this, MouseEvent.HOVER, x, y, button, scroll));
-                    }
-                } else {
-                    if (entered) {
-                        getBus().post(new GuiMouseEvent(this, MouseEvent.EXIT, x, y, button, scroll));
-                    }
+                    getBus().post(new GuiMouseEvent(this, MouseEvent.CLICK, x, y, button, 0));
+                    getBus().post(new ActionPerformedEvent(this));
                 }
-                if (scroll != 0) {
-                    // wheel moved
-                    getBus().post(new GuiMouseEvent(this, MouseEvent.SCROLL, x, y, button, scroll));
+            } else if (button != -1) {
+                if (this.mc.gameSettings.touchscreen && --this.touchValue > 0) {
+                    return;
                 }
+                lastButton = -1;
+                if (isHovered())
+                    getBus().post(new GuiMouseEvent(this, MouseEvent.RELEASE, x, y, button, 0));
+            } else if (lastButton != -1 && lastButtonTime > 0) {
+                long buttonTime = Minecraft.getSystemTime() - this.lastButtonTime;
+                getBus().post(new GuiMouseEvent(this, MouseEvent.DRAG, x, y, this.lastButton, buttonTime));
             }
 
-            if (isHovered() && button == 0 && !Mouse.getEventButtonState()) {
-                // left button released
-                getBus().post(new ActionPerformedEvent(this));
+            if (scroll != 0) {
+                getBus().post(new GuiMouseEvent(this, MouseEvent.SCROLL, x, y, -1, -1, scroll));
             }
         }
     }
@@ -270,8 +239,6 @@ public abstract class GuiComponent extends Gui {
             wrapper.onClosed();
         }
         this.hovered = false;
-        this.entered = false;
-        this.buttonHeld = false;
     }
 
     /**
@@ -618,17 +585,6 @@ public abstract class GuiComponent extends Gui {
             return wrapper.isHovered();
         }
         return hovered && (parent == null ? true : parent.isHovered());
-    }
-
-    /**
-     * Returns if the cursor is hovered over this component and a button is
-     * held.
-     */
-    public boolean isButtonHeld() {
-        if (wrapper != null) {
-            return wrapper.isButtonHeld();
-        }
-        return buttonHeld;
     }
 
     /**

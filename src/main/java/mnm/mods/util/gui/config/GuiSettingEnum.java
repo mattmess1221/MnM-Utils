@@ -44,7 +44,7 @@ public class GuiSettingEnum<T> extends GuiSetting<T> {
 
     @Subscribe
     public void activate(GuiMouseEvent event) {
-        if (event.getEvent() == MouseEvent.CLICK) {
+        if (event.getType() == MouseEvent.CLICK) {
             if (event.getButton() == 0) {
                 // Left click, go forward
                 select(selected + 1);

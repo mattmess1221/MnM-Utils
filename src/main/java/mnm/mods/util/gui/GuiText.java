@@ -35,7 +35,7 @@ public class GuiText extends GuiComponent implements IGuiInput<String> {
 
     @Subscribe
     public void textboxClick(GuiMouseEvent event) {
-        if (event.getEvent() == MouseEvent.CLICK) {
+        if (event.getType() == MouseEvent.CLICK) {
             setFocused(true);
 
             int x = event.getMouseX();
