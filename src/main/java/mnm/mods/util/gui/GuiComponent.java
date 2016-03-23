@@ -179,8 +179,8 @@ public abstract class GuiComponent extends Gui {
             int button = Mouse.getEventButton();
             int scroll = Mouse.getEventDWheel();
 
-            if (x >= actual.x && x <= actual.x + actual.width
-                    && y >= actual.y && y <= actual.y + actual.height) {
+            if (x >= 0 && x <= actual.width
+                    && y >= 0 && y <= actual.height) {
                 this.hovered = true;
             } else {
                 this.hovered = false;
@@ -590,6 +590,8 @@ public abstract class GuiComponent extends Gui {
     /**
      * Sets the caption which is shown when the mouse is hovering over this
      * component.
+     *
+     * TODO convert to use IChatComponent
      *
      * @param caption The new caption
      */

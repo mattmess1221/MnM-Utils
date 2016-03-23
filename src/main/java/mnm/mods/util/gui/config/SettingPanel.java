@@ -1,7 +1,6 @@
 package mnm.mods.util.gui.config;
 
 import mnm.mods.util.config.SettingsFile;
-import mnm.mods.util.gui.GuiComponent;
 import mnm.mods.util.gui.GuiPanel;
 
 /**
@@ -43,25 +42,5 @@ public abstract class SettingPanel<T extends SettingsFile> extends GuiPanel {
      */
     public abstract T getSettings();
 
-    /**
-     * Saves all the settings
-     */
-    public void saveSettings() {
-        for (GuiComponent comp : this) {
-            if (comp instanceof GuiSetting) {
-                ((GuiSetting<?>) comp).saveValue();
-            }
-        }
-    }
 
-    /**
-     * Resets all the settings to their value.
-     */
-    public void reset() {
-        for (GuiComponent comp : this) {
-            if (comp instanceof GuiSetting) {
-                ((GuiSetting<?>) comp).reset();
-            }
-        }
-    }
 }

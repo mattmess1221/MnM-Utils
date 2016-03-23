@@ -20,21 +20,21 @@ import net.minecraft.client.resources.I18n;
  */
 public class GuiSettingEnum<T> extends GuiSetting<T> {
 
+    private final T[] values;
+    private final String[] names;
+
     private T value;
 
     private String text;
-    private final T[] values;
-    private String[] names;
     private int selected;
 
-    public GuiSettingEnum(Value<T> setting, T[] values, String[] names) {
-        this(setting, values);
-        this.names = names;
-        select(Arrays.binarySearch(values, setting.get()));
+    public GuiSettingEnum(Value<T> setting, T[] values) {
+        this(setting, values, null);
     }
 
-    public GuiSettingEnum(Value<T> setting, T[] values) {
+    public GuiSettingEnum(Value<T> setting, T[] values, String[] names) {
         super(setting);
+        this.names = names;
         this.values = values;
         selected = getCurrentPosition();
 

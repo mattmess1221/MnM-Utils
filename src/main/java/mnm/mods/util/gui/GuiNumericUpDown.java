@@ -7,7 +7,7 @@ import com.google.common.eventbus.Subscribe;
 
 import mnm.mods.util.Color;
 import mnm.mods.util.gui.events.ActionPerformedEvent;
-import mnm.mods.util.text.ChatBuilder;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 
 /**
@@ -38,23 +38,23 @@ public abstract class GuiNumericUpDown<T extends Number> extends GuiPanel implem
                     return getParent().getBounds();
                 }
             };
-            rect.setForeColor(Color.WHITE);
+            rect.setForeColor(Color.BLACK);
             text.addComponent(rect);
             GuiLabel label = new GuiLabel() {
                 @Override
                 public IChatComponent getText() {
-                    return new ChatBuilder().text(format.format(getValue())).build();
+                    return new ChatComponentText(format.format(getValue()));
                 }
             };
-            label.setPosition(5, 7);
+            label.setPosition(5, 0);
             text.addComponent(label);
 
             addComponent(text, BorderLayout.Position.CENTER);
         }
         {
             GuiPanel pnlButtons = new GuiPanel(new GuiGridLayout(1, 2));
-            GuiButton up = new UpDown("\u2191", 1); // upsidedown v
-            GuiButton down = new UpDown("\u2193", -1);
+            GuiButton up = new UpDown("\u2191", 1); // up arrow
+            GuiButton down = new UpDown("\u2193", -1); // down arrow
             pnlButtons.addComponent(up, new int[] { 0, 0 });
             pnlButtons.addComponent(down, new int[] { 0, 1 });
 
@@ -172,7 +172,7 @@ public abstract class GuiNumericUpDown<T extends Number> extends GuiPanel implem
         @Override
         public Rectangle getBounds() {
             Rectangle bounds = super.getBounds();
-            bounds.width = 7;
+            bounds.width = 6;
             bounds.height = 6;
             return bounds;
         }

@@ -29,18 +29,10 @@ public abstract class GuiSetting<T> extends GuiComponent implements IGuiInput<T>
         return this.setting;
     }
 
-    /**
-     * Resets the value to setting value.
-     */
-    public void reset() {
-        this.setValue(this.setting.get());
-    }
-
-    /**
-     * Sets the setting value to the value.
-     */
-    public void saveValue() {
-        this.setting.set(this.getValue());
+    @Override
+    public void updateComponent() {
+        super.updateComponent();
+        getSetting().set(getValue());
     }
 
     public static class GuiSettingWrapped<T, Wrapper extends IGuiInput<T>> extends GuiSetting<T> {
@@ -67,16 +59,14 @@ public abstract class GuiSetting<T> extends GuiComponent implements IGuiInput<T>
 
         @Override
         public T getValue() {
-
             return getInput().getValue();
         }
 
         @Override
         public void setValue(T value) {
-            if (getInput() == null) {
-                return;
+            if (getInput() != null) {
+                getInput().setValue(value);
             }
-            getInput().setValue(value);
         }
 
     }

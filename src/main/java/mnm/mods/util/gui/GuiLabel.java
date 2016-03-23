@@ -28,7 +28,7 @@ public class GuiLabel extends GuiComponent {
      */
     public GuiLabel(IChatComponent chat) {
         this();
-        this.text = chat;
+        this.setText(chat);
     }
 
     /**
@@ -56,7 +56,7 @@ public class GuiLabel extends GuiComponent {
 
     @Override
     public void drawComponent(int mouseX, int mouseY) {
-        if (text == null)
+        if (getText() == null)
             return;
         GlStateManager.pushMatrix();
         GlStateManager.rotate(angle, 0, 0, angle);
@@ -66,7 +66,7 @@ public class GuiLabel extends GuiComponent {
             GlStateManager.translate(-angle / 15, angle / 40, 0);
         }
 
-        fr.drawChat(text, getBounds().x, getBounds().y, getForeColor().getHex(), true);
+        fr.drawChat(getText(), 0, 1, getForeColor().getHex(), true);
 
         GlStateManager.popMatrix();
         super.drawComponent(mouseX, mouseY);
