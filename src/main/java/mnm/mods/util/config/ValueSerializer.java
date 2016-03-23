@@ -19,6 +19,7 @@ class ValueSerializer implements JsonSerializer<Value<?>>, JsonDeserializer<Valu
     @Override
     public Value<?> deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {
         Type arg = ((ParameterizedType) type).getActualTypeArguments()[0];
+        type = ((ParameterizedType) type).getRawType();
         if (Value.class.equals(type)) {
             return value(json, arg, context);
         }

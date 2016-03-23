@@ -4,7 +4,10 @@ import java.io.File;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.internal.Excluder;
+import com.mumfrey.liteloader.core.runtime.Obf;
 import com.mumfrey.liteloader.modconfig.AdvancedExposable;
+import com.mumfrey.liteloader.util.PrivateFields;
 
 /**
  * Used for creating settings and saving/loading them in the JSON format. Start
@@ -17,7 +20,7 @@ import com.mumfrey.liteloader.modconfig.AdvancedExposable;
  */
 public abstract class SettingsFile extends ValueObject implements AdvancedExposable {
 
-    private String path;
+    private final String path;
     private File file;
 
     public SettingsFile(String path, String name) {
@@ -26,6 +29,8 @@ public abstract class SettingsFile extends ValueObject implements AdvancedExposa
 
     @Override
     public void setupGsonSerialiser(GsonBuilder gsonBuilder) {
+        new PrivateFields<GsonBuilder, Excluder>(GsonBuilder.class, new Obf("excluder") {}) {}
+                .set(gsonBuilder, Excluder.DEFAULT); // grr
         gsonBuilder.registerTypeAdapter(Value.class, new ValueSerializer());
     }
 
@@ -33,7 +38,7 @@ public abstract class SettingsFile extends ValueObject implements AdvancedExposa
     public File getConfigFile(File configFile, File configFileLocation, String defaultFileName) {
         if (file == null)
             file = new File(configFileLocation, path);
-        return getFile();
+        return file;
     }
 
     public File getFile() {
