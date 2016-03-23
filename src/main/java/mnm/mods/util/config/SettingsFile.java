@@ -20,8 +20,8 @@ import com.mumfrey.liteloader.util.PrivateFields;
  */
 public abstract class SettingsFile extends ValueObject implements AdvancedExposable {
 
-    private final String path;
-    private File file;
+    private transient final String path;
+    private transient File file;
 
     public SettingsFile(String path, String name) {
         this.path = String.format("%s/%s.json", path, name);
@@ -31,7 +31,10 @@ public abstract class SettingsFile extends ValueObject implements AdvancedExposa
     public void setupGsonSerialiser(GsonBuilder gsonBuilder) {
         new PrivateFields<GsonBuilder, Excluder>(GsonBuilder.class, new Obf("excluder") {}) {}
                 .set(gsonBuilder, Excluder.DEFAULT); // grr
-        gsonBuilder.registerTypeAdapter(Value.class, new ValueSerializer());
+        ValueSerializer vs = new ValueSerializer();
+        gsonBuilder.registerTypeAdapter(Value.class, vs)
+                .registerTypeAdapter(ValueList.class, vs)
+                .registerTypeAdapter(ValueMap.class, vs);
     }
 
     @Override
