@@ -31,10 +31,7 @@ public abstract class SettingsFile extends ValueObject implements AdvancedExposa
     public void setupGsonSerialiser(GsonBuilder gsonBuilder) {
         new PrivateFields<GsonBuilder, Excluder>(GsonBuilder.class, new Obf("excluder") {}) {}
                 .set(gsonBuilder, Excluder.DEFAULT); // grr
-        ValueSerializer vs = new ValueSerializer();
-        gsonBuilder.registerTypeAdapter(Value.class, vs)
-                .registerTypeAdapter(ValueList.class, vs)
-                .registerTypeAdapter(ValueMap.class, vs);
+        gsonBuilder.registerTypeHierarchyAdapter(Value.class, new ValueSerializer());
     }
 
     @Override
