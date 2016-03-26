@@ -7,6 +7,8 @@ def doCmd(s) {
 }
 ext.gitRevision = doCmd('git rev-list --count HEAD')
 ext.gitHash = doCmd('git rev-parse --short HEAD')
+if (System.env.BUILD_ID != null)
+	version += "-SNAPSHOT-${gitRevision}"
 
 targetCompatibility = 1.8
 sourceCompatibility = 1.8
@@ -22,11 +24,12 @@ minecraft {
 	if (plugins.hasPlugin('net.minecraftforge.gradle.tweaker-client'))
 		tweakClass = 'com.mumfrey.liteloader.launch.LiteLoaderTweaker'
 }
+version += "-mc${minecraft.version}"
 processResources {
 	def map = [
 		version:project.version,
 		mcversion:project.minecraft.version,
-		revision:project.gitRevision
+		revision:(project.gitRevision == 'null' ? -1 : project.gitRevision)
 	]
 	def tokens = ['litemod.json']
 
@@ -46,7 +49,6 @@ processResources {
 }
 afterEvaluate {
 	// remove the manifest after fg adds the TweakClass attribute
-	jar.manifest.attributes.remove 'TweakClass'
 	tasks.withType(Jar){
 		exclude 'dummyThing'
 		manifest {
@@ -54,3 +56,4 @@ afterEvaluate {
 		}
 	}
 }
+evaluationDependsOnChildren()

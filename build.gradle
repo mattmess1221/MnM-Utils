@@ -12,12 +12,9 @@ apply plugin: 'net.minecraftforge.gradle.liteloader'
 
 group = "mnm.mods"
 archivesBaseName = "MnM-Utils"
-version = "1.1-SNAPSHOT"
-
-ext.rev = '20'
+version = "1.1"
 
 apply from: file('gradle/minecraft.gradle')
-version += "-b${gitRevision}"
 
 group = "mnm.mods"
 archivesBaseName = "MnM-Utils"
