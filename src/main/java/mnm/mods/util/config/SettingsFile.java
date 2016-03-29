@@ -9,6 +9,8 @@ import com.mumfrey.liteloader.core.runtime.Obf;
 import com.mumfrey.liteloader.modconfig.AdvancedExposable;
 import com.mumfrey.liteloader.util.PrivateFields;
 
+import net.minecraft.util.EnumTypeAdapterFactory;
+
 /**
  * Used for creating settings and saving/loading them in the JSON format. Start
  * by registering settings using {@link #registerSetting(String, SettingValue)}.
@@ -31,7 +33,9 @@ public abstract class SettingsFile extends ValueObject implements AdvancedExposa
     public void setupGsonSerialiser(GsonBuilder gsonBuilder) {
         new PrivateFields<GsonBuilder, Excluder>(GsonBuilder.class, new Obf("excluder") {}) {}
                 .set(gsonBuilder, Excluder.DEFAULT); // grr
-        gsonBuilder.registerTypeHierarchyAdapter(Value.class, new ValueSerializer());
+        gsonBuilder
+                .registerTypeAdapterFactory(new EnumTypeAdapterFactory())
+                .registerTypeHierarchyAdapter(Value.class, new ValueSerializer());
     }
 
     @Override

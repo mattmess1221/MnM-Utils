@@ -1,8 +1,8 @@
 {
 	"obfuscation": {
 		"classes": [
-			{ "id": "Minecraft", "mcp": "net.minecraft.client.Minecraft", "obf": "bsu" },
-			{ "id": "GuiScreen", "mcp": "net.minecraft.client.gui.GuiScreen", "obf": "bxf" },
+			{ "id": "Minecraft", "mcp": "net.minecraft.client.Minecraft", "obf": "ave" },
+			{ "id": "GuiScreen", "mcp": "net.minecraft.client.gui.GuiScreen", "obf": "axu" },
 			{ "id": "GuiScreenHandler", "mcp":"mnm.mods.util.events.GuiScreenHandler" }
 		],
 		"methods": [
