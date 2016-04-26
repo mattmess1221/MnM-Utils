@@ -1,7 +1,9 @@
 package mnm.mods.util.config;
 
 import java.io.File;
+import java.io.IOException;
 
+import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.Excluder;
@@ -42,6 +44,10 @@ public abstract class SettingsFile extends ValueObject implements AdvancedExposa
     public File getConfigFile(File configFile, File configFileLocation, String defaultFileName) {
         if (file == null)
             file = new File(configFileLocation, path);
+        try {
+            // create the paths to it
+            Files.createParentDirs(file);
+        } catch (IOException e) {}
         return file;
     }
 

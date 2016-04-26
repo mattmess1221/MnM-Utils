@@ -3,6 +3,8 @@ package mnm.mods.util.text;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.common.collect.Iterators;
+
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.IChatComponent;
@@ -75,7 +77,9 @@ public class FancyChatComponent implements IChatComponent {
 
     @Override
     public Iterator<IChatComponent> iterator() {
-        return chat.iterator();
+        // don't iterate using the vanilla components
+        return Iterators.transform(chat.iterator(), it -> it instanceof FancyChatComponent ? it
+                : new FancyChatComponent(it).setFancyStyle(this.getFancyStyle()));
     }
 
     public IChatComponent getChat() {
@@ -88,8 +92,9 @@ public class FancyChatComponent implements IChatComponent {
         return style;
     }
 
-    public void setFancyStyle(FancyChatStyle style) {
+    public FancyChatComponent setFancyStyle(FancyChatStyle style) {
         this.style = style;
+        return this;
     }
 
     @Override

@@ -5,11 +5,14 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.SubscriberExceptionContext;
+import com.google.common.eventbus.SubscriberExceptionHandler;
 
 import mnm.mods.util.Color;
 import mnm.mods.util.gui.events.ActionPerformedEvent;
@@ -47,7 +50,12 @@ public abstract class GuiComponent extends Gui {
     private float scale = 1;
     private String caption;
 
-    private EventBus bus = new EventBus(getClass().getName());
+    private EventBus bus = new EventBus(new SubscriberExceptionHandler() {
+        @Override
+        public void handleException(Throwable exception, SubscriberExceptionContext context) {
+            LogManager.getLogger().throwing(exception);
+        }
+    });
 
     private GuiComponent wrapper;
 
