@@ -658,10 +658,8 @@ public abstract class GuiComponent extends Gui {
      *
      * @return Whether this is focusable
      */
-    @SuppressWarnings("deprecation")
     public boolean isFocusable() {
-        // return false; check for IFocusable for compatibility
-        return this instanceof IFocusable;
+        return false;
     }
 
     protected static Point scalePoint(Point point) {
