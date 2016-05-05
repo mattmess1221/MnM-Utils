@@ -10,7 +10,7 @@ import com.google.common.eventbus.Subscribe;
 import mnm.mods.util.Color;
 import mnm.mods.util.config.Value;
 import mnm.mods.util.gui.config.GuiSettingString;
-import mnm.mods.util.gui.events.GuiEvent;
+import mnm.mods.util.gui.events.ActionPerformedEvent;
 import mnm.mods.util.gui.events.GuiKeyboardEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
@@ -25,7 +25,6 @@ import net.minecraft.util.EnumChatFormatting;
  */
 public class GuiSelectColor extends GuiPanel {
 
-    private Consumer<Color> callback;
     private Color color;
 
     private GuiSliderColor sliderRed;
@@ -44,8 +43,7 @@ public class GuiSelectColor extends GuiPanel {
      * @param callback_ Called when apply is clicked
      * @param color The starting color
      */
-    public GuiSelectColor(Consumer<Color> callback_, Color color) {
-        this.callback = callback_;
+    public GuiSelectColor(final Consumer<Color> callback_, Color color) {
         this.current.setForeColor(color);
         this.selected.setForeColor(color);
         this.current.getBus().register(new Object() {
@@ -72,7 +70,7 @@ public class GuiSelectColor extends GuiPanel {
         this.addComponent(label, new int[] { 1, 12 });
 
         label = new GuiLabel();
-        label.setText(new ChatBuilder().quickTranslate("chat.green").format(EnumChatFormatting.GREEN).build());
+        label.setText(new ChatBuilder().quickTranslate("colors.green").format(EnumChatFormatting.GREEN).build());
         label.setAngle(300);
         this.addComponent(label, new int[] { 4, 12 });
 
@@ -83,6 +81,7 @@ public class GuiSelectColor extends GuiPanel {
 
         label = new GuiLabel();
         label.setText(new ChatBuilder().quickTranslate("colors.alpha").format(EnumChatFormatting.WHITE).build());
+        label.setAngle(300);
         this.addComponent(label, new int[] { 10, 12 });
 
         this.addComponent(current, new int[] { 14, 1, 6, 3 });
@@ -107,7 +106,7 @@ public class GuiSelectColor extends GuiPanel {
         GuiButton random = new GuiButton(I18n.format("createWorld.customize.custom.randomize"));
         random.getBus().register(new Object() {
             @Subscribe
-            public void action(GuiEvent event) {
+            public void action(ActionPerformedEvent event) {
                 setColor(Color.random());
             }
         });
@@ -116,7 +115,7 @@ public class GuiSelectColor extends GuiPanel {
         GuiButton cancel = new GuiButton(I18n.format("gui.cancel"));
         cancel.getBus().register(new Object() {
             @Subscribe
-            public void action(GuiEvent event) {
+            public void action(ActionPerformedEvent event) {
                 // Close
                 getParent().setOverlay(null);
             }
@@ -125,8 +124,8 @@ public class GuiSelectColor extends GuiPanel {
         GuiButton apply = new GuiButton(I18n.format("gui.done"));
         apply.getBus().register(new Object() {
             @Subscribe
-            public void action(GuiEvent event) {
-                callback.accept(GuiSelectColor.this.color);
+            public void action(ActionPerformedEvent event) {
+                callback_.accept(GuiSelectColor.this.color);
             }
         });
         this.addComponent(apply, new int[] { 17, 13, 4, 2 });
