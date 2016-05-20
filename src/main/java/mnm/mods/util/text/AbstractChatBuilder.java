@@ -1,89 +1,89 @@
 package mnm.mods.util.text;
 
 import mnm.mods.util.Color;
-import net.minecraft.event.ClickEvent;
-import net.minecraft.event.HoverEvent;
-import net.minecraft.util.ChatComponentScore;
-import net.minecraft.util.ChatComponentSelector;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentScore;
+import net.minecraft.util.text.TextComponentSelector;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 
-public abstract class AbstractChatBuilder implements IChatBuilder {
+public abstract class AbstractChatBuilder implements ITextBuilder {
 
-    protected IChatComponent current;
+    protected ITextComponent current;
 
     @Override
-    public IChatBuilder format(EnumChatFormatting f) {
+    public ITextBuilder format(TextFormatting f) {
         checkCreated();
         if (f.isColor()) {
-            current.getChatStyle().setColor(f);
+            current.getStyle().setColor(f);
         } else if (f.isFancyStyling()) {
-            if (f == EnumChatFormatting.BOLD) {
-                current.getChatStyle().setBold(true);
-            } else if (f == EnumChatFormatting.ITALIC) {
-                current.getChatStyle().setItalic(true);
-            } else if (f == EnumChatFormatting.UNDERLINE) {
-                current.getChatStyle().setUnderlined(true);
-            } else if (f == EnumChatFormatting.STRIKETHROUGH) {
-                current.getChatStyle().setStrikethrough(true);
-            } else if (f == EnumChatFormatting.OBFUSCATED) {
-                current.getChatStyle().setObfuscated(true);
+            if (f == TextFormatting.BOLD) {
+                current.getStyle().setBold(true);
+            } else if (f == TextFormatting.ITALIC) {
+                current.getStyle().setItalic(true);
+            } else if (f == TextFormatting.UNDERLINE) {
+                current.getStyle().setUnderlined(true);
+            } else if (f == TextFormatting.STRIKETHROUGH) {
+                current.getStyle().setStrikethrough(true);
+            } else if (f == TextFormatting.OBFUSCATED) {
+                current.getStyle().setObfuscated(true);
             }
-        } else if (f == EnumChatFormatting.RESET) {
-            current.getChatStyle().setColor(null);
-            current.getChatStyle().setBold(false);
-            current.getChatStyle().setItalic(false);
-            current.getChatStyle().setUnderlined(false);
-            current.getChatStyle().setStrikethrough(false);
-            current.getChatStyle().setObfuscated(false);
+        } else if (f == TextFormatting.RESET) {
+            current.getStyle().setColor(null);
+            current.getStyle().setBold(false);
+            current.getStyle().setItalic(false);
+            current.getStyle().setUnderlined(false);
+            current.getStyle().setStrikethrough(false);
+            current.getStyle().setObfuscated(false);
         }
         return this;
     }
 
     @Override
-    public IChatBuilder color(Color color) {
+    public ITextBuilder color(Color color) {
         asFancy().getFancyStyle().setColor(color);
         return this;
     }
 
     @Override
-    public IChatBuilder underline(Color color) {
+    public ITextBuilder underline(Color color) {
         asFancy().getFancyStyle().setUnderline(color);
         return this;
     }
 
     @Override
-    public IChatBuilder highlight(Color color) {
+    public ITextBuilder highlight(Color color) {
         asFancy().getFancyStyle().setHighlight(color);
         return this;
     }
 
-    private FancyChatComponent asFancy() {
-        if (!(current instanceof FancyChatComponent)) {
-            current = new FancyChatComponent(current);
+    private FancyTextComponent asFancy() {
+        if (!(current instanceof FancyTextComponent)) {
+            current = new FancyTextComponent(current);
         }
-        return (FancyChatComponent) current;
+        return (FancyTextComponent) current;
     }
 
     @Override
-    public IChatBuilder click(ClickEvent event) {
+    public ITextBuilder click(ClickEvent event) {
         checkCreated();
-        current.getChatStyle().setChatClickEvent(event);
+        current.getStyle().setClickEvent(event);
         return this;
     }
 
     @Override
-    public IChatBuilder hover(HoverEvent event) {
+    public ITextBuilder hover(HoverEvent event) {
         checkCreated();
-        current.getChatStyle().setChatHoverEvent(event);
+        current.getStyle().setHoverEvent(event);
         return this;
     }
 
     @Override
-    public IChatBuilder insertion(String insertion) {
+    public ITextBuilder insertion(String insertion) {
         checkCreated();
-        current.getChatStyle().setInsertion(insertion);
+        current.getStyle().setInsertion(insertion);
         return this;
     }
 
@@ -94,27 +94,27 @@ public abstract class AbstractChatBuilder implements IChatBuilder {
     }
 
     @Override
-    public IChatBuilder score(String player, String objective) {
-        return append(new ChatComponentScore(player, objective));
+    public ITextBuilder score(String player, String objective) {
+        return append(new TextComponentScore(player, objective));
     }
 
     @Override
-    public IChatBuilder text(String text) {
-        return append(new ChatComponentText(text));
+    public ITextBuilder text(String text) {
+        return append(new TextComponentString(text));
     }
 
     @Override
-    public IChatBuilder selector(Selector selector) {
-        return append(new ChatComponentSelector(selector.toString()));
+    public ITextBuilder selector(Selector selector) {
+        return append(new TextComponentSelector(selector.toString()));
     }
 
     @Override
-    public IChatBuilder translation(String key) {
+    public ITextBuilder translation(String key) {
         return new TranslationBuilder(this, key);
     }
 
     @Override
-    public IChatBuilder quickTranslate(String key) {
+    public ITextBuilder quickTranslate(String key) {
         return translation(key).end();
     }
 

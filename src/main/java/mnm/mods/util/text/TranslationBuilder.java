@@ -4,43 +4,43 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 
 class TranslationBuilder extends AbstractChatBuilder {
 
-    private final IChatBuilder parent;
+    private final ITextBuilder parent;
     private final String translationKey;
     private List<Object> translationArgs = Lists.newArrayList();
 
-    private IChatComponent buffer;
+    private ITextComponent buffer;
 
-    TranslationBuilder(IChatBuilder parent, String key) {
+    TranslationBuilder(ITextBuilder parent, String key) {
         this.parent = parent;
         this.translationKey = key;
     }
 
     @Override
-    public IChatBuilder next() {
+    public ITextBuilder next() {
         translationArgs.add(append(null).buffer);
         buffer = null;
         return this;
     }
 
     @Override
-    public IChatBuilder end() {
+    public ITextBuilder end() {
         if (buffer != null)
             translationArgs.add(append(null).buffer);
-        return parent.append(new ChatComponentTranslation(translationKey, translationArgs));
+        return parent.append(new TextComponentTranslation(translationKey, translationArgs));
     }
 
     @Override
-    public IChatComponent build() {
+    public ITextComponent build() {
         throw new IllegalStateException("Translation in progress.");
     }
 
     @Override
-    public TranslationBuilder append(IChatComponent chat) {
+    public TranslationBuilder append(ITextComponent chat) {
         if (current != null) {
             if (this.buffer == null)
                 buffer = current;

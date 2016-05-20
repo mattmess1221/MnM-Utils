@@ -7,8 +7,8 @@ import com.google.common.eventbus.Subscribe;
 
 import mnm.mods.util.Color;
 import mnm.mods.util.gui.events.ActionPerformedEvent;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 
 /**
  * Input for numbers, also known as a slider. Use {@link DoubleUpDown} for
@@ -42,8 +42,8 @@ public abstract class GuiNumericUpDown<T extends Number> extends GuiPanel implem
             text.addComponent(rect);
             GuiLabel label = new GuiLabel() {
                 @Override
-                public IChatComponent getText() {
-                    return new ChatComponentText(format.format(getValue()));
+                public ITextComponent getText() {
+                    return new TextComponentString(format.format(getValue()));
                 }
             };
             label.setPosition(5, 0);

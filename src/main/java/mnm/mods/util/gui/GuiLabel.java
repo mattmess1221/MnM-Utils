@@ -3,8 +3,7 @@ package mnm.mods.util.gui;
 import mnm.mods.util.text.FancyFontRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 
 /**
  * Gui component label used to show text on the screen.
@@ -14,7 +13,7 @@ import net.minecraft.util.IChatComponent;
 public class GuiLabel extends GuiComponent {
 
     private FancyFontRenderer fr;
-    private IChatComponent text;
+    private ITextComponent text;
     private float angle;
 
     public GuiLabel() {
@@ -26,32 +25,9 @@ public class GuiLabel extends GuiComponent {
      *
      * @param chat The text
      */
-    public GuiLabel(IChatComponent chat) {
+    public GuiLabel(ITextComponent chat) {
         this();
         this.setText(chat);
-    }
-
-    /**
-     * Creates a label from a string
-     *
-     * @param string The string
-     * @deprecated Use {@link #GuiLabel(IChatComponent)}
-     */
-    @Deprecated
-    public GuiLabel(String string) {
-        this(string, 0);
-    }
-
-    /**
-     * Creates a label from a string and angle.
-     *
-     * @param string The string
-     * @param angle The angle
-     */
-    @Deprecated
-    public GuiLabel(String string, float angle) {
-        this(new ChatComponentText(string));
-        setAngle(angle);
     }
 
     @Override
@@ -72,16 +48,12 @@ public class GuiLabel extends GuiComponent {
         super.drawComponent(mouseX, mouseY);
     }
 
-    public void setText(String text) {
-        setText(new ChatComponentText(text));
-    }
-
     /**
      * Sets the string of this label
      *
      * @param text The string
      */
-    public void setText(IChatComponent text) {
+    public void setText(ITextComponent text) {
         this.text = text;
     }
 
@@ -90,7 +62,7 @@ public class GuiLabel extends GuiComponent {
      *
      * @return The string
      */
-    public IChatComponent getText() {
+    public ITextComponent getText() {
         return text;
     }
 

@@ -14,9 +14,9 @@ import mnm.mods.util.gui.events.ActionPerformedEvent;
 import mnm.mods.util.gui.events.GuiKeyboardEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
-import mnm.mods.util.text.ChatBuilder;
+import mnm.mods.util.text.TextBuilder;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * A gui used to select a color.
@@ -65,22 +65,22 @@ public class GuiSelectColor extends GuiPanel {
         GuiLabel label;
 
         label = new GuiLabel();
-        label.setText(new ChatBuilder().quickTranslate("colors.red").format(EnumChatFormatting.RED).build());
+        label.setText(new TextBuilder().quickTranslate("colors.red").format(TextFormatting.RED).build());
         label.setAngle(300);
         this.addComponent(label, new int[] { 1, 12 });
 
         label = new GuiLabel();
-        label.setText(new ChatBuilder().quickTranslate("colors.green").format(EnumChatFormatting.GREEN).build());
+        label.setText(new TextBuilder().quickTranslate("colors.green").format(TextFormatting.GREEN).build());
         label.setAngle(300);
         this.addComponent(label, new int[] { 4, 12 });
 
         label = new GuiLabel();
-        label.setText(new ChatBuilder().quickTranslate("colors.blue").format(EnumChatFormatting.BLUE).build());
+        label.setText(new TextBuilder().quickTranslate("colors.blue").format(TextFormatting.BLUE).build());
         label.setAngle(300);
         this.addComponent(label, new int[] { 7, 12 });
 
         label = new GuiLabel();
-        label.setText(new ChatBuilder().quickTranslate("colors.alpha").format(EnumChatFormatting.WHITE).build());
+        label.setText(new TextBuilder().quickTranslate("colors.alpha").format(TextFormatting.WHITE).build());
         label.setAngle(300);
         this.addComponent(label, new int[] { 10, 12 });
 

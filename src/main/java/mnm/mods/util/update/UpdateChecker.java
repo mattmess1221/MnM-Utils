@@ -17,10 +17,10 @@ import com.mumfrey.liteloader.LiteMod;
 import com.mumfrey.liteloader.core.LiteLoader;
 
 import mnm.mods.util.MnmUtils;
-import mnm.mods.util.text.ChatBuilder;
-import mnm.mods.util.text.IChatBuilder;
-import net.minecraft.event.ClickEvent;
-import net.minecraft.util.IChatComponent;
+import mnm.mods.util.text.ITextBuilder;
+import mnm.mods.util.text.TextBuilder;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.event.ClickEvent;
 
 /**
  * Update checker for several mods.
@@ -72,14 +72,14 @@ public class UpdateChecker extends Thread {
     }
 
     private void notifyUser(VersionData data, UpdateResponse response) {
-        IChatBuilder builder = new ChatBuilder()
+        ITextBuilder builder = new TextBuilder()
                 .translation("update.available")
                 .text(data.getName()).next();
         if (data.getUrl() != null)
             builder = builder
                     .translation("update.clickhere").end()
                     .click(new ClickEvent(ClickEvent.Action.OPEN_URL, data.getUrl())).next();
-        IChatComponent msg = builder
+        ITextComponent msg = builder
                 .text(response.update.version).next()
                 .text(response.update.changes).end().build();
         LogManager.getLogger("Updates").info(msg.getUnformattedText());

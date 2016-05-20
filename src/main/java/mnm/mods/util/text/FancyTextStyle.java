@@ -2,7 +2,7 @@ package mnm.mods.util.text;
 
 import mnm.mods.util.Color;
 
-public class FancyChatStyle {
+public class FancyTextStyle {
 
     private Color color;
     private Color underline;
@@ -38,8 +38,8 @@ public class FancyChatStyle {
         this.highlight = highlight;
     }
 
-    public FancyChatStyle createCopy() {
-        FancyChatStyle fcs = new FancyChatStyle();
+    public FancyTextStyle createCopy() {
+        FancyTextStyle fcs = new FancyTextStyle();
         fcs.highlight = highlight;
         fcs.underline = underline;
         return fcs;

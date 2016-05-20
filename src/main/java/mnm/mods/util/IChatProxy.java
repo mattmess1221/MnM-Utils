@@ -1,8 +1,8 @@
 package mnm.mods.util;
 
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 
 public interface IChatProxy {
 
-    void addToChat(String channel, IChatComponent message);
+    void addToChat(String channel, ITextComponent message);
 }

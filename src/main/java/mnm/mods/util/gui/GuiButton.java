@@ -13,7 +13,9 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 
 /**
  * A {@link net.minecraft.client.gui.GuiButton} for the GuiComponent system.
@@ -26,7 +28,7 @@ public class GuiButton extends GuiComponent {
     private static final TexturedModal MODAL_DISABLE = new TexturedModal(WIDGETS, 0, 46, 200, 20);
 
     private String text = "";
-    private ResourceLocation sound = new ResourceLocation("gui.button.press");
+    private SoundEvent sound;
     public int packedFGColour;
 
     /**
@@ -36,11 +38,12 @@ public class GuiButton extends GuiComponent {
      */
     public GuiButton(String text) {
         this.setText(text);
+        setSound(SoundEvents.UI_BUTTON_CLICK);
     }
 
     @Subscribe
     public void onClick(ActionPerformedEvent action) {
-        mc.getSoundHandler().playSound(PositionedSoundRecord.create(getSound(), 1.0F));
+        mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(getSound(), 1.0F));
     }
 
     /**
@@ -64,11 +67,11 @@ public class GuiButton extends GuiComponent {
         return this.text;
     }
 
-    public void setSound(ResourceLocation sound) {
+    public void setSound(SoundEvent sound) {
         this.sound = sound;
     }
 
-    public ResourceLocation getSound() {
+    public SoundEvent getSound() {
         return sound;
     }
 

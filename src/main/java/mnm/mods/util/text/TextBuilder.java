@@ -1,10 +1,10 @@
 package mnm.mods.util.text;
 
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 
-public class ChatBuilder extends AbstractChatBuilder {
+public class TextBuilder extends AbstractChatBuilder {
 
-    private IChatComponent chat;
+    private ITextComponent chat;
 
     /**
      * Used for builders that build multiple chats.
@@ -12,7 +12,7 @@ public class ChatBuilder extends AbstractChatBuilder {
      * @return This builder
      */
     @Override
-    public IChatBuilder next() {
+    public ITextBuilder next() {
         throw new UnsupportedOperationException();
     }
 
@@ -22,7 +22,7 @@ public class ChatBuilder extends AbstractChatBuilder {
      * @return
      */
     @Override
-    public IChatBuilder end() {
+    public ITextBuilder end() {
         throw new UnsupportedOperationException();
     }
 
@@ -34,7 +34,7 @@ public class ChatBuilder extends AbstractChatBuilder {
      * @return
      */
     @Override
-    public ChatBuilder append(IChatComponent chat) {
+    public TextBuilder append(ITextComponent chat) {
 
         if (current != null) {
             if (this.chat == null)
@@ -52,7 +52,7 @@ public class ChatBuilder extends AbstractChatBuilder {
      * @return The chat
      */
     @Override
-    public IChatComponent build() {
+    public ITextComponent build() {
         return append(null).chat;
     }
 }

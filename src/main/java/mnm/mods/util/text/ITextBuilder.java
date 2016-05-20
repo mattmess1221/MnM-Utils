@@ -1,12 +1,12 @@
 package mnm.mods.util.text;
 
 import mnm.mods.util.Color;
-import net.minecraft.event.ClickEvent;
-import net.minecraft.event.HoverEvent;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 
-public interface IChatBuilder {
+public interface ITextBuilder {
 
     /**
      * Sets the formatting in the style of the current chat.
@@ -14,25 +14,25 @@ public interface IChatBuilder {
      * @param f The format
      * @return This builder
      */
-    IChatBuilder format(EnumChatFormatting f);
+    ITextBuilder format(TextFormatting f);
 
-    IChatBuilder color(Color color);
+    ITextBuilder color(Color color);
 
-    IChatBuilder underline(Color color);
+    ITextBuilder underline(Color color);
 
-    IChatBuilder highlight(Color color);
+    ITextBuilder highlight(Color color);
 
-    IChatBuilder click(ClickEvent event);
+    ITextBuilder click(ClickEvent event);
 
-    IChatBuilder hover(HoverEvent event);
+    ITextBuilder hover(HoverEvent event);
 
-    IChatBuilder insertion(String insertion);
+    ITextBuilder insertion(String insertion);
 
-    IChatBuilder score(String player, String objective);
+    ITextBuilder score(String player, String objective);
 
-    IChatBuilder text(String text);
+    ITextBuilder text(String text);
 
-    IChatBuilder selector(Selector selector);
+    ITextBuilder selector(Selector selector);
 
     /**
      * Starts the creation of a translation. After calling, any call to
@@ -44,7 +44,7 @@ public interface IChatBuilder {
      * @param key The translation key
      * @return A translation builder
      */
-    IChatBuilder translation(String key);
+    ITextBuilder translation(String key);
 
     /**
      * Quickly translates the given key with zero arguments or formatting.
@@ -54,21 +54,21 @@ public interface IChatBuilder {
      * @param key
      * @return
      */
-    IChatBuilder quickTranslate(String key);
+    ITextBuilder quickTranslate(String key);
 
     /**
      * Used for builders that build multiple chats.
      *
      * @return This builder
      */
-    IChatBuilder next();
+    ITextBuilder next();
 
     /**
      * Ends a translation so it can be appended to the chat.
      *
      * @return
      */
-    IChatBuilder end();
+    ITextBuilder end();
 
     /**
      * Appends the current chat to the chat and makes the provided value the
@@ -77,13 +77,13 @@ public interface IChatBuilder {
      * @param chat The new current value
      * @return
      */
-    IChatBuilder append(IChatComponent chat);
+    ITextBuilder append(ITextComponent chat);
 
     /**
      * Appends the current chat (if any) to the chat and returns the built chat.
      *
      * @return The chat
      */
-    IChatComponent build();
+    ITextComponent build();
 
 }
