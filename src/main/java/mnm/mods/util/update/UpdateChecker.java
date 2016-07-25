@@ -20,6 +20,7 @@ import mnm.mods.util.MnmUtils;
 import mnm.mods.util.text.ITextBuilder;
 import mnm.mods.util.text.TextBuilder;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 
 /**
@@ -64,7 +65,7 @@ public class UpdateChecker extends Thread {
             IOUtils.closeQuietly(in);
         }
 
-        if (data.isOutdated(response.update.revision)) {
+        if (data.isOutdated(response.mcversion)) {
             notifyUser(data, response);
         } else {
             logger.info("Update check for " + data.getName() + " finished. None found.");
@@ -74,16 +75,20 @@ public class UpdateChecker extends Thread {
     private void notifyUser(VersionData data, UpdateResponse response) {
         ITextBuilder builder = new TextBuilder()
                 .translation("update.available")
-                .text(data.getName()).next();
+                .text(data.getName())
+                .format(TextFormatting.GOLD).next();
         if (data.getUrl() != null)
-            builder = builder
-                    .translation("update.clickhere").end()
+            builder.translation("update.clickhere").end()
+                    .format(TextFormatting.LIGHT_PURPLE)
                     .click(new ClickEvent(ClickEvent.Action.OPEN_URL, data.getUrl())).next();
+        else
+            builder.text(" ").next();
         ITextComponent msg = builder
-                .text(response.update.version).next()
-                .text(response.update.changes).end().build();
+                .text(response.mcversion.version).next()
+                .text(response.mcversion.changes).end()
+                .build();
         LogManager.getLogger("Updates").info(msg.getUnformattedText());
-        MnmUtils.getInstance().getChatProxy().addToChat("Updates", msg);
+        MnmUtils.INSTANCE.getChatProxy().addToChat("Updates", msg);
     }
 
     public static void runUpdateChecks() {

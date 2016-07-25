@@ -31,7 +31,7 @@ class TranslationBuilder extends AbstractChatBuilder {
     public ITextBuilder end() {
         if (buffer != null)
             translationArgs.add(append(null).buffer);
-        return parent.append(new TextComponentTranslation(translationKey, translationArgs));
+        return parent.append(new TextComponentTranslation(translationKey, translationArgs.toArray()));
     }
 
     @Override

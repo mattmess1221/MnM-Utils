@@ -1,31 +1,10 @@
 package mnm.mods.util;
 
-import mnm.mods.util.events.GuiScreenHandler;
-import mnm.mods.util.events.ScreenHandler;
-import mnm.mods.util.update.UpdateChecker;
-
 public class MnmUtils {
 
-    private static MnmUtils instance;
+    public static final MnmUtils INSTANCE = new MnmUtils();
 
     private IChatProxy chatProxy = new DefaultChatProxy();
-    private ScreenHandler screenHandler;
-
-    private MnmUtils() {
-        this.screenHandler = new GuiScreenHandler();
-        UpdateChecker.runUpdateChecks();
-    }
-
-    public static MnmUtils getInstance() {
-        if (instance == null) {
-            instance = new MnmUtils();
-        }
-        return instance;
-    }
-
-    public ScreenHandler getScreenHandler() {
-        return screenHandler;
-    }
 
     public IChatProxy getChatProxy() {
         return chatProxy;

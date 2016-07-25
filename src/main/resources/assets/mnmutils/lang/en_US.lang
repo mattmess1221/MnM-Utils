@@ -17,5 +17,5 @@ colors.white=White
 colors.reset=Reset
 colors.alpha=Alpha
 
-update.available=A new version of %s is available, %s. %s - %s
-update.clickhere=click here
+update.available=A new version of %s is available.%s. %s - %s
+update.clickhere= Click here

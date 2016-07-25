@@ -7,6 +7,7 @@ def doCmd(s) {
 }
 ext.gitRevision = doCmd('git rev-list --count HEAD')
 ext.gitHash = doCmd('git rev-parse --short HEAD')
+
 if (System.env.BUILD_ID != null)
 	version += "-SNAPSHOT-${gitRevision}"
 
@@ -14,15 +15,11 @@ targetCompatibility = 1.8
 sourceCompatibility = 1.8
 
 minecraft {
-	def v = '1.9.4'
-	if ('forgever' in project.properties)
-		v += "-$forgever"
-	version = v
+	version = '1.9.4'
 	mappings = 'snapshot_20160517'
 	runDir = rootProject.file('run')
 
 }
-version += "-mc${minecraft.version}"
 processResources {
 	def map = [
 		version:project.version,

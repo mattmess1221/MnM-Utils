@@ -11,6 +11,7 @@ import mnm.mods.util.Color;
 import mnm.mods.util.gui.events.GuiKeyboardEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
 
 /**
@@ -20,17 +21,29 @@ import net.minecraft.client.gui.GuiTextField;
  */
 public class GuiText extends GuiComponent implements IGuiInput<String> {
 
+    @FunctionalInterface
+    public interface ITextFactory {
+        GuiTextField create(int width, int height);
+    }
+
+    private ITextFactory factory;
     private GuiTextField textField;
     private String hint;
 
     public GuiText() {
-        this.textField = new GuiTextField(0, mc.fontRendererObj, 0, 0, 0, 0);
+        this((w, h) -> new GuiTextField(0, Minecraft.getMinecraft().fontRendererObj, 0, 0, w, h));
+    }
+
+    public GuiText(ITextFactory factory) {
+        this.factory = factory;
+        this.textField = factory.create(0, 0);
         // This text field must not be calibrated for someone of your...
         // generous..ness
         // I'll add a few 0s to the maximum length...
-        textField.setMaxStringLength(10000);
+        this.textField.setMaxStringLength(10000);
 
         // you look great, by the way.
+
     }
 
     @Subscribe
@@ -79,7 +92,7 @@ public class GuiText extends GuiComponent implements IGuiInput<String> {
             max = textField.getMaxStringLength();
             bkgnd = textField.getEnableBackgroundDrawing();
         }
-        textField = new GuiTextField(0, mc.fontRendererObj, 0, 0, width, height);
+        textField = this.factory.create(width, height);
         textField.setMaxStringLength(max);
         textField.setText(text);
         textField.setEnableBackgroundDrawing(bkgnd);

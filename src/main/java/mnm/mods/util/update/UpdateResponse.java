@@ -5,22 +5,9 @@ import com.google.gson.annotations.SerializedName;
 public class UpdateResponse {
 
     @SerializedName("@MCVERSION@")
-    public Update update;
-    private transient boolean success;
+    public Version mcversion;
 
-    public UpdateResponse() {
-        this(true);
-    }
-
-    public UpdateResponse(boolean success) {
-        this.success = success;
-    }
-
-    public boolean isSuccess() {
-        return success && update != null;
-    }
-
-    public class Update {
+    public class Version {
         public double revision;
         public String version;
         public String changes;

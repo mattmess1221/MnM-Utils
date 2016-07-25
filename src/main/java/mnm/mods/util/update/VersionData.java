@@ -1,5 +1,7 @@
 package mnm.mods.util.update;
 
+import javax.annotation.Nullable;
+
 import com.google.common.base.Optional;
 import com.google.common.primitives.Doubles;
 import com.mumfrey.liteloader.LiteMod;
@@ -41,8 +43,8 @@ public class VersionData {
         return Double.compare(revision, arg0);
     }
 
-    boolean isOutdated(double d) {
-        return compareTo(d) < 0;
+    boolean isOutdated(@Nullable UpdateResponse.Version update) {
+        return update != null ? compareTo(update.revision) > 0 : false;
     }
 
     public static VersionData fromLiteMod(LiteMod litemod) {
