@@ -11,20 +11,32 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.liteloader'
 
 group = "mnm.mods"
-archivesBaseName = "MnM-Utils"
 version = "1.2"
 
 apply from: file('gradle/minecraft.gradle')
 
-group = "mnm.mods"
-archivesBaseName = "MnM-Utils"
+archivesBaseName = 'mnmutils'
+ext.displayName = null
 
 minecraft {
 	replace "@MCVERSION@", project.minecraft.version
 	replace "@VERSION@", project.version
 }
+litemod.json {
+	name = 'mnmutils'
+	author = 'killjoy1221'
+	description = 'A utility library mod used for my mods. Mostly GUI stuff.'
+	revision = ext.gitRevision
+}
+tasks.withType(Jar) {
+	baseName = "lib-${archivesBaseName.toLowerCase()}"
+}
+jar {
+	from litemod
+}
 task jarSrg(type:Jar) {
     from sourceSets.main.output
+	from litemod
     classifier "srg"
 }
 artifacts.archives jarSrg
