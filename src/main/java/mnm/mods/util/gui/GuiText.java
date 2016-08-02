@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
 import com.google.common.eventbus.Subscribe;
+import com.mumfrey.liteloader.client.overlays.IGuiTextField;
 
 import mnm.mods.util.Color;
 import mnm.mods.util.gui.events.GuiKeyboardEvent;
@@ -21,22 +22,15 @@ import net.minecraft.client.gui.GuiTextField;
  */
 public class GuiText extends GuiComponent implements IGuiInput<String> {
 
-    @FunctionalInterface
-    public interface ITextFactory {
-        GuiTextField create(int width, int height);
-    }
-
-    private ITextFactory factory;
-    private GuiTextField textField;
+    private final GuiTextField textField;
     private String hint;
 
     public GuiText() {
-        this((w, h) -> new GuiTextField(0, Minecraft.getMinecraft().fontRendererObj, 0, 0, w, h));
+        this(new GuiTextField(0, Minecraft.getMinecraft().fontRendererObj, 0, 0, 1, 1));
     }
 
-    public GuiText(ITextFactory factory) {
-        this.factory = factory;
-        this.textField = factory.create(0, 0);
+    public GuiText(GuiTextField textField) {
+        this.textField = textField;
         // This text field must not be calibrated for someone of your...
         // generous..ness
         // I'll add a few 0s to the maximum length...
@@ -83,19 +77,10 @@ public class GuiText extends GuiComponent implements IGuiInput<String> {
     }
 
     private void updateTextbox(int width, int height) {
-        // Create a new instance so it works without forge
-        String text = "";
-        int max = 32;
-        boolean bkgnd = true;
-        if (textField != null) {
-            text = textField.getText();
-            max = textField.getMaxStringLength();
-            bkgnd = textField.getEnableBackgroundDrawing();
-        }
-        textField = this.factory.create(width, height);
-        textField.setMaxStringLength(max);
-        textField.setText(text);
-        textField.setEnableBackgroundDrawing(bkgnd);
+        // this interface is provided by liteloader. (Thanks, mum)
+        IGuiTextField field = (IGuiTextField) this.textField;
+        field.setInternalWidth(width);
+        field.setHeight(height);
     }
 
     @Override
