@@ -1,7 +1,7 @@
 package mnm.mods.util.gui;
 
-import java.awt.Rectangle;
 import java.text.NumberFormat;
+import java.util.Optional;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -28,17 +28,17 @@ public abstract class GuiNumericUpDown<T extends Number> extends GuiPanel implem
     private NumberFormat format = NumberFormat.getNumberInstance();
 
     private GuiNumericUpDown() {
-        setLayout(new BorderLayout());
+        setLayout(Optional.of(new BorderLayout()));
 
         {
             GuiPanel text = new GuiPanel();
             GuiRectangle rect = new GuiRectangle() {
                 @Override
-                public Rectangle getBounds() {
-                    return getParent().getBounds();
+                public ILocation getLocation() {
+                    return getParent().getLocation();
                 }
             };
-            rect.setForeColor(Color.BLACK);
+            rect.setPrimaryColor(Color.BLACK);
             text.addComponent(rect);
             GuiLabel label = new GuiLabel() {
                 @Override
@@ -46,7 +46,7 @@ public abstract class GuiNumericUpDown<T extends Number> extends GuiPanel implem
                     return new TextComponentString(format.format(getValue()));
                 }
             };
-            label.setPosition(5, 0);
+            label.setLocation(label.getLocation().copy().setXPos(5).setYPos(0));
             text.addComponent(label);
 
             addComponent(text, BorderLayout.Position.CENTER);
@@ -166,15 +166,14 @@ public abstract class GuiNumericUpDown<T extends Number> extends GuiPanel implem
         public UpDown(String text, int direction) {
             super(text);
             this.direction = direction;
-            setBackColor(Color.DARK_GRAY);
+            setSecondaryColor(Color.DARK_GRAY);
         }
 
         @Override
-        public Rectangle getBounds() {
-            Rectangle bounds = super.getBounds();
-            bounds.width = 6;
-            bounds.height = 6;
-            return bounds;
+        public ILocation getLocation() {
+            return ImmutableLocation.copyOf(super.getLocation().copy()
+                    .setWidth(6)
+                    .setHeight(6));
         }
 
         @Subscribe

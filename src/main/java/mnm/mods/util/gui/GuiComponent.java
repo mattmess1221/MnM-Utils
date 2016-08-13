@@ -2,7 +2,9 @@ package mnm.mods.util.gui;
 
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.Rectangle;
+import java.util.function.Function;
+
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
@@ -42,10 +44,11 @@ public abstract class GuiComponent extends Gui {
 
     protected Minecraft mc = Minecraft.getMinecraft();
 
-    private Color backColor;
-    private Color foreColor;
+    private Color secondaryColor;
+    private Color primaryColor;
     private GuiPanel parent;
-    private Rectangle bounds;
+    // private Rectangle bounds;
+    private ILocation location = new Location();
     private Dimension minimumSize = new Dimension();
     private float scale = 1;
     private String caption;
@@ -60,7 +63,7 @@ public abstract class GuiComponent extends Gui {
     private GuiComponent wrapper;
 
     public GuiComponent() {
-        this.setBounds(new Rectangle());
+        this.setLocation(new Location());
         this.getBus().register(this);
     }
 
@@ -179,16 +182,16 @@ public abstract class GuiComponent extends Gui {
         if (mc.currentScreen != null) {
             float scale = getActualScale();
             Point point = scalePoint(new Point(Mouse.getX(), Mouse.getY()));
-            Rectangle actual = getActualBounds();
+            ILocation actual = getActualLocation();
             // adjust for position and scale
-            int x = (int) ((point.x - actual.x) / scale);
-            int y = (int) ((point.y - actual.y) / scale);
+            int x = (int) ((point.x - actual.getXPos()) / scale);
+            int y = (int) ((point.y - actual.getYPos()) / scale);
 
             int button = Mouse.getEventButton();
             int scroll = Mouse.getEventDWheel();
 
-            if (x >= 0 && x <= actual.width
-                    && y >= 0 && y <= actual.height) {
+            if (x >= 0 && x <= actual.getWidth()
+                    && y >= 0 && y <= actual.getHeight()) {
                 this.hovered = true;
             } else {
                 this.hovered = false;
@@ -243,70 +246,34 @@ public abstract class GuiComponent extends Gui {
      * Called when the screen is closed.
      */
     public void onClosed() {
-        if (wrapper != null) {
-            wrapper.onClosed();
-        }
         this.hovered = false;
     }
 
     /**
-     * Sets the bounds of this component.
+     * Gets the current location of this component.
      *
-     * @param bounds The new bounds
+     * @return The current immutable location.
      */
-    public void setBounds(Rectangle bounds) {
+
+    public ILocation getLocation() {
         if (wrapper != null) {
-            wrapper.setBounds(bounds);
+            return this.wrapper.getLocation();
+        }
+        return this.location;
+    }
+
+    /**
+     * Sets the location of this component. In order to maintain encapsulation,
+     * it is wrapped as an immutable.
+     * 
+     * @param location The new location
+     */
+    public void setLocation(ILocation location) {
+        if (wrapper != null) {
+            wrapper.setLocation(location);
             return;
         }
-        this.bounds = bounds;
-    }
-
-    /**
-     * Sets the new bounds of this component.
-     *
-     * @param x
-     * @param y
-     * @param width
-     * @param height
-     */
-    public void setBounds(int x, int y, int width, int height) {
-        setBounds(new Rectangle(x, y, width, height));
-    }
-
-    /**
-     * Sets the position of this component.
-     *
-     * @param xPos The X position
-     * @param yPos The Y position
-     */
-    public void setPosition(int xPos, int yPos) {
-        getBounds().x = xPos;
-        getBounds().y = yPos;
-    }
-
-    /**
-     * Sets the size of this component.
-     *
-     * @param width The width
-     * @param height The height
-     */
-    public void setSize(int width, int height) {
-        getBounds().width = width;
-        getBounds().height = height;
-    }
-
-    /**
-     * Gets the current bounds of this component. The returned object is
-     * mutable.
-     *
-     * @return The current bounds
-     */
-    public Rectangle getBounds() {
-        if (wrapper != null) {
-            return this.wrapper.getBounds();
-        }
-        return this.bounds;
+        this.location = ImmutableLocation.copyOf(location);
     }
 
     /**
@@ -336,6 +303,7 @@ public abstract class GuiComponent extends Gui {
      *
      * @return The parent or null if there is none
      */
+    @Nullable
     public GuiPanel getParent() {
         if (wrapper != null) {
             return wrapper.getParent();
@@ -343,6 +311,27 @@ public abstract class GuiComponent extends Gui {
         return this.parent;
     }
 
+    /**
+     * Sets the parent of this component. Should only be used by
+     * {@link GuiPanel}.
+     *
+     * @param guiPanel The parent
+     */
+    void setParent(@Nullable GuiPanel guiPanel) {
+        if (wrapper != null) {
+            wrapper.setParent(guiPanel);
+            return;
+        }
+        this.parent = guiPanel;
+    }
+
+    /**
+     * Gets the top-most parent of this component. May return null if this
+     * component has no parent and is not a {@link GuiPanel}.
+     * 
+     * @return The root panel or {@code null}.
+     */
+    @Nullable
     public GuiPanel getRootPanel() {
         GuiPanel panel = getParent();
         if (panel == null) {
@@ -356,31 +345,19 @@ public abstract class GuiComponent extends Gui {
     }
 
     /**
-     * Sets the parent of this component. Should only be used by
-     * {@link GuiPanel}.
-     *
-     * @param guiPanel The parent
-     */
-    void setParent(GuiPanel guiPanel) {
-        if (wrapper != null) {
-            wrapper.setParent(guiPanel);
-            return;
-        }
-        this.parent = guiPanel;
-    }
-
-    /**
      * Gets the position of this component when drawn on the screen. Includes
      * all parent's positions and scales.
      *
      * @return The position
      */
     public Point getActualPosition() {
-        Point point = new Point(getBounds().x, getBounds().y);
-        if (getParent() != null) {
-            Point parent = getParent().getActualPosition();
-            point.x += parent.x;
-            point.y += parent.y;
+        ILocation location = this.getLocation();
+        Point point = new Point(location.getXPos(), location.getYPos());
+        GuiPanel parent = getParent();
+        if (parent != null) {
+            Point ppoint = parent.getActualPosition();
+            point.x += ppoint.x;
+            point.y += ppoint.y;
         }
         point.x *= getScale();
         point.y *= getScale();
@@ -389,31 +366,26 @@ public abstract class GuiComponent extends Gui {
 
     public Dimension getActualSize() {
         float scale = getActualScale();
-        Dimension d = new Dimension(getBounds().getSize());
+        Dimension d = new Dimension(getLocation().getSize());
         d.height *= scale;
         d.width *= scale;
         return d;
     }
 
-    public Rectangle getActualBounds() {
-        Rectangle b = new Rectangle(getBounds());
+    public ILocation getActualLocation() {
+        Location location = this.getLocation().copy();
         float scale = getActualScale();
-        b.x *= scale;
-        b.y *= scale;
-        b.width *= scale;
-        b.height *= scale;
+        location.scale(scale);
         if (getParent() != null) {
-            Rectangle b1 = getParent().getActualBounds();
-            b.x += b1.x;
-            b.y += b1.y;
+            ILocation loc1 = getParent().getActualLocation();
+            location.move(loc1.getXPos(), loc1.getYPos());
         }
-        return b;
+        return location;
     }
 
     public void setMinimumSize(Dimension size) {
         if (wrapper != null) {
             wrapper.setMinimumSize(size);
-            return;
         }
         this.minimumSize = size;
     }
@@ -458,10 +430,41 @@ public abstract class GuiComponent extends Gui {
      */
     public float getActualScale() {
         float scale = getScale();
-        if (getParent() != null) {
-            scale *= getParent().getActualScale();
+        GuiPanel parent = getParent();
+        if (parent != null) {
+            scale *= parent.getActualScale();
         }
         return scale;
+    }
+
+    public Color getPrimaryColor() {
+        if (wrapper != null) {
+            return wrapper.getPrimaryColor();
+        }
+        return this.primaryColor;
+    }
+
+    public void setPrimaryColor(Color color) {
+        if (wrapper != null) {
+            wrapper.setPrimaryColor(color);
+            return;
+        }
+        this.primaryColor = color;
+    }
+
+    public Color getSecondaryColor() {
+        if (wrapper != null) {
+            return wrapper.getSecondaryColor();
+        }
+        return this.secondaryColor;
+    }
+
+    public void setSecondaryColor(Color color) {
+        if (wrapper != null) {
+            wrapper.setSecondaryColor(color);
+            return;
+        }
+        this.secondaryColor = color;
     }
 
     /**
@@ -470,13 +473,7 @@ public abstract class GuiComponent extends Gui {
      * @return The background color
      */
     public Color getBackColor() {
-        if (wrapper != null) {
-            return wrapper.getBackColor();
-        }
-        Color result = backColor;
-        if (getParent() != null && result == null) {
-            result = getParent().getBackColor();
-        }
+        Color result = getProperty(GuiComponent::getSecondaryColor);
         if (result == null)
             result = Color.of(0);
         return result;
@@ -487,12 +484,9 @@ public abstract class GuiComponent extends Gui {
      *
      * @param backColor The new color
      */
+    @Deprecated
     public void setBackColor(Color backColor) {
-        if (wrapper != null) {
-            wrapper.setBackColor(backColor);
-            return;
-        }
-        this.backColor = backColor;
+        this.setSecondaryColor(backColor);
     }
 
     /**
@@ -501,15 +495,10 @@ public abstract class GuiComponent extends Gui {
      * @return The foreground color
      */
     public Color getForeColor() {
-        if (wrapper != null) {
-            return wrapper.getForeColor();
-        }
-        Color result = foreColor;
-        if (getParent() != null && result == null) {
-            result = getParent().getForeColor();
-        }
-        if (result == null)
+        Color result = getProperty(GuiComponent::getPrimaryColor);
+        if (result == null) {
             result = Color.WHITE;
+        }
         return result;
     }
 
@@ -518,12 +507,9 @@ public abstract class GuiComponent extends Gui {
      *
      * @param foreColor The new color
      */
+    @Deprecated
     public void setForeColor(Color foreColor) {
-        if (wrapper != null) {
-            wrapper.setForeColor(foreColor);
-            return;
-        }
-        this.foreColor = foreColor;
+        this.setPrimaryColor(foreColor);
     }
 
     /**
@@ -597,9 +583,7 @@ public abstract class GuiComponent extends Gui {
 
     /**
      * Sets the caption which is shown when the mouse is hovering over this
-     * component.
-     *
-     * TODO convert to use IChatComponent
+     * component. TODO convert to use IChatComponent
      *
      * @param caption The new caption
      */
@@ -660,6 +644,18 @@ public abstract class GuiComponent extends Gui {
      */
     public boolean isFocusable() {
         return false;
+    }
+
+    protected <T> T getProperty(final Function<GuiComponent, T> prop) {
+        GuiPanel parent = getParent();
+        if (parent == null) {
+            return prop.apply(this);
+        }
+        T result = prop.apply(parent);
+        if (result == null)
+            result = parent.getProperty(prop);
+        return result;
+
     }
 
     protected static Point scalePoint(Point point) {

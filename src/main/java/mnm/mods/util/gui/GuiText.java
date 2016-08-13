@@ -1,7 +1,5 @@
 package mnm.mods.util.gui;
 
-import java.awt.Rectangle;
-
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
@@ -60,23 +58,14 @@ public class GuiText extends GuiComponent implements IGuiInput<String> {
     }
 
     @Override
-    public void setBounds(Rectangle bounds) {
-        if (getBounds() != null
-                && (bounds.width != getBounds().width || bounds.height != getBounds().height)) {
-            updateTextbox(bounds.width, bounds.height);
-        }
-        super.setBounds(bounds);
+    public void setLocation(ILocation bounds) {
+        updateTextbox(bounds);
+        super.setLocation(bounds);
     }
 
-    @Override
-    public void setSize(int width, int height) {
-        if (width != getBounds().width || height != getBounds().height) {
-            updateTextbox(width, height);
-        }
-        super.setSize(width, height);
-    }
-
-    private void updateTextbox(int width, int height) {
+    private void updateTextbox(ILocation loc) {
+        int width = loc.getWidth();
+        int height = loc.getHeight();
         // this interface is provided by liteloader. (Thanks, mum)
         IGuiTextField field = (IGuiTextField) this.textField;
         field.setInternalWidth(width);
@@ -112,9 +101,9 @@ public class GuiText extends GuiComponent implements IGuiInput<String> {
     }
 
     @Override
-    public void setForeColor(Color foreColor) {
+    public void setPrimaryColor(Color foreColor) {
         textField.setTextColor(foreColor.getHex());
-        super.setForeColor(foreColor);
+        super.setPrimaryColor(foreColor);
     }
 
     @Override

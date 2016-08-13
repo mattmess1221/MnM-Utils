@@ -16,8 +16,8 @@ public class GuiCheckbox extends GuiComponent implements IGuiInput<Boolean> {
     private boolean value;
 
     public GuiCheckbox() {
-        this.setSize(9, 9);
-        setBackColor(Color.of(0x99ffffa0));
+        this.setLocation(new Location(0, 0, 9, 9));
+        setSecondaryColor(Color.of(0x99ffffa0));
     }
 
     @Override

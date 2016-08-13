@@ -37,8 +37,10 @@ public class VerticalLayout implements ILayout {
     public void layoutComponents(GuiPanel parent) {
         int y = 0;
         for (GuiComponent comp : list) {
-            comp.getBounds().x = 0;
-            comp.getBounds().y = y;
+            Location loc = comp.getLocation().copy();
+            loc.setXPos(0);
+            loc.setYPos(y);
+            comp.setLocation(loc);
             y += comp.getMinimumSize().height;
         }
     }
@@ -48,7 +50,7 @@ public class VerticalLayout implements ILayout {
         int width = 0;
         int height = 0;
         for (GuiComponent comp : list) {
-            width = Math.max(width, comp.getBounds().width);
+            width = Math.max(width, comp.getLocation().getWidth());
             height += comp.getMinimumSize().height;
         }
         return new Dimension(width, height);

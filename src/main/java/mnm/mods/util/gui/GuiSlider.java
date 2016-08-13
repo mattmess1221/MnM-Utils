@@ -31,29 +31,29 @@ public class GuiSlider extends GuiComponent implements IGuiInput<Double> {
     @Override
     public void drawComponent(int mouseX, int mouseY) {
         GlStateManager.enableBlend();
-        Gui.drawRect(0, 0, getBounds().width, getBounds().height, -1);
+        ILocation loc = getLocation();
+        Gui.drawRect(0, 0, loc.getWidth(), loc.getHeight(), -1);
         mc.getTextureManager().bindTexture(TRANSPARENCY);
-        Gui.drawModalRectWithCustomSizedTexture(1, 1, 0, 0, getBounds().width - 2,
-                getBounds().height - 2, 6, 6);
-        drawMid();
+        Gui.drawModalRectWithCustomSizedTexture(1, 1, 0, 0, loc.getWidth() - 2, loc.getHeight() - 2, 6, 6);
+        drawMid(loc);
         if (vertical) {
-            int nook = Math.abs((int) (getBounds().height * getValue()) - getBounds().height);
-            Gui.drawRect(-1, nook - 1, getBounds().width + 1, nook + 2, 0xffffffff);
-            Gui.drawRect(0, nook, getBounds().width, nook + 1, 0xff000000);
+            int nook = Math.abs((int) (loc.getHeight() * getValue()) - loc.getHeight());
+            Gui.drawRect(-1, nook - 1, loc.getWidth() + 1, nook + 2, 0xffffffff);
+            Gui.drawRect(0, nook, loc.getWidth(), nook + 1, 0xff000000);
         } else {
-            int nook = (int) (getBounds().width * getValue());
-            Gui.drawRect(nook, 0, nook + 1, getBounds().height, 0xff000000);
+            int nook = (int) (loc.getWidth() * getValue());
+            Gui.drawRect(nook, 0, nook + 1, loc.getHeight(), 0xff000000);
         }
-        int midX = getBounds().width / 2;
-        int midY = getBounds().height / 2;
+        int midX = loc.getWidth() / 2;
+        int midY = loc.getHeight() / 2;
         drawCenteredString(mc.fontRendererObj, getFormattedValue(), midX, midY, -1);
         GlStateManager.disableAlpha();
         GlStateManager.disableBlend();
         super.drawComponent(mouseX, mouseY);
     }
 
-    protected void drawMid() {
-        Gui.drawRect(1, 1, getBounds().width - 1, getBounds().height - 1, getForeColor().getHex());
+    protected void drawMid(ILocation loc) {
+        Gui.drawRect(1, 1, loc.getWidth() - 1, loc.getHeight() - 1, getForeColor().getHex());
     }
 
     public String getFormattedValue() {
@@ -64,8 +64,8 @@ public class GuiSlider extends GuiComponent implements IGuiInput<Double> {
     public void moveSlider(GuiMouseEvent event) {
         if (event.getMouseX() < 0
                 || event.getMouseY() < 0
-                || event.getMouseX() > getBounds().width
-                || event.getMouseY() > getBounds().height) {
+                || event.getMouseX() > getLocation().getWidth()
+                || event.getMouseY() > getLocation().getHeight()) {
             return;
         }
         if ((event.getType() == MouseEvent.CLICK || event.getType() == MouseEvent.DRAG)
@@ -73,10 +73,10 @@ public class GuiSlider extends GuiComponent implements IGuiInput<Double> {
             double val;
             if (vertical) {
                 int y = event.getMouseY();
-                val = Math.abs((double) y / (double) getBounds().height - 1);
+                val = Math.abs((double) y / (double) getLocation().getHeight() - 1);
             } else {
                 int x = event.getMouseX();
-                val = (double) x / (double) getBounds().width;
+                val = (double) x / (double) getLocation().getWidth();
             }
             setValue(val);
         }

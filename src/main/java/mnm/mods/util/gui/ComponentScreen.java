@@ -43,7 +43,7 @@ public class ComponentScreen extends GuiScreen {
 
     @Override
     public void setWorldAndResolution(Minecraft mc, int width, int height) {
-        PANEL.setBounds(0, 0, width, height);
+        PANEL.setLocation(new Location(0, 0, width, height));
         PANEL.clearComponents();
         super.setWorldAndResolution(mc, width, height);
     }

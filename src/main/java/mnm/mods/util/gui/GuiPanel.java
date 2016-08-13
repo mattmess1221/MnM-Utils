@@ -3,8 +3,10 @@ package mnm.mods.util.gui;
 import java.awt.Dimension;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
@@ -21,12 +23,12 @@ import net.minecraft.client.renderer.GlStateManager;
 public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
 
     private List<GuiComponent> components = Lists.newArrayList();
-    private ILayout layout;
-    @Nullable
-    private GuiComponent overlay;
+    private Anchor anchor = Anchor.TOP_LEFT;
+    private Optional<GuiComponent> overlay = Optional.empty();
+    private Optional<ILayout> layout = Optional.empty();
 
-    public GuiPanel(ILayout layout) {
-        setLayout(layout);
+    public GuiPanel(@Nonnull ILayout layout) {
+        setLayout(Optional.of(layout));
     }
 
     public GuiPanel() {}
@@ -41,62 +43,66 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
 
     @Override
     public void drawComponent(int mouseX, int mouseY) {
-
-        if (overlay != null) {
-            overlay.drawComponent(mouseX, mouseY);
+        if (this.overlay.isPresent()) {
+            overlay.get().drawComponent(mouseX, mouseY);
             return;
         }
-        for (GuiComponent gc : components) {
-            if (gc.isVisible()) {
-                GlStateManager.pushMatrix();
+        this.components.stream()
+                .filter(GuiComponent::isVisible)
+                .forEach(gc -> {
+                    GlStateManager.pushMatrix();
+                    ILocation location = gc.getLocation();
+                    int xPos = location.getXPos();
+                    int yPos = location.getYPos();
+                    GuiPanel parent = this.getParent();
+                    if (parent != null) {
+                        Anchor anch = this.getAnchor();
+                        if (!anch.isAnchoredLeft()) {
+                            xPos = parent.getLocation().getWidth() - xPos;
+                        }
+                        if (!anch.isAnchoredTop()) {
+                            yPos = parent.getLocation().getHeight() - yPos;
+                        }
+                    }
 
-                GlStateManager.translate(gc.getBounds().x, gc.getBounds().y, 0F);
-                GlStateManager.scale(gc.getScale(), gc.getScale(), 1F);
+                    GlStateManager.translate(xPos, yPos, 0F);
+                    GlStateManager.scale(gc.getScale(), gc.getScale(), 1F);
 
-                gc.drawComponent(mouseX, mouseY);
+                    gc.drawComponent(mouseX, mouseY);
 
-                GlStateManager.popMatrix();
-            }
-        }
+                    GlStateManager.popMatrix();
+                });
+
         super.drawComponent(mouseX, mouseY);
     }
 
     @Override
     public void updateComponent() {
         super.updateComponent();
-        for (GuiComponent comp : this) {
-            comp.updateComponent();
-        }
-        if (layout != null) {
-            layout.layoutComponents(this);
-        }
-        if (this.overlay != null) {
-            overlay.updateComponent();
-        }
+        this.components.forEach(GuiComponent::updateComponent);
+        getLayout().ifPresent(layout -> layout.layoutComponents(this));
+        getOverlay().ifPresent(GuiComponent::updateComponent);
+
     }
 
     @Override
     public void handleMouseInput() {
         super.handleMouseInput();
-        if (overlay != null) {
-            overlay.handleMouseInput();
+        if (overlay.isPresent()) {
+            overlay.get().handleMouseInput();
             return;
         }
-        for (int i = 0; i < this.components.size(); i++) {
-            this.components.get(i).handleMouseInput();
-        }
+        this.components.forEach(GuiComponent::handleMouseInput);
     }
 
     @Override
     public void handleKeyboardInput() {
         super.handleKeyboardInput();
-        if (overlay != null) {
-            overlay.handleKeyboardInput();
+        if (overlay.isPresent()) {
+            overlay.get().handleKeyboardInput();
             return;
         }
-        for (GuiComponent comp : this) {
-            comp.handleKeyboardInput();
-        }
+        this.components.forEach(GuiComponent::handleKeyboardInput);
     }
 
     /**
@@ -127,9 +133,7 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
         if (guiComponent != null) {
             guiComponent.setParent(this);
             components.add(guiComponent);
-            if (layout != null) {
-                layout.addComponent(guiComponent, constraints);
-            }
+            getLayout().ifPresent(layout -> layout.addComponent(guiComponent, constraints));
             if (getParent() != null) {
                 updateComponent();
             }
@@ -142,12 +146,10 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
     public void clearComponents() {
         for (GuiComponent comp : components) {
             comp.setParent(null);
-            if (layout != null) {
-                layout.removeComponent(comp);
-            }
+            getLayout().ifPresent(layout -> layout.removeComponent(comp));
         }
         components.clear();
-        setOverlay(null);
+        setOverlay(Optional.empty());
         updateComponent();
     }
 
@@ -158,10 +160,25 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
      */
     public void removeComponent(GuiComponent guiComp) {
         components.remove(guiComp);
-        if (layout != null) {
-            layout.removeComponent(guiComp);
-        }
+        getLayout().ifPresent(layout -> layout.removeComponent(guiComp));
         updateComponent();
+    }
+
+    public void removeComponent(Predicate<GuiComponent> pred) {
+        for (GuiComponent gc : this.components) {
+            if (pred.test(this)) {
+                removeComponent(gc);
+                break;
+            }
+        }
+    }
+
+    public void setAnchor(Anchor anchor) {
+        this.anchor = anchor;
+    }
+
+    public Anchor getAnchor() {
+        return anchor;
     }
 
     /**
@@ -169,7 +186,7 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
      *
      * @param lmg The layout manager
      */
-    public void setLayout(ILayout lmg) {
+    public void setLayout(Optional<ILayout> lmg) {
         this.layout = lmg;
     }
 
@@ -178,7 +195,7 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
      *
      * @return The layout
      */
-    public ILayout getLayout() {
+    public Optional<ILayout> getLayout() {
         return layout;
     }
 
@@ -189,14 +206,21 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
      *
      * @param gui The component to overlay
      */
-    public void setOverlay(GuiComponent gui) {
-        if (gui != null) {
-            gui.setParent(this);
-            gui.setSize(getBounds().width, getBounds().height);
+    public void setOverlay(Optional<GuiComponent> overlay) {
+        if (overlay.isPresent()) {
+            GuiComponent gui = overlay.get();
+            gui.setParent(this.getParent());
+            gui.setLocation(gui.getLocation().copy()
+                    .setWidth(getLocation().getWidth())
+                    .setHeight(getLocation().getHeight()));
         } else {
             this.unfocusAll();
         }
-        this.overlay = gui;
+        this.overlay = overlay;
+    }
+
+    public Optional<GuiComponent> getOverlay() {
+        return overlay;
     }
 
     /**
@@ -214,34 +238,30 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
 
     @Override
     public void onClosed() {
-        for (GuiComponent comp : components) {
-            comp.onClosed();
-        }
-        if (this.overlay != null) {
-            this.overlay.onClosed();
-        }
+        this.components.forEach(GuiComponent::onClosed);
+        this.overlay.ifPresent(GuiComponent::onClosed);
     }
 
     @Override
     public Dimension getMinimumSize() {
-        Dimension size = null;
-        if (getLayout() != null) {
-            size = getLayout().getLayoutSize();
-        } else {
+        Dimension size = getLayout().map(ILayout::getLayoutSize).orElseGet(() -> {
             int width = 0;
             int height = 0;
-            for (GuiComponent gc : this) {
-                width = Math.max(width, gc.getBounds().x + gc.getBounds().width);
-                height = Math.max(height, gc.getBounds().y + gc.getBounds().height);
+            for (GuiComponent gc : components) {
+                width = Math.max(width, gc.getLocation().getXPos() + gc.getLocation().getWidth());
+                height = Math.max(height, gc.getLocation().getYPos() + gc.getLocation().getHeight());
             }
-            size = new Dimension(width, height);
-        }
+            return new Dimension(width, height);
+        });
+
         return size;
 
     }
 
+    @Deprecated
     @Override
     public Iterator<GuiComponent> iterator() {
         return components.iterator();
     }
+
 }

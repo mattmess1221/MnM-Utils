@@ -1,7 +1,5 @@
 package mnm.mods.util.gui;
 
-import java.awt.Rectangle;
-
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -20,9 +18,9 @@ public class GuiRectangle extends GuiComponent {
     public void drawComponent(int mouseX, int mouseY) {
         GlStateManager.enableAlpha();
         mc.getTextureManager().bindTexture(TRANSPARENCY);
-        Rectangle r = getBounds();
-        Gui.drawModalRectWithCustomSizedTexture(0, 0, 0, 0, r.width, r.height, 5, 5);
-        Gui.drawRect(0, 0, getBounds().width, getBounds().height, getForeColor().getHex());
+        ILocation loc = getLocation();
+        Gui.drawModalRectWithCustomSizedTexture(0, 0, 0, 0, loc.getWidth(), loc.getHeight(), 5, 5);
+        Gui.drawRect(0, 0, loc.getWidth(), loc.getHeight(), getForeColor().getHex());
         GlStateManager.disableBlend();
         super.drawComponent(mouseX, mouseY);
     }

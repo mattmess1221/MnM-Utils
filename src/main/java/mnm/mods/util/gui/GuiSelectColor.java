@@ -1,6 +1,7 @@
 package mnm.mods.util.gui;
 
 import java.math.BigInteger;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.lwjgl.input.Keyboard;
@@ -44,8 +45,8 @@ public class GuiSelectColor extends GuiPanel {
      * @param color The starting color
      */
     public GuiSelectColor(final Consumer<Color> callback_, Color color) {
-        this.current.setForeColor(color);
-        this.selected.setForeColor(color);
+        this.current.setPrimaryColor(color);
+        this.selected.setPrimaryColor(color);
         this.current.getBus().register(new Object() {
             @Subscribe
             public void accept(GuiMouseEvent event) {
@@ -55,7 +56,7 @@ public class GuiSelectColor extends GuiPanel {
                 }
             }
         });
-        this.setLayout(new GuiGridLayout(20, 20));
+        this.setLayout(Optional.of(new GuiGridLayout(20, 20)));
 
         this.addComponent(sliderRed = new GuiSliderColor(color.getRed() / 255D, true, GuiSliderColor.Model.RED, color), new int[] { 1, 1, 2, 10 });
         this.addComponent(sliderGreen = new GuiSliderColor(color.getGreen() / 255D, true, GuiSliderColor.Model.GREEN, color), new int[] { 4, 1, 2, 10 });
@@ -117,7 +118,7 @@ public class GuiSelectColor extends GuiPanel {
             @Subscribe
             public void action(ActionPerformedEvent event) {
                 // Close
-                getParent().setOverlay(null);
+                getParent().setOverlay(Optional.empty());
             }
         });
         this.addComponent(cancel, new int[] { 13, 13, 4, 2 });
@@ -152,7 +153,7 @@ public class GuiSelectColor extends GuiPanel {
         Color color = Color.of(r, g, b, a);
         if (!color.equals(this.color)) {
             this.color = color;
-            selected.setForeColor(color);
+            selected.setPrimaryColor(color);
 
             sliderRed.setBase(color);
             sliderGreen.setBase(color);

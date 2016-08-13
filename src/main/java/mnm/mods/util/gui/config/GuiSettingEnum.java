@@ -6,6 +6,7 @@ import com.google.common.eventbus.Subscribe;
 
 import mnm.mods.util.Color;
 import mnm.mods.util.config.Value;
+import mnm.mods.util.gui.ILocation;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
 import net.minecraft.client.gui.Gui;
@@ -39,7 +40,7 @@ public class GuiSettingEnum<T> extends GuiSetting<T> {
         selected = getCurrentPosition();
 
         select(Arrays.binarySearch(values, setting.get()));
-        setBackColor(Color.DARK_GRAY);
+        setSecondaryColor(Color.DARK_GRAY);
     }
 
     @Subscribe
@@ -83,12 +84,13 @@ public class GuiSettingEnum<T> extends GuiSetting<T> {
 
     @Override
     public void drawComponent(int mouseX, int mouseY) {
-        Gui.drawRect(0, 0, getBounds().width, getBounds().height, 0xff000000);
-        String string = mc.fontRendererObj.trimStringToWidth(text, getBounds().width);
-        int xPos = getBounds().width / 2 - mc.fontRendererObj.getStringWidth(string) / 2;
-        int yPos = getBounds().height / 2 - 4;
+        ILocation loc = this.getLocation();
+        Gui.drawRect(0, 0, loc.getWidth(), loc.getHeight(), 0xff000000);
+        String string = mc.fontRendererObj.trimStringToWidth(text, loc.getWidth());
+        int xPos = loc.getWidth() / 2 - mc.fontRendererObj.getStringWidth(string) / 2;
+        int yPos = loc.getHeight() / 2 - 4;
         mc.fontRendererObj.drawString(string, xPos, yPos, getForeColor().getHex());
-        drawBorders(0, -1, getBounds().width, getBounds().height + 1);
+        drawBorders(0, -1, loc.getWidth(), loc.getHeight() + 1);
     }
 
     @Override

@@ -107,7 +107,7 @@ public class GuiGridLayout implements ILayout {
 
     @Override
     public void layoutComponents(GuiPanel parent) {
-        Dimension size = parent.getBounds().getSize();
+        Dimension size = parent.getLocation().getSize();
         int colW = size.width / cols;
         int rowH = size.height / rows;
         for (Map.Entry<Rectangle, GuiComponent> entry : grid.entrySet()) {
@@ -116,7 +116,7 @@ public class GuiGridLayout implements ILayout {
             int width = bounds.width * colW;
             int y = bounds.y * rowH;
             int height = bounds.height * rowH;
-            entry.getValue().setBounds(x, y, width, height);
+            entry.getValue().setLocation(new Location(x, y, width, height));
         }
     }
 
