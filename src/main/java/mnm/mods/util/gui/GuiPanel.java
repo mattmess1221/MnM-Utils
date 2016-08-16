@@ -4,11 +4,12 @@ import java.awt.Dimension;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
+import java.util.Queue;
 
 import javax.annotation.Nonnull;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Queues;
 import com.google.common.eventbus.Subscribe;
 
 import mnm.mods.util.ILocation;
@@ -26,6 +27,8 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
     private List<GuiComponent> components = Lists.newArrayList();
     private Optional<GuiComponent> overlay = Optional.empty();
     private Optional<ILayout> layout = Optional.empty();
+
+    private Queue<Runnable> actionQueue = Queues.newLinkedBlockingDeque();
 
     public GuiPanel(@Nonnull ILayout layout) {
         setLayout(Optional.of(layout));
@@ -47,6 +50,7 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
             overlay.get().drawComponent(mouseX, mouseY);
             return;
         }
+        getLayout().ifPresent(layout -> layout.layoutComponents(this));
         this.components.stream()
                 .filter(GuiComponent::isVisible)
                 .forEach(gc -> {
@@ -67,9 +71,11 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
 
     @Override
     public void updateComponent() {
-        super.updateComponent();
+        // run the queue
+        for (Runnable r = actionQueue.poll(); r != null; r = actionQueue.poll()) {
+            r.run();
+        }
         this.components.forEach(GuiComponent::updateComponent);
-        getLayout().ifPresent(layout -> layout.layoutComponents(this));
         getOverlay().ifPresent(GuiComponent::updateComponent);
 
     }
@@ -120,12 +126,11 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
      */
     public void addComponent(GuiComponent guiComponent, Object constraints) {
         if (guiComponent != null) {
-            guiComponent.setParent(this);
-            components.add(guiComponent);
-            getLayout().ifPresent(layout -> layout.addComponent(guiComponent, constraints));
-            if (getParent() != null) {
-                updateComponent();
-            }
+            this.actionQueue.offer(() -> {
+                guiComponent.setParent(this);
+                components.add(guiComponent);
+                getLayout().ifPresent(layout -> layout.addComponent(guiComponent, constraints));
+            });
         }
     }
 
@@ -133,13 +138,14 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
      * Removes all components from this panel.
      */
     public void clearComponents() {
-        for (GuiComponent comp : components) {
-            comp.setParent(null);
-            getLayout().ifPresent(layout -> layout.removeComponent(comp));
-        }
-        components.clear();
-        setOverlay(Optional.empty());
-        updateComponent();
+        this.actionQueue.offer(() -> {
+            for (GuiComponent comp : components) {
+                comp.setParent(null);
+                getLayout().ifPresent(layout -> layout.removeComponent(comp));
+            }
+            components.clear();
+            setOverlay(Optional.empty());
+        });
     }
 
     /**
@@ -148,18 +154,10 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
      * @param guiComp The component to remove
      */
     public void removeComponent(GuiComponent guiComp) {
-        components.remove(guiComp);
-        getLayout().ifPresent(layout -> layout.removeComponent(guiComp));
-        updateComponent();
-    }
-
-    public void removeComponent(Predicate<GuiComponent> pred) {
-        for (GuiComponent gc : this.components) {
-            if (pred.test(this)) {
-                removeComponent(gc);
-                break;
-            }
-        }
+        this.actionQueue.offer(() -> {
+            components.remove(guiComp);
+            getLayout().ifPresent(layout -> layout.removeComponent(guiComp));
+        });
     }
 
     /**
