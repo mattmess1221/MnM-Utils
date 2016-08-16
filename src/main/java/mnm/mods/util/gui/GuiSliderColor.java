@@ -1,6 +1,7 @@
 package mnm.mods.util.gui;
 
 import mnm.mods.util.Color;
+import mnm.mods.util.ILocation;
 import net.minecraft.client.gui.Gui;
 
 /**

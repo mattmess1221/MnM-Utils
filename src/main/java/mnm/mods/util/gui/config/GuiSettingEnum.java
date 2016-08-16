@@ -5,8 +5,8 @@ import java.util.Arrays;
 import com.google.common.eventbus.Subscribe;
 
 import mnm.mods.util.Color;
+import mnm.mods.util.ILocation;
 import mnm.mods.util.config.Value;
-import mnm.mods.util.gui.ILocation;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
 import net.minecraft.client.gui.Gui;
@@ -89,7 +89,7 @@ public class GuiSettingEnum<T> extends GuiSetting<T> {
         String string = mc.fontRendererObj.trimStringToWidth(text, loc.getWidth());
         int xPos = loc.getWidth() / 2 - mc.fontRendererObj.getStringWidth(string) / 2;
         int yPos = loc.getHeight() / 2 - 4;
-        mc.fontRendererObj.drawString(string, xPos, yPos, getForeColor().getHex());
+        mc.fontRendererObj.drawString(string, xPos, yPos, getPrimaryColorProperty().getHex());
         drawBorders(0, -1, loc.getWidth(), loc.getHeight() + 1);
     }
 

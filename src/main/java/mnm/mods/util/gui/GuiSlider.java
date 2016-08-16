@@ -4,6 +4,7 @@ import org.lwjgl.input.Mouse;
 
 import com.google.common.eventbus.Subscribe;
 
+import mnm.mods.util.ILocation;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
 import net.minecraft.client.gui.Gui;
@@ -53,7 +54,7 @@ public class GuiSlider extends GuiComponent implements IGuiInput<Double> {
     }
 
     protected void drawMid(ILocation loc) {
-        Gui.drawRect(1, 1, loc.getWidth() - 1, loc.getHeight() - 1, getForeColor().getHex());
+        Gui.drawRect(1, 1, loc.getWidth() - 1, loc.getHeight() - 1, getPrimaryColorProperty().getHex());
     }
 
     public String getFormattedValue() {

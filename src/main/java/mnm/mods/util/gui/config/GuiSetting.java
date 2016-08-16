@@ -1,7 +1,10 @@
 package mnm.mods.util.gui.config;
 
+import javax.annotation.Nonnull;
+
 import mnm.mods.util.config.Value;
 import mnm.mods.util.gui.GuiComponent;
+import mnm.mods.util.gui.GuiWrappedComponent;
 import mnm.mods.util.gui.IGuiInput;
 
 /**
@@ -9,7 +12,7 @@ import mnm.mods.util.gui.IGuiInput;
  *
  * @author Matthew
  * @param <T> The setting type
- * @param <Wrapper> The gui this setting will wrap
+ * @param <W> The gui this setting will wrap
  */
 public abstract class GuiSetting<T> extends GuiComponent implements IGuiInput<T> {
 
@@ -35,37 +38,49 @@ public abstract class GuiSetting<T> extends GuiComponent implements IGuiInput<T>
         getSetting().set(getValue());
     }
 
-    public static class GuiSettingWrapped<T, Wrapper extends IGuiInput<T>> extends GuiSetting<T> {
+    private abstract static class Wrapped<T, W extends GuiComponent> extends GuiWrappedComponent<W> implements IGuiInput<T> {
 
-        private final Wrapper input;
+        private final Value<T> setting;
 
-        public GuiSettingWrapped(Value<T> setting, Wrapper input) {
-            super(setting);
-            this.input = input;
-            this.input.setValue(setting.get());
-            if (input instanceof GuiComponent) {
-                wrap((GuiComponent) input);
-            }
+        public Wrapped(Value<T> setting, @Nonnull W wrap) {
+            super(wrap);
+            this.setting = setting;
+        }
+
+        public Value<T> getSetting() {
+            return this.setting;
+        }
+
+    }
+
+    public static class GuiSettingWrapped<T, Wrapper extends GuiComponent & IGuiInput<T>>
+            extends Wrapped<T, Wrapper> {
+
+        public GuiSettingWrapped(Value<T> setting, @Nonnull Wrapper input) {
+            super(setting, input);
+            input.setValue(setting.get());
         }
 
         /**
          * Gets the input object.
          *
          * @return The input object
+         * @deprecated Use {@link #getComponent()}
          */
+        @Deprecated
         public Wrapper getInput() {
-            return input;
+            return this.getComponent();
         }
 
         @Override
         public T getValue() {
-            return getInput().getValue();
+            return getComponent() == null ? null : getComponent().getValue();
         }
 
         @Override
         public void setValue(T value) {
-            if (getInput() != null) {
-                getInput().setValue(value);
+            if (getComponent() != null) {
+                getComponent().setValue(value);
             }
         }
 

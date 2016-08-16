@@ -1,13 +1,16 @@
 package mnm.mods.util.gui;
 
 import java.awt.Dimension;
-import java.awt.Rectangle;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.logging.log4j.LogManager;
 
 import com.google.common.collect.Maps;
+
+import mnm.mods.util.ILocation;
+import mnm.mods.util.ImmutableLocation;
+import mnm.mods.util.Location;
 
 /**
  * A layout which places components along a grid. Add components with an int[]
@@ -38,7 +41,7 @@ public class GuiGridLayout implements ILayout {
     private int cols;
     private int rows;
 
-    private Map<Rectangle, GuiComponent> grid = Maps.newHashMap();
+    private Map<ILocation, GuiComponent> grid = Maps.newHashMap();
 
     public GuiGridLayout(int columns, int rows) {
         this.cols = columns;
@@ -67,10 +70,10 @@ public class GuiGridLayout implements ILayout {
             w = constraints[2];
             h = constraints[3];
         }
-        Rectangle rect = new Rectangle(x, y, w, h);
+        ILocation rect = new Location(x, y, w, h);
         try {
             checkBoundsIfValid(rect);
-            grid.put(rect, comp);
+            grid.put(ImmutableLocation.copyOf(rect), comp);
         } catch (Exception e) {
             LogManager.getLogger().catching(e);
         }
@@ -80,12 +83,12 @@ public class GuiGridLayout implements ILayout {
      * Checks if the rectangle is valid. A rectangle is valid if x and y are
      * above 0 and x + width < cols and y + height < rows
      */
-    private void checkBoundsIfValid(Rectangle b) {
-        if (b.x + b.width - 1 > cols || b.y + b.height - 1 > rows || b.x < 0 || b.y < 0) {
+    private void checkBoundsIfValid(ILocation b) {
+        if (b.getXWidth() - 1 > cols || b.getYHeight() - 1 > rows || b.getXPos() < 0 || b.getYPos() < 0) {
             throw new IndexOutOfBoundsException(String.format(
-                    "x:%s y:%s w:%s h:%s cols:%s rows:%s", b.x, b.y, b.width, b.height, cols, rows));
+                    "x:%s y:%s w:%s h:%s cols:%s rows:%s", b.getXPos(), b.getYPos(), b.getWidth(), b.getHeight(), cols, rows));
         }
-        for (Rectangle r : grid.keySet()) {
+        for (ILocation r : grid.keySet()) {
             if (b.contains(r)) {
                 throw new IllegalArgumentException("Area " + b + " already contains "
                         + grid.get(r).getClass().getName());
@@ -95,8 +98,8 @@ public class GuiGridLayout implements ILayout {
 
     @Override
     public void removeComponent(GuiComponent comp) {
-        Rectangle remove = null;
-        for (Entry<Rectangle, GuiComponent> entry : grid.entrySet()) {
+        ILocation remove = null;
+        for (Entry<ILocation, GuiComponent> entry : grid.entrySet()) {
             if (entry.getValue() == comp) {
                 remove = entry.getKey();
                 break;
@@ -110,12 +113,12 @@ public class GuiGridLayout implements ILayout {
         Dimension size = parent.getLocation().getSize();
         int colW = size.width / cols;
         int rowH = size.height / rows;
-        for (Map.Entry<Rectangle, GuiComponent> entry : grid.entrySet()) {
-            Rectangle bounds = entry.getKey();
-            int x = bounds.x * colW;
-            int width = bounds.width * colW;
-            int y = bounds.y * rowH;
-            int height = bounds.height * rowH;
+        for (Map.Entry<ILocation, GuiComponent> entry : grid.entrySet()) {
+            ILocation bounds = entry.getKey();
+            int x = bounds.getXPos() * colW;
+            int width = bounds.getWidth() * colW;
+            int y = bounds.getYPos() * rowH;
+            int height = bounds.getHeight() * rowH;
             entry.getValue().setLocation(new Location(x, y, width, height));
         }
     }

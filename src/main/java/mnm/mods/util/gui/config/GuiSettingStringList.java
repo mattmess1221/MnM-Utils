@@ -6,8 +6,8 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 
 import mnm.mods.util.config.ValueList;
-import mnm.mods.util.gui.GuiComponent;
 import mnm.mods.util.gui.GuiText;
+import mnm.mods.util.gui.GuiWrappedComponent;
 import mnm.mods.util.gui.IGuiInput;
 import mnm.mods.util.gui.config.GuiSetting.GuiSettingWrapped;
 
@@ -30,17 +30,17 @@ public class GuiSettingStringList extends GuiSettingWrapped<List<String>, GuiSet
         return getInput();
     }
 
-    public static class GuiStringList extends GuiComponent implements IGuiInput<List<String>> {
+    public static class GuiStringList extends GuiWrappedComponent<GuiText> implements IGuiInput<List<String>> {
 
         private GuiText text;
         private String split;
         private String join;
 
         public GuiStringList(String split, String join) {
-            this.text = new GuiText();
+            super(new GuiText());
+            this.text = getComponent();
             this.split = split;
             this.join = join;
-            wrap(text);
         }
 
         @Override

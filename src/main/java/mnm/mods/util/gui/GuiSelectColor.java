@@ -51,7 +51,7 @@ public class GuiSelectColor extends GuiPanel {
             @Subscribe
             public void accept(GuiMouseEvent event) {
                 if (event.getType() == MouseEvent.CLICK) {
-                    Color color = current.getForeColor();
+                    Color color = current.getPrimaryColorProperty();
                     setColor(color);
                 }
             }
@@ -89,7 +89,7 @@ public class GuiSelectColor extends GuiPanel {
         this.addComponent(selected, new int[] { 14, 4, 6, 3 });
 
         string = new GuiSettingString(new Value<String>(""));
-        string.getInput().getTextField().setMaxStringLength(8);
+        string.getComponent().getTextField().setMaxStringLength(8);
         string.getBus().register(new Object() {
             @Subscribe
             public void accept(GuiKeyboardEvent event) {

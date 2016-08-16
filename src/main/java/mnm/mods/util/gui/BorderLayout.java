@@ -6,6 +6,9 @@ import java.util.Map.Entry;
 
 import com.google.common.collect.Maps;
 
+import mnm.mods.util.ILocation;
+import mnm.mods.util.Location;
+
 /**
  * A recreation of Border Layout.
  *

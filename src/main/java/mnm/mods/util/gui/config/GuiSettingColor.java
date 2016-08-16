@@ -6,9 +6,9 @@ import java.util.function.Consumer;
 import com.google.common.eventbus.Subscribe;
 
 import mnm.mods.util.Color;
+import mnm.mods.util.ILocation;
 import mnm.mods.util.config.Value;
 import mnm.mods.util.gui.GuiSelectColor;
-import mnm.mods.util.gui.ILocation;
 import mnm.mods.util.gui.events.ActionPerformedEvent;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.ResourceLocation;

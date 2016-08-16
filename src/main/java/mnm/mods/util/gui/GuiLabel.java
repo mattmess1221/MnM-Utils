@@ -42,7 +42,7 @@ public class GuiLabel extends GuiComponent {
             GlStateManager.translate(-angle / 15, angle / 40, 0);
         }
 
-        fr.drawChat(getText(), 0, 1, getForeColor().getHex(), true);
+        fr.drawChat(getText(), 0, 1, getPrimaryColorProperty().getHex(), true);
 
         GlStateManager.popMatrix();
         super.drawComponent(mouseX, mouseY);

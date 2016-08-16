@@ -2,6 +2,7 @@ package mnm.mods.util.gui;
 
 import java.io.IOException;
 
+import mnm.mods.util.Location;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 

@@ -1,16 +1,18 @@
-package mnm.mods.util.gui;
+package mnm.mods.util;
 
-import javax.annotation.concurrent.Immutable;
 
-@Immutable
-public final class ImmutableLocation implements ILocation {
+public class Location implements ILocation {
 
-    private final int xPos;
-    private final int yPos;
-    private final int width;
-    private final int height;
+    private int xPos;
+    private int yPos;
+    private int width;
+    private int height;
 
-    public ImmutableLocation(int xPos, int yPos, int width, int height) {
+    public Location() {
+        this(0, 0, 1, 1);
+    }
+
+    public Location(int xPos, int yPos, int width, int height) {
         this.xPos = xPos;
         this.yPos = yPos;
         this.width = width;
@@ -37,13 +39,48 @@ public final class ImmutableLocation implements ILocation {
         return this.height;
     }
 
+    public Location setXPos(int xPos) {
+        this.xPos = xPos;
+        return this;
+    }
+
+    public Location setYPos(int yPos) {
+        this.yPos = yPos;
+        return this;
+    }
+
+    public Location setWidth(int width) {
+        this.width = width;
+        return this;
+    }
+
+    public Location setHeight(int height) {
+        this.height = height;
+        return this;
+    }
+
+    public Location move(int x, int y) {
+        this.xPos += x;
+        this.yPos += y;
+        return this;
+    }
+
+    public Location scale(float scale) {
+        this.xPos *= scale;
+        this.yPos *= scale;
+        this.width *= scale;
+        this.height *= scale;
+        return this;
+    }
+
     @Override
     public String toString() {
-        return "ImmutableLocation [xPos=" + xPos + ", yPos=" + yPos + ", width=" + width + ", height=" + height + "]";
+        return "Location [xPos=" + xPos + ", yPos=" + yPos + ", width=" + width + ", height=" + height + "]";
     }
 
     @Override
     public int hashCode() {
+        // only ImmutableLocation should be used in Maps
         final int prime = 31;
         int result = 1;
         result = prime * result + height;
@@ -73,9 +110,7 @@ public final class ImmutableLocation implements ILocation {
         return true;
     }
 
-    public static ILocation copyOf(ILocation loc) {
-        if (loc instanceof ImmutableLocation)
-            return loc;
-        return new ImmutableLocation(loc.getXPos(), loc.getYPos(), loc.getWidth(), loc.getHeight());
+    public static Location copyOf(ILocation location) {
+        return new Location(location.getXPos(), location.getYPos(), location.getWidth(), location.getHeight());
     }
 }

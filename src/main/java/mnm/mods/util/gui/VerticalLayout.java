@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import mnm.mods.util.Location;
+
 /**
  * Displays components top to bottom. Like {@link FlowLayout}, but vertical.
  * 

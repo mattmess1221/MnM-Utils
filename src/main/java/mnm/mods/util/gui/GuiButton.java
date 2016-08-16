@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.google.common.eventbus.Subscribe;
 
+import mnm.mods.util.ILocation;
 import mnm.mods.util.TexturedModal;
 import mnm.mods.util.gui.events.ActionPerformedEvent;
 import net.minecraft.client.audio.PositionedSoundRecord;

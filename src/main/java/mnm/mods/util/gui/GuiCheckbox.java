@@ -3,6 +3,7 @@ package mnm.mods.util.gui;
 import com.google.common.eventbus.Subscribe;
 
 import mnm.mods.util.Color;
+import mnm.mods.util.Location;
 import mnm.mods.util.gui.events.ActionPerformedEvent;
 import net.minecraft.client.gui.Gui;
 
@@ -27,8 +28,8 @@ public class GuiCheckbox extends GuiComponent implements IGuiInput<Boolean> {
         int width = 9;
         int height = 9;
 
-        int fore = getForeColor().getHex();
-        int back = getBackColor().getHex();
+        int fore = getPrimaryColorProperty().getHex();
+        int back = getSecondaryColorProperty().getHex();
 
         // Background
         Gui.drawRect(1, 0, width - 1, 1, back); // top

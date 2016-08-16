@@ -1,5 +1,6 @@
 package mnm.mods.util.gui;
 
+import mnm.mods.util.ILocation;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -20,7 +21,7 @@ public class GuiRectangle extends GuiComponent {
         mc.getTextureManager().bindTexture(TRANSPARENCY);
         ILocation loc = getLocation();
         Gui.drawModalRectWithCustomSizedTexture(0, 0, 0, 0, loc.getWidth(), loc.getHeight(), 5, 5);
-        Gui.drawRect(0, 0, loc.getWidth(), loc.getHeight(), getForeColor().getHex());
+        Gui.drawRect(0, 0, loc.getWidth(), loc.getHeight(), getPrimaryColorProperty().getHex());
         GlStateManager.disableBlend();
         super.drawComponent(mouseX, mouseY);
     }

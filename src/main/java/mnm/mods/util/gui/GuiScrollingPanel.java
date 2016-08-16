@@ -3,10 +3,11 @@ package mnm.mods.util.gui;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Dimension;
-import java.awt.Point;
 
 import com.google.common.eventbus.Subscribe;
 
+import mnm.mods.util.ILocation;
+import mnm.mods.util.Location;
 import mnm.mods.util.gui.BorderLayout.Position;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
@@ -33,11 +34,11 @@ public class GuiScrollingPanel extends GuiPanel {
 
     @Override
     public void drawComponent(int mouseX, int mouseY) {
-        Point actual = getActualPosition();
+        ILocation actual = getActualLocation();
         ILocation rect = getLocation();
 
         glEnable(GL_SCISSOR_TEST);
-        glScissor(actual.x * 2, mc.displayHeight - rect.getHeight() * 2 - actual.y * 2, rect.getWidth() * 2, rect.getHeight() * 2);
+        glScissor(actual.getXPos() * 2, mc.displayHeight - rect.getHeight() * 2 - actual.getYPos() * 2, rect.getWidth() * 2, rect.getHeight() * 2);
 
         super.drawComponent(mouseX, mouseY);
 

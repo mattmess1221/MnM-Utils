@@ -22,6 +22,9 @@ minecraft {
 	replace "@MCVERSION@", project.minecraft.version
 	replace "@VERSION@", project.version
 }
+dependencies {
+	testCompile 'junit:junit:4.12'
+}
 litemod.json {
 	name = 'mnmutils'
 	author = 'killjoy1221'

@@ -6,6 +6,8 @@ import java.util.Optional;
 import com.google.common.eventbus.Subscribe;
 
 import mnm.mods.util.Color;
+import mnm.mods.util.ILocation;
+import mnm.mods.util.ImmutableLocation;
 import mnm.mods.util.gui.events.ActionPerformedEvent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;

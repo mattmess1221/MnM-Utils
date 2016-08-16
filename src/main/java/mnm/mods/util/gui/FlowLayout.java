@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import mnm.mods.util.ILocation;
+import mnm.mods.util.Location;
+
 /**
  * A layout that puts items side-by-side and left-to-right.
  *

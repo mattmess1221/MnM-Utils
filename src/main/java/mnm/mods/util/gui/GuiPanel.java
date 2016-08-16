@@ -11,6 +11,7 @@ import javax.annotation.Nonnull;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
+import mnm.mods.util.ILocation;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
 import net.minecraft.client.renderer.GlStateManager;
@@ -23,7 +24,6 @@ import net.minecraft.client.renderer.GlStateManager;
 public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
 
     private List<GuiComponent> components = Lists.newArrayList();
-    private Anchor anchor = Anchor.TOP_LEFT;
     private Optional<GuiComponent> overlay = Optional.empty();
     private Optional<ILayout> layout = Optional.empty();
 
@@ -54,17 +54,6 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
                     ILocation location = gc.getLocation();
                     int xPos = location.getXPos();
                     int yPos = location.getYPos();
-                    GuiPanel parent = this.getParent();
-                    if (parent != null) {
-                        Anchor anch = this.getAnchor();
-                        if (!anch.isAnchoredLeft()) {
-                            xPos = parent.getLocation().getWidth() - xPos;
-                        }
-                        if (!anch.isAnchoredTop()) {
-                            yPos = parent.getLocation().getHeight() - yPos;
-                        }
-                    }
-
                     GlStateManager.translate(xPos, yPos, 0F);
                     GlStateManager.scale(gc.getScale(), gc.getScale(), 1F);
 
@@ -173,14 +162,6 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
         }
     }
 
-    public void setAnchor(Anchor anchor) {
-        this.anchor = anchor;
-    }
-
-    public Anchor getAnchor() {
-        return anchor;
-    }
-
     /**
      * Sets the layout for this panel.
      *
@@ -209,7 +190,7 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
     public void setOverlay(Optional<GuiComponent> overlay) {
         if (overlay.isPresent()) {
             GuiComponent gui = overlay.get();
-            gui.setParent(this.getParent());
+            gui.setParent(this);
             gui.setLocation(gui.getLocation().copy()
                     .setWidth(getLocation().getWidth())
                     .setHeight(getLocation().getHeight()));
