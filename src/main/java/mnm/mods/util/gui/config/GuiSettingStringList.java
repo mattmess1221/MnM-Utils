@@ -32,29 +32,28 @@ public class GuiSettingStringList extends GuiSettingWrapped<List<String>, GuiSet
 
     public static class GuiStringList extends GuiWrappedComponent<GuiText> implements IGuiInput<List<String>> {
 
-        private GuiText text;
         private String split;
         private String join;
 
         public GuiStringList(String split, String join) {
             super(new GuiText());
-            this.text = getComponent();
             this.split = split;
             this.join = join;
         }
 
         @Override
         public List<String> getValue() {
-            return Splitter.on(split).omitEmptyStrings().trimResults().splitToList(text.getValue());
+            return Splitter.on(split).omitEmptyStrings().trimResults().splitToList(getComponent().getValue());
         }
 
         @Override
         public void setValue(List<String> value) {
-            text.setValue(Joiner.on(join).skipNulls().join(value));
+            getComponent().setValue(Joiner.on(join).skipNulls().join(value));
         }
 
+        @Deprecated
         public GuiText getText() {
-            return text;
+            return getComponent();
         }
     }
 }

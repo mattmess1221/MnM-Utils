@@ -11,6 +11,9 @@ import net.minecraft.network.INetHandler;
 import net.minecraft.network.play.server.SPacketJoinGame;
 
 public class LiteModMnmUtils implements JoinGameListener {
+
+    private MnmUtils utils;
+
     @Override
     public String getName() {
         return "MnmUtils";
@@ -21,14 +24,22 @@ public class LiteModMnmUtils implements JoinGameListener {
         return "@VERSION@";
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public void init(File arg0) {}
+    public void init(File arg0) {
+        this.utils = MnmUtils.INSTANCE;// new MnmUtils();
+    }
 
     @Override
     public void upgradeSettings(String arg0, File arg1, File arg2) {}
 
     @Override
     public void onJoinGame(INetHandler netHandler, SPacketJoinGame joinGamePacket, ServerData serverData, RealmsServer realmsServer) {
-        UpdateChecker.runUpdateChecks();
+        UpdateChecker.runUpdateChecks(utils.getChatProxy(), utils.getDisabledUpdates());
     }
+
+    public MnmUtils getUtils() {
+        return utils;
+    }
+
 }

@@ -48,6 +48,7 @@ public class GuiText extends GuiComponent implements IGuiInput<String> {
 
             int x = event.getMouseX();
             int y = event.getMouseY();
+
             // send to text field.
             textField.mouseClicked(x, y, 0);
         }
@@ -117,6 +118,7 @@ public class GuiText extends GuiComponent implements IGuiInput<String> {
     @Override
     public void setValue(String value) {
         textField.setText(value);
+        textField.setCursorPositionZero();
     }
 
     public String getHint() {

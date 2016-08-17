@@ -26,7 +26,6 @@ public class GuiWrappedComponent<T extends GuiComponent> extends GuiComponent {
     @Override
     public void drawComponent(int mouseX, int mouseY) {
         wrapper.drawComponent(mouseX, mouseY);
-        super.drawComponent(mouseX, mouseY);
     }
 
     @Override
@@ -142,6 +141,21 @@ public class GuiWrappedComponent<T extends GuiComponent> extends GuiComponent {
     @Override
     public ITextComponent getCaptionText() {
         return wrapper.getCaptionText();
+    }
+
+    @Override
+    public boolean isFocusable() {
+        return wrapper.isFocusable();
+    }
+
+    @Override
+    public boolean isFocused() {
+        return wrapper.isFocused();
+    }
+
+    @Override
+    public void setFocused(boolean focused) {
+        wrapper.setFocused(focused);
     }
 
 }
