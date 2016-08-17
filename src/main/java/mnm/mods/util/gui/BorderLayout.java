@@ -1,11 +1,13 @@
 package mnm.mods.util.gui;
 
 import java.awt.Dimension;
-import java.awt.Rectangle;
 import java.util.EnumMap;
 import java.util.Map.Entry;
 
 import com.google.common.collect.Maps;
+
+import mnm.mods.util.ILocation;
+import mnm.mods.util.Location;
 
 /**
  * A recreation of Border Layout.
@@ -45,7 +47,7 @@ public class BorderLayout implements ILayout {
 
     @Override
     public void layoutComponents(GuiPanel parent) {
-        Rectangle pbounds = parent.getBounds();
+        ILocation pbounds = parent.getLocation();
         GuiComponent center = components.get(Position.CENTER);
         GuiComponent north = components.get(Position.NORTH);
         GuiComponent south = components.get(Position.SOUTH);
@@ -53,120 +55,106 @@ public class BorderLayout implements ILayout {
         GuiComponent east = components.get(Position.EAST);
 
         if (north != null) {
-            Rectangle bounds = north.getBounds();
-
-            bounds.x = 0;
-            bounds.y = 0;
-            bounds.width = pbounds.width;
-            bounds.height = north.getMinimumSize().height;
+            north.setLocation(new Location(0, 0, pbounds.getWidth(), north.getMinimumSize().height));
         }
 
         if (west != null) {
-            Rectangle bounds = west.getBounds();
-            bounds.x = 0;
-            bounds.width = west.getMinimumSize().width;
+            Location bounds = new Location();
+            bounds.setWidth(west.getMinimumSize().width);
 
-            if (north == null) {
-                bounds.y = 0;
-            } else {
-                bounds.y = north.getBounds().height;
+            if (north != null) {
+                bounds.setYPos(north.getLocation().getHeight());
             }
 
             if (south == null) {
                 if (north == null) {
-                    bounds.height = pbounds.height;
+                    bounds.setHeight(pbounds.getHeight());
                 } else {
-                    bounds.height = pbounds.height - north.getBounds().height;
+                    bounds.setHeight(pbounds.getHeight() - north.getLocation().getHeight());
                 }
             } else {
                 if (north == null) {
-                    bounds.height = pbounds.height - south.getBounds().height;
+                    bounds.setHeight(pbounds.getHeight() - south.getLocation().getHeight());
                 } else {
-                    bounds.height = pbounds.height - south.getBounds().height
-                            - north.getBounds().height;
+                    bounds.setHeight(pbounds.getHeight() - south.getLocation().getHeight() - north.getLocation().getHeight());
                 }
             }
+            west.setLocation(bounds);
         }
 
         if (center != null) {
-            Rectangle bounds = center.getBounds();
+            Location bounds = new Location();
 
-            if (north == null) {
-                bounds.y = 0;
-            } else {
-                bounds.y = north.getBounds().height + 1;
+            if (north != null) {
+                bounds.setYPos(north.getLocation().getHeight() + 1);
             }
 
-            if (west == null) {
-                bounds.x = 0;
-            } else {
-                bounds.x = west.getBounds().width;
+            if (west != null) {
+                bounds.setXPos(west.getLocation().getWidth());
             }
 
             if (east == null) {
                 if (west == null) {
-                    bounds.width = pbounds.getBounds().width;
+                    bounds.setWidth(pbounds.getWidth());
                 } else {
-                    bounds.width = pbounds.getBounds().width - west.getBounds().width;
+                    bounds.setWidth(pbounds.getWidth() - west.getLocation().getWidth());
                 }
             } else {
                 if (west == null) {
-                    bounds.width = pbounds.getBounds().width - east.getBounds().width;
+                    bounds.setWidth(pbounds.getWidth() - east.getLocation().getWidth());
                 } else {
-                    bounds.width = pbounds.getBounds().width - east.getBounds().width
-                            - west.getBounds().width;
+                    bounds.setWidth(pbounds.getWidth() - east.getLocation().getWidth() - west.getLocation().getWidth());
                 }
             }
 
             if (south == null) {
                 if (north == null) {
-                    bounds.height = pbounds.getBounds().height;
+                    bounds.setHeight(pbounds.getHeight());
                 } else {
-                    bounds.height = pbounds.getBounds().height - north.getBounds().height;
+                    bounds.setHeight(pbounds.getHeight() - north.getLocation().getHeight());
                 }
             } else {
                 if (north == null) {
-                    bounds.height = pbounds.getBounds().height - south.getBounds().height - 1;
+                    bounds.setHeight(pbounds.getHeight() - south.getLocation().getHeight() - 1);
                 } else {
-                    bounds.height = pbounds.getBounds().height - south.getBounds().height
-                            - north.getBounds().height - 2;
+                    bounds.setHeight(pbounds.getHeight() - south.getLocation().getHeight() - north.getLocation().getHeight() - 2);
                 }
             }
+            center.setLocation(bounds);
         }
 
         if (east != null) {
-            Rectangle bounds = east.getBounds();
+            Location bounds = new Location();
 
-            bounds.x = pbounds.width - east.getMinimumSize().width;
-            bounds.width = east.getMinimumSize().width;
-            if (north == null) {
-                bounds.y = 0;
-            } else {
-                bounds.y = north.getBounds().height;
+            bounds.setXPos(pbounds.getWidth() - east.getMinimumSize().width);
+            bounds.setWidth(east.getMinimumSize().width);
+            if (north != null) {
+                bounds.setYPos(north.getLocation().getHeight());
             }
             if (south == null) {
                 if (north == null) {
-                    bounds.height = pbounds.height;
+                    bounds.setHeight(pbounds.getHeight());
                 } else {
-                    bounds.height = pbounds.height - north.getMinimumSize().height;
+                    bounds.setHeight(pbounds.getHeight() - north.getMinimumSize().height);
                 }
             } else {
                 if (north == null) {
-                    bounds.height = pbounds.height - south.getMinimumSize().height;
+                    bounds.setHeight(pbounds.getHeight() - south.getMinimumSize().height);
                 } else {
-                    bounds.height = pbounds.height - south.getMinimumSize().height
-                            - north.getMinimumSize().height;
+                    bounds.setHeight(pbounds.getHeight() - south.getMinimumSize().height - north.getMinimumSize().height);
                 }
             }
+            east.setLocation(bounds);
         }
 
         if (south != null) {
-            Rectangle bounds = south.getBounds();
 
-            bounds.x = 0;
-            bounds.width = pbounds.width;
-            bounds.height = south.getMinimumSize().height;
-            bounds.y = pbounds.height - bounds.height;
+            int x = 0;
+            int y = pbounds.getHeight() - south.getLocation().getHeight();
+            int width = pbounds.getWidth();
+            int height = south.getMinimumSize().height;
+
+            south.setLocation(new Location(x, y, width, height));
         }
     }
 

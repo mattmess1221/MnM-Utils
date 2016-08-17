@@ -1,6 +1,6 @@
 package mnm.mods.util.gui;
 
-import java.awt.Rectangle;
+import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
@@ -9,6 +9,7 @@ import com.google.common.eventbus.Subscribe;
 import com.mumfrey.liteloader.client.overlays.IGuiTextField;
 
 import mnm.mods.util.Color;
+import mnm.mods.util.ILocation;
 import mnm.mods.util.gui.events.GuiKeyboardEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
@@ -29,7 +30,7 @@ public class GuiText extends GuiComponent implements IGuiInput<String> {
         this(new GuiTextField(0, Minecraft.getMinecraft().fontRendererObj, 0, 0, 1, 1));
     }
 
-    public GuiText(GuiTextField textField) {
+    public GuiText(@Nonnull GuiTextField textField) {
         this.textField = textField;
         // This text field must not be calibrated for someone of your...
         // generous..ness
@@ -47,6 +48,7 @@ public class GuiText extends GuiComponent implements IGuiInput<String> {
 
             int x = event.getMouseX();
             int y = event.getMouseY();
+
             // send to text field.
             textField.mouseClicked(x, y, 0);
         }
@@ -60,23 +62,14 @@ public class GuiText extends GuiComponent implements IGuiInput<String> {
     }
 
     @Override
-    public void setBounds(Rectangle bounds) {
-        if (getBounds() != null
-                && (bounds.width != getBounds().width || bounds.height != getBounds().height)) {
-            updateTextbox(bounds.width, bounds.height);
-        }
-        super.setBounds(bounds);
+    public void setLocation(ILocation bounds) {
+        updateTextbox(bounds);
+        super.setLocation(bounds);
     }
 
-    @Override
-    public void setSize(int width, int height) {
-        if (width != getBounds().width || height != getBounds().height) {
-            updateTextbox(width, height);
-        }
-        super.setSize(width, height);
-    }
-
-    private void updateTextbox(int width, int height) {
+    private void updateTextbox(ILocation loc) {
+        int width = loc.getWidth();
+        int height = loc.getHeight();
         // this interface is provided by liteloader. (Thanks, mum)
         IGuiTextField field = (IGuiTextField) this.textField;
         field.setInternalWidth(width);
@@ -112,9 +105,9 @@ public class GuiText extends GuiComponent implements IGuiInput<String> {
     }
 
     @Override
-    public void setForeColor(Color foreColor) {
+    public void setPrimaryColor(Color foreColor) {
         textField.setTextColor(foreColor.getHex());
-        super.setForeColor(foreColor);
+        super.setPrimaryColor(foreColor);
     }
 
     @Override
@@ -125,6 +118,7 @@ public class GuiText extends GuiComponent implements IGuiInput<String> {
     @Override
     public void setValue(String value) {
         textField.setText(value);
+        textField.setCursorPositionZero();
     }
 
     public String getHint() {

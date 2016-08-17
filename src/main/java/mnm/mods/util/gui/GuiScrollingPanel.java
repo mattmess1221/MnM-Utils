@@ -3,11 +3,11 @@ package mnm.mods.util.gui;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
 
 import com.google.common.eventbus.Subscribe;
 
+import mnm.mods.util.ILocation;
+import mnm.mods.util.Location;
 import mnm.mods.util.gui.BorderLayout.Position;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
@@ -25,7 +25,7 @@ public class GuiScrollingPanel extends GuiPanel {
     public GuiScrollingPanel() {
         super(new BorderLayout());
         this.panel = new GuiPanel();
-        this.panel.setBounds(0, 0, 100000, 100000);
+        this.panel.setLocation(new Location(0, 0, 100000, 100000));
         GuiPanel panel = new GuiPanel();
         panel.addComponent(this.panel);
         this.addComponent(panel, Position.CENTER);
@@ -34,11 +34,11 @@ public class GuiScrollingPanel extends GuiPanel {
 
     @Override
     public void drawComponent(int mouseX, int mouseY) {
-        Point actual = getActualPosition();
-        Rectangle rect = getBounds();
+        ILocation actual = getActualLocation();
+        ILocation rect = getLocation();
 
         glEnable(GL_SCISSOR_TEST);
-        glScissor(actual.x * 2, mc.displayHeight - rect.height * 2 - actual.y * 2, rect.width * 2, rect.height * 2);
+        glScissor(actual.getXPos() * 2, mc.displayHeight - rect.getHeight() * 2 - actual.getYPos() * 2, rect.getWidth() * 2, rect.getHeight() * 2);
 
         super.drawComponent(mouseX, mouseY);
 
@@ -48,16 +48,19 @@ public class GuiScrollingPanel extends GuiPanel {
     @Subscribe
     public void scroll(GuiMouseEvent event) {
         if (event.getType() == MouseEvent.SCROLL) {
-            Rectangle rect = panel.getBounds();
-            rect.y += event.getScroll() / 12;
+            Location rect = panel.getLocation().copy();
+            int scr = rect.getYPos() + event.getScroll() / 12;
+            rect.setYPos(scr);
 
-            Rectangle prect = panel.getParent().getBounds();
+            ILocation prect = panel.getParent().getLocation();
             Dimension dim = panel.getMinimumSize();
-            if (rect.y + dim.height < prect.height) {
-                rect.y = prect.height - dim.height;
+            if (rect.getYPos() + dim.height < prect.getHeight()) {
+                rect.setYPos(prect.getHeight() - dim.height);
             }
-            if (rect.y > 0)
-                rect.y = 0;
+            if (rect.getYPos() > 0)
+                rect.setYPos(0);
+
+            panel.setLocation(rect);
         }
     }
 
@@ -67,7 +70,7 @@ public class GuiScrollingPanel extends GuiPanel {
 
     @Override
     public Dimension getMinimumSize() {
-        return getBounds().getSize();
+        return getLocation().getSize();
     }
 
     // TODO Make draggable
@@ -75,8 +78,8 @@ public class GuiScrollingPanel extends GuiPanel {
 
         @Override
         public void drawComponent(int mouseX, int mouseY) {
-            int scroll = panel.getBounds().y;
-            int max = GuiScrollingPanel.this.getBounds().height;
+            int scroll = panel.getLocation().getYPos();
+            int max = GuiScrollingPanel.this.getLocation().getHeight();
             int total = panel.getMinimumSize().height;
             if (total <= max) {
                 return;

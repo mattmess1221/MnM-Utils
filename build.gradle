@@ -11,7 +11,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.liteloader'
 
 group = "mnm.mods"
-version = "1.2.1"
+version = "1.2.1.1"
 
 apply from: file('gradle/minecraft.gradle')
 
@@ -21,6 +21,9 @@ ext.displayName = null
 minecraft {
 	replace "@MCVERSION@", project.minecraft.version
 	replace "@VERSION@", project.version
+}
+dependencies {
+	testCompile 'junit:junit:4.12'
 }
 litemod.json {
 	name = 'mnmutils'

@@ -1,6 +1,7 @@
 package mnm.mods.util.gui;
 
 import mnm.mods.util.Color;
+import mnm.mods.util.ILocation;
 import net.minecraft.client.gui.Gui;
 
 /**
@@ -20,20 +21,20 @@ public class GuiSliderColor extends GuiSlider {
     }
 
     @Override
-    protected void drawMid() {
+    protected void drawMid(ILocation loc) {
         if (isVertical()) {
-            for (int i = 0; i < getBounds().height; i++) {
-                int color = (int) ((double) i / (double) getBounds().height * 255D);
+            for (int i = 0; i < loc.getHeight(); i++) {
+                int color = (int) ((double) i / (double) loc.getHeight() * 255D);
                 color = Math.abs(color - 256);
                 color = getColor(color);
-                Gui.drawRect(0, i, getBounds().width, i + 1, color);
+                Gui.drawRect(0, i, loc.getWidth(), i + 1, color);
             }
         } else {
-            for (int i = 0; i < getBounds().width; i++) {
-                int color = (int) ((double) i / (double) getBounds().width * 255D);
+            for (int i = 0; i < loc.getWidth(); i++) {
+                int color = (int) ((double) i / (double) loc.getWidth() * 255D);
                 // color = Math.abs(color - 256);
                 color = getColor(color);
-                Gui.drawRect(i, 0, i + 1, getBounds().height, color);
+                Gui.drawRect(i, 0, i + 1, loc.getHeight(), color);
             }
         }
     }

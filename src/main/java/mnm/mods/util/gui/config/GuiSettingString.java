@@ -15,9 +15,4 @@ public class GuiSettingString extends GuiSettingWrapped<String, GuiText> {
         super(setting, new GuiText());
     }
 
-    @Override
-    public boolean isFocusable() {
-        return true;
-    }
-
 }

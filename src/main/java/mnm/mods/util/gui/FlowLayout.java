@@ -1,10 +1,12 @@
 package mnm.mods.util.gui;
 
 import java.awt.Dimension;
-import java.awt.Rectangle;
 import java.util.List;
 
 import com.google.common.collect.Lists;
+
+import mnm.mods.util.ILocation;
+import mnm.mods.util.Location;
 
 /**
  * A layout that puts items side-by-side and left-to-right.
@@ -32,16 +34,16 @@ public class FlowLayout implements ILayout {
         int maxH = 0;
         for (GuiComponent comp : components) {
             Dimension size = comp.getMinimumSize();
-            if (xPos + size.width >= parent.getParent().getBounds().width) {
+            if (xPos + size.width >= parent.getParent().getLocation().getWidth()) {
                 // wrapping
                 xPos = 0;
                 yPos += maxH;
                 maxH = 0;
             }
-            comp.setSize(size.width, size.height);
-            maxH = Math.max(maxH, comp.getBounds().height);
-            comp.setPosition(xPos, yPos);
-            xPos += comp.getBounds().width;
+            comp.setLocation(new Location(xPos, yPos, size.width, size.height));
+
+            maxH = Math.max(maxH, size.height);
+            xPos += size.width;
         }
     }
 
@@ -51,9 +53,9 @@ public class FlowLayout implements ILayout {
         int height = 0;
 
         for (GuiComponent comp : components) {
-            Rectangle bounds = comp.getBounds();
-            width = Math.max(width, bounds.x + bounds.width);
-            height = Math.max(height, bounds.y + bounds.height);
+            ILocation loc = comp.getLocation();
+            width = Math.max(width, loc.getXPos() + loc.getWidth());
+            height = Math.max(height, loc.getYPos() + loc.getHeight());
         }
         return new Dimension(width, height);
     }

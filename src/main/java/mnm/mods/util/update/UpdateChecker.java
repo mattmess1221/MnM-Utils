@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -16,7 +17,7 @@ import com.google.gson.Gson;
 import com.mumfrey.liteloader.LiteMod;
 import com.mumfrey.liteloader.core.LiteLoader;
 
-import mnm.mods.util.MnmUtils;
+import mnm.mods.util.IChatProxy;
 import mnm.mods.util.text.ITextBuilder;
 import mnm.mods.util.text.TextBuilder;
 import net.minecraft.util.text.ITextComponent;
@@ -32,10 +33,12 @@ public class UpdateChecker extends Thread {
 
     private static final Logger logger = LogManager.getLogger("Updates");
 
+    private IChatProxy chatProxy;
     private VersionData[] data;
 
-    public UpdateChecker(VersionData[] data) {
+    public UpdateChecker(IChatProxy chat, VersionData[] data) {
         super("Update Checker");
+        this.chatProxy = chat;
         this.data = data;
     }
 
@@ -88,19 +91,19 @@ public class UpdateChecker extends Thread {
                 .text(response.mcversion.changes).end()
                 .build();
         LogManager.getLogger("Updates").info(msg.getUnformattedText());
-        MnmUtils.INSTANCE.getChatProxy().addToChat("Updates", msg);
+        this.chatProxy.addToChat("Updates", msg);
     }
 
-    public static void runUpdateChecks() {
+    public static void runUpdateChecks(IChatProxy chat, Set<Class<? extends LiteMod>> disabled) {
 
         List<VersionData> list = Lists.newArrayList();
         for (LiteMod mod : LiteLoader.getInstance().getLoadedMods()) {
             VersionData data = VersionData.fromLiteMod(mod);
-            if (data != null)
+            if (data != null && !disabled.contains(mod.getClass()))
                 list.add(data);
         }
         if (!list.isEmpty()) {
-            new UpdateChecker(list.toArray(new VersionData[0])).start();
+            new UpdateChecker(chat, list.toArray(new VersionData[0])).start();
         }
     }
 }
