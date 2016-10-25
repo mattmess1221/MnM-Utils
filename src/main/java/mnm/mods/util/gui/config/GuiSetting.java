@@ -34,7 +34,6 @@ public abstract class GuiSetting<T> extends GuiComponent implements IGuiInput<T>
 
     @Override
     public void updateComponent() {
-        super.updateComponent();
         getSetting().set(getValue());
     }
 
@@ -49,6 +48,12 @@ public abstract class GuiSetting<T> extends GuiComponent implements IGuiInput<T>
 
         public Value<T> getSetting() {
             return this.setting;
+        }
+
+        @Override
+        public void updateComponent() {
+            super.updateComponent();
+            getSetting().set(getValue());
         }
 
     }
