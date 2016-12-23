@@ -15,8 +15,8 @@ targetCompatibility = 1.8
 sourceCompatibility = 1.8
 
 minecraft {
-	version = '1.10.2'
-	mappings = 'snapshot_20160704'
+	version = '1.11'
+	mappings = 'snapshot_20161120'
 	runDir = rootProject.file('run')
 }
 processResources {
