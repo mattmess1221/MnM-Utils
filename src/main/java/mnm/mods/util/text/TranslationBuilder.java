@@ -1,11 +1,10 @@
 package mnm.mods.util.text;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+
+import java.util.List;
 
 class TranslationBuilder extends AbstractChatBuilder {
 
@@ -29,8 +28,9 @@ class TranslationBuilder extends AbstractChatBuilder {
 
     @Override
     public ITextBuilder end() {
+        ITextComponent buffer = append(null).buffer;
         if (buffer != null)
-            translationArgs.add(append(null).buffer);
+            translationArgs.add(buffer);
         return parent.append(new TextComponentTranslation(translationKey, translationArgs.toArray()));
     }
 

@@ -1,5 +1,19 @@
 package mnm.mods.util.update;
 
+import com.google.common.collect.Lists;
+import com.google.gson.Gson;
+import com.mumfrey.liteloader.LiteMod;
+import com.mumfrey.liteloader.core.LiteLoader;
+import mnm.mods.util.IChatProxy;
+import mnm.mods.util.text.ITextBuilder;
+import mnm.mods.util.text.TextBuilder;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -7,22 +21,6 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.List;
 import java.util.Set;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.google.common.collect.Lists;
-import com.google.gson.Gson;
-import com.mumfrey.liteloader.LiteMod;
-import com.mumfrey.liteloader.core.LiteLoader;
-
-import mnm.mods.util.IChatProxy;
-import mnm.mods.util.text.ITextBuilder;
-import mnm.mods.util.text.TextBuilder;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.ClickEvent;
 
 /**
  * Update checker for several mods.
@@ -79,16 +77,18 @@ public class UpdateChecker extends Thread {
         ITextBuilder builder = new TextBuilder()
                 .translation("update.available")
                 .text(data.getName())
-                .format(TextFormatting.GOLD).next();
+                .format(TextFormatting.GOLD)
+                .end()
+                .text(" ");
         if (data.getUrl() != null)
             builder.translation("update.clickhere").end()
                     .format(TextFormatting.LIGHT_PURPLE)
-                    .click(new ClickEvent(ClickEvent.Action.OPEN_URL, data.getUrl())).next();
-        else
-            builder.text(" ").next();
+                    .click(new ClickEvent(ClickEvent.Action.OPEN_URL, data.getUrl()))
+                    .text(". ");
         ITextComponent msg = builder
-                .text(response.mcversion.version).next()
-                .text(response.mcversion.changes).end()
+                .text(response.mcversion.version)
+                .text(" - ")
+                .text(response.mcversion.changes)
                 .build();
         LogManager.getLogger("Updates").info(msg.getUnformattedText());
         this.chatProxy.addToChat("Updates", msg);

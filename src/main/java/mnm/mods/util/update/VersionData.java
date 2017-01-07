@@ -1,11 +1,10 @@
 package mnm.mods.util.update;
 
-import javax.annotation.Nullable;
-
-import com.google.common.base.Optional;
 import com.google.common.primitives.Doubles;
 import com.mumfrey.liteloader.LiteMod;
 import com.mumfrey.liteloader.core.LiteLoader;
+
+import javax.annotation.Nullable;
 
 public class VersionData {
 
@@ -14,13 +13,11 @@ public class VersionData {
     private String url;
     private double revision;
 
-    public VersionData() {}
-
-    private VersionData(String name, String updateUrl, String url, Double revision) {
+    private VersionData(String name, String updateUrl, String url, @Nullable Double revision) {
         this.name = name;
         this.updateUrl = updateUrl;
         this.url = url;
-        this.revision = Optional.fromNullable(revision).or(Double.MAX_VALUE);
+        this.revision = revision != null ? revision : Double.MAX_VALUE;
     }
 
     public String getName() {
@@ -35,16 +32,12 @@ public class VersionData {
         return this.url;
     }
 
-    public double getRevision() {
-        return this.revision;
-    }
-
     public int compareTo(double arg0) {
         return Double.compare(revision, arg0);
     }
 
     boolean isOutdated(@Nullable UpdateResponse.Version update) {
-        return update != null ? compareTo(update.revision) > 0 : false;
+        return update != null && compareTo(update.revision) > 0;
     }
 
     public static VersionData fromLiteMod(LiteMod litemod) {
