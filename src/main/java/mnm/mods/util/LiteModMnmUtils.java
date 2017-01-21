@@ -1,14 +1,13 @@
 package mnm.mods.util;
 
-import java.io.File;
-
 import com.mojang.realmsclient.dto.RealmsServer;
 import com.mumfrey.liteloader.JoinGameListener;
-
 import mnm.mods.util.update.UpdateChecker;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.play.server.SPacketJoinGame;
+
+import java.io.File;
 
 public class LiteModMnmUtils implements JoinGameListener {
 
@@ -27,7 +26,7 @@ public class LiteModMnmUtils implements JoinGameListener {
     @SuppressWarnings("deprecation")
     @Override
     public void init(File arg0) {
-        this.utils = MnmUtils.INSTANCE;// new MnmUtils();
+        this.utils = new MnmUtils();
     }
 
     @Override

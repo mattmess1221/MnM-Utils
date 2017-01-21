@@ -2,16 +2,16 @@ package mnm.mods.util.gui;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import java.awt.Dimension;
-
 import com.google.common.eventbus.Subscribe;
-
 import mnm.mods.util.ILocation;
 import mnm.mods.util.Location;
 import mnm.mods.util.gui.BorderLayout.Position;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
 import net.minecraft.client.gui.Gui;
+
+import java.awt.Dimension;
+import javax.annotation.Nonnull;
 
 /**
  * TODO: Horizontal scrolling
@@ -52,11 +52,12 @@ public class GuiScrollingPanel extends GuiPanel {
             int scr = rect.getYPos() + event.getScroll() / 12;
             rect.setYPos(scr);
 
-            ILocation prect = panel.getParent().getLocation();
-            Dimension dim = panel.getMinimumSize();
-            if (rect.getYPos() + dim.height < prect.getHeight()) {
-                rect.setYPos(prect.getHeight() - dim.height);
-            }
+            panel.getParent().map(GuiComponent::getLocation).ifPresent(prect -> {
+                Dimension dim = panel.getMinimumSize();
+                if (rect.getYPos() + dim.height < prect.getHeight()) {
+                    rect.setYPos(prect.getHeight() - dim.height);
+                }
+            });
             if (rect.getYPos() > 0)
                 rect.setYPos(0);
 
@@ -68,6 +69,7 @@ public class GuiScrollingPanel extends GuiPanel {
         return panel;
     }
 
+    @Nonnull
     @Override
     public Dimension getMinimumSize() {
         return getLocation().getSize();

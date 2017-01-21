@@ -1,8 +1,8 @@
 package mnm.mods.util;
 
-import java.util.Random;
-
 import com.google.gson.annotations.SerializedName;
+
+import java.util.Random;
 
 /**
  * Represents a color and provides an easy way to convert to and from html color
@@ -75,8 +75,7 @@ public class Color {
         int alphaI = alpha << 24;
         int redI = red << 16;
         int greenI = green << 8;
-        int blueI = blue;
-        return alphaI + redI + greenI + blueI;
+        return alphaI + redI + greenI + blue;
     }
 
     /**

@@ -36,7 +36,7 @@ public class IPUtils {
      * @return The parsed IP
      */
     public static IPUtils parse(String ipString) {
-        IPUtils result = null;
+        IPUtils result;
         switch (getType(ipString)) {
         case NAME:
         case IPV4:
@@ -143,10 +143,10 @@ public class IPUtils {
         return this.host.replace(':', '_') + (hasPort() ? "" : "(" + port + ")");
     }
 
-    private static enum ConnectionType {
+    private enum ConnectionType {
         IPV4,
         IPV6,
-        NAME;
+        NAME
     }
 
 }

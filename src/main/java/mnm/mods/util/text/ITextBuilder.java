@@ -6,6 +6,8 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 
+import javax.annotation.Nullable;
+
 public interface ITextBuilder {
 
     /**
@@ -36,10 +38,10 @@ public interface ITextBuilder {
 
     /**
      * Starts the creation of a translation. After calling, any call to
-     * {@link #append(IChatComponent)} won't be immediately appended to the
+     * {@link #append(ITextComponent)} won't be immediately appended to the
      * component. Instead, it will be added to a list of arguments for the
      * translation. To end the translation and allow it to be appended to the
-     * chat, call {@link #endTranslation()}.
+     * chat, call {@link #end()}.
      *
      * @param key The translation key
      * @return A translation builder
@@ -77,7 +79,7 @@ public interface ITextBuilder {
      * @param chat The new current value
      * @return
      */
-    ITextBuilder append(ITextComponent chat);
+    ITextBuilder append(@Nullable ITextComponent chat);
 
     /**
      * Appends the current chat (if any) to the chat and returns the built chat.

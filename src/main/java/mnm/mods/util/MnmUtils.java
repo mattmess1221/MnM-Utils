@@ -1,15 +1,12 @@
 package mnm.mods.util;
 
-import java.util.Set;
-
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.mumfrey.liteloader.LiteMod;
 
-public class MnmUtils {
+import java.util.Set;
 
-    @Deprecated
-    public static final MnmUtils INSTANCE = new MnmUtils();
+public class MnmUtils {
 
     private Set<Class<? extends LiteMod>> disabledUpdates = Sets.newIdentityHashSet();
     private IChatProxy chatProxy = new DefaultChatProxy();

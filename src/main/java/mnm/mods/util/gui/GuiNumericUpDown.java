@@ -1,16 +1,14 @@
 package mnm.mods.util.gui;
 
-import java.text.NumberFormat;
-import java.util.Optional;
-
 import com.google.common.eventbus.Subscribe;
-
 import mnm.mods.util.Color;
 import mnm.mods.util.ILocation;
-import mnm.mods.util.ImmutableLocation;
 import mnm.mods.util.gui.events.ActionPerformedEvent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+
+import java.text.NumberFormat;
+import javax.annotation.Nonnull;
 
 /**
  * Input for numbers, also known as a slider. Use {@link DoubleUpDown} for
@@ -30,14 +28,15 @@ public abstract class GuiNumericUpDown<T extends Number> extends GuiPanel implem
     private NumberFormat format = NumberFormat.getNumberInstance();
 
     private GuiNumericUpDown() {
-        setLayout(Optional.of(new BorderLayout()));
+        setLayout(new BorderLayout());
 
         {
             GuiPanel text = new GuiPanel();
             GuiRectangle rect = new GuiRectangle() {
+                @Nonnull
                 @Override
                 public ILocation getLocation() {
-                    return getParent().getLocation();
+                    return getParent().map(GuiComponent::getLocation).orElseGet(super::getLocation);
                 }
             };
             rect.setPrimaryColor(Color.BLACK);
@@ -171,11 +170,12 @@ public abstract class GuiNumericUpDown<T extends Number> extends GuiPanel implem
             setSecondaryColor(Color.DARK_GRAY);
         }
 
+        @Nonnull
         @Override
         public ILocation getLocation() {
-            return ImmutableLocation.copyOf(super.getLocation().copy()
-                    .setWidth(6)
-                    .setHeight(6));
+            return super.getLocation().copy()
+                        .setWidth(6)
+                        .setHeight(6).asImmutable();
         }
 
         @Subscribe

@@ -63,20 +63,15 @@ public final class ImmutableLocation implements ILocation {
         if (!(obj instanceof ILocation))
             return false;
         ILocation other = (ILocation) obj;
-        if (height != other.getHeight())
-            return false;
-        if (width != other.getWidth())
-            return false;
-        if (xPos != other.getXPos())
-            return false;
-        if (yPos != other.getYPos())
-            return false;
-        return true;
+        return height == other.getHeight()
+                && width == other.getWidth()
+                && xPos == other.getXPos()
+                && yPos == other.getYPos();
     }
 
-    public static ILocation copyOf(ILocation loc) {
-        if (loc instanceof ImmutableLocation)
-            return loc;
-        return new ImmutableLocation(loc.getXPos(), loc.getYPos(), loc.getWidth(), loc.getHeight());
+    @Override
+    public ILocation asImmutable() {
+        return this;
     }
+
 }

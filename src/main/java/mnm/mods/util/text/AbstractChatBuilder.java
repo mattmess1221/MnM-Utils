@@ -2,6 +2,7 @@ package mnm.mods.util.text;
 
 import mnm.mods.util.Color;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentScore;
 import net.minecraft.util.text.TextComponentSelector;
 import net.minecraft.util.text.TextComponentString;
@@ -31,12 +32,7 @@ public abstract class AbstractChatBuilder implements ITextBuilder {
                 current.getStyle().setObfuscated(true);
             }
         } else if (f == TextFormatting.RESET) {
-            current.getStyle().setColor(null);
-            current.getStyle().setBold(false);
-            current.getStyle().setItalic(false);
-            current.getStyle().setUnderlined(false);
-            current.getStyle().setStrikethrough(false);
-            current.getStyle().setObfuscated(false);
+            current.setStyle(new Style());
         }
         return this;
     }

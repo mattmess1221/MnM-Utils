@@ -1,10 +1,6 @@
 package mnm.mods.util.gui.config;
 
-import java.util.Optional;
-import java.util.function.Consumer;
-
 import com.google.common.eventbus.Subscribe;
-
 import mnm.mods.util.Color;
 import mnm.mods.util.ILocation;
 import mnm.mods.util.config.Value;
@@ -12,6 +8,8 @@ import mnm.mods.util.gui.GuiSelectColor;
 import mnm.mods.util.gui.events.ActionPerformedEvent;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.ResourceLocation;
+
+import java.util.function.Consumer;
 
 /**
  * A setting for colors. When clicked, shows a {@link GuiSelectColor}.
@@ -31,7 +29,7 @@ public class GuiSettingColor extends GuiSetting<Color> implements Consumer<Color
 
     @Subscribe
     public void selectColor(ActionPerformedEvent event) {
-        getParent().setOverlay(Optional.of(new GuiSelectColor(GuiSettingColor.this, getValue())));
+        getParent().ifPresent(p -> p.setOverlay(new GuiSelectColor(GuiSettingColor.this, getValue())));
     }
 
     @Override
@@ -49,7 +47,7 @@ public class GuiSettingColor extends GuiSetting<Color> implements Consumer<Color
     @Override
     public void accept(Color input) {
         setValue(input);
-        getParent().setOverlay(Optional.empty());
+        getParent().ifPresent( p -> p.setOverlay(null));
     }
 
     @Override

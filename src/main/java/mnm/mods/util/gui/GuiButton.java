@@ -1,11 +1,6 @@
 package mnm.mods.util.gui;
 
-import java.awt.Dimension;
-
-import org.lwjgl.opengl.GL11;
-
 import com.google.common.eventbus.Subscribe;
-
 import mnm.mods.util.ILocation;
 import mnm.mods.util.TexturedModal;
 import mnm.mods.util.gui.events.ActionPerformedEvent;
@@ -16,6 +11,10 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import org.lwjgl.opengl.GL11;
+
+import java.awt.Dimension;
+import javax.annotation.Nonnull;
 
 /**
  * A {@link net.minecraft.client.gui.GuiButton} for the GuiComponent system.
@@ -29,7 +28,6 @@ public class GuiButton extends GuiComponent {
 
     private String text = "";
     private SoundEvent sound;
-    public int packedFGColour;
 
     /**
      * Instantiates a new button with {@code text} as the display string.
@@ -119,9 +117,7 @@ public class GuiButton extends GuiComponent {
 
         int textColor = 0xE0E0E0;
 
-        if (packedFGColour != 0) {
-            textColor = packedFGColour;
-        } else if (!this.isEnabled()) {
+        if (!this.isEnabled()) {
             textColor = 0xA0A0A0;
         } else if (this.isHovered()) {
             textColor = 0xFFFFA0;
@@ -145,6 +141,7 @@ public class GuiButton extends GuiComponent {
         return modal;
     }
 
+    @Nonnull
     @Override
     public Dimension getMinimumSize() {
         return new Dimension(mc.fontRendererObj.getStringWidth(this.getText()) + 8, 20);

@@ -1,12 +1,11 @@
 package mnm.mods.util.gui;
 
-import java.awt.Dimension;
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
 import mnm.mods.util.ILocation;
 import mnm.mods.util.Location;
+
+import java.awt.Dimension;
+import java.util.List;
 
 /**
  * A layout that puts items side-by-side and left-to-right.
@@ -15,7 +14,7 @@ import mnm.mods.util.Location;
  */
 public class FlowLayout implements ILayout {
 
-    protected List<GuiComponent> components = Lists.newArrayList();
+    private List<GuiComponent> components = Lists.newArrayList();
 
     @Override
     public void addComponent(GuiComponent comp, Object constraints) {
@@ -29,22 +28,24 @@ public class FlowLayout implements ILayout {
 
     @Override
     public void layoutComponents(GuiPanel parent) {
-        int xPos = 0;
-        int yPos = 0;
-        int maxH = 0;
-        for (GuiComponent comp : components) {
-            Dimension size = comp.getMinimumSize();
-            if (xPos + size.width >= parent.getParent().getLocation().getWidth()) {
-                // wrapping
-                xPos = 0;
-                yPos += maxH;
-                maxH = 0;
-            }
-            comp.setLocation(new Location(xPos, yPos, size.width, size.height));
+        parent.getParent().ifPresent(p -> {
+            int xPos = 0;
+            int yPos = 0;
+            int maxH = 0;
+            for (GuiComponent comp : components) {
+                Dimension size = comp.getMinimumSize();
+                if (xPos + size.width >= p.getLocation().getWidth()) {
+                    // wrapping
+                    xPos = 0;
+                    yPos += maxH;
+                    maxH = 0;
+                }
+                comp.setLocation(new Location(xPos, yPos, size.width, size.height));
 
-            maxH = Math.max(maxH, size.height);
-            xPos += size.width;
-        }
+                maxH = Math.max(maxH, size.height);
+                xPos += size.width;
+            }
+        });
     }
 
     @Override

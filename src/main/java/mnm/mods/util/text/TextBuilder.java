@@ -2,6 +2,8 @@ package mnm.mods.util.text;
 
 import net.minecraft.util.text.ITextComponent;
 
+import javax.annotation.Nullable;
+
 public class TextBuilder extends AbstractChatBuilder {
 
     private ITextComponent chat;
@@ -34,7 +36,7 @@ public class TextBuilder extends AbstractChatBuilder {
      * @return
      */
     @Override
-    public TextBuilder append(ITextComponent chat) {
+    public TextBuilder append(@Nullable ITextComponent chat) {
 
         if (current != null) {
             if (this.chat == null)

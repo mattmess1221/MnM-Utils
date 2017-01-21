@@ -1,13 +1,12 @@
 package mnm.mods.util.gui;
 
+import com.google.common.collect.Maps;
+import mnm.mods.util.ILocation;
+import mnm.mods.util.Location;
+
 import java.awt.Dimension;
 import java.util.EnumMap;
 import java.util.Map.Entry;
-
-import com.google.common.collect.Maps;
-
-import mnm.mods.util.ILocation;
-import mnm.mods.util.Location;
 
 /**
  * A recreation of Border Layout.
@@ -182,11 +181,11 @@ public class BorderLayout implements ILayout {
         return new Dimension(width, height);
     }
 
-    public static enum Position {
+    public enum Position {
         NORTH,
         SOUTH,
         EAST,
         WEST,
-        CENTER;
+        CENTER
     }
 }

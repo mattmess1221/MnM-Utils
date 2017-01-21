@@ -41,7 +41,7 @@ public class GuiMouseEvent extends AbstractMouseEvent {
         return scroll;
     }
 
-    public static enum MouseEvent {
+    public enum MouseEvent {
         RAW,
         CLICK,
         RELEASE,

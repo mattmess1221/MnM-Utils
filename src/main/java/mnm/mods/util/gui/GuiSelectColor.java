@@ -1,13 +1,6 @@
 package mnm.mods.util.gui;
 
-import java.math.BigInteger;
-import java.util.Optional;
-import java.util.function.Consumer;
-
-import org.lwjgl.input.Keyboard;
-
 import com.google.common.eventbus.Subscribe;
-
 import mnm.mods.util.Color;
 import mnm.mods.util.config.Value;
 import mnm.mods.util.gui.config.GuiSettingString;
@@ -18,6 +11,10 @@ import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
 import mnm.mods.util.text.TextBuilder;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
+import org.lwjgl.input.Keyboard;
+
+import java.math.BigInteger;
+import java.util.function.Consumer;
 
 /**
  * A gui used to select a color.
@@ -56,7 +53,7 @@ public class GuiSelectColor extends GuiPanel {
                 }
             }
         });
-        this.setLayout(Optional.of(new GuiGridLayout(20, 20)));
+        this.setLayout(new GuiGridLayout(20, 20));
 
         this.addComponent(sliderRed = new GuiSliderColor(color.getRed() / 255D, true, GuiSliderColor.Model.RED, color), new int[] { 1, 1, 2, 10 });
         this.addComponent(sliderGreen = new GuiSliderColor(color.getGreen() / 255D, true, GuiSliderColor.Model.GREEN, color), new int[] { 4, 1, 2, 10 });
@@ -88,7 +85,7 @@ public class GuiSelectColor extends GuiPanel {
         this.addComponent(current, new int[] { 14, 1, 6, 3 });
         this.addComponent(selected, new int[] { 14, 4, 6, 3 });
 
-        string = new GuiSettingString(new Value<String>(""));
+        string = new GuiSettingString(new Value<>(""));
         string.getComponent().getTextField().setMaxStringLength(8);
         string.getBus().register(new Object() {
             @Subscribe
@@ -118,7 +115,7 @@ public class GuiSelectColor extends GuiPanel {
             @Subscribe
             public void action(ActionPerformedEvent event) {
                 // Close
-                getParent().setOverlay(Optional.empty());
+                getParent().ifPresent(parent -> parent.setOverlay(null));
             }
         });
         this.addComponent(cancel, new int[] { 13, 13, 4, 2 });

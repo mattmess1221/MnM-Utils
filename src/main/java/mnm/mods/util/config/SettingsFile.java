@@ -1,8 +1,5 @@
 package mnm.mods.util.config;
 
-import java.io.File;
-import java.io.IOException;
-
 import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,14 +7,16 @@ import com.google.gson.internal.Excluder;
 import com.mumfrey.liteloader.core.runtime.Obf;
 import com.mumfrey.liteloader.modconfig.AdvancedExposable;
 import com.mumfrey.liteloader.util.PrivateFields;
-
 import net.minecraft.util.EnumTypeAdapterFactory;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Used for creating settings and saving/loading them in the JSON format. Start
- * by registering settings using {@link #registerSetting(String, SettingValue)}.
+ * by creating fields. Mark anything you don't wish to be serialized with {@code transient}.
  * If your setting requires special handling for serialization, override
- * {@link #setupGson(GsonBuilder)} and use it to customize the {@link Gson}
+ * {@link #setupGsonSerialiser(GsonBuilder)} and use it to customize the {@link Gson}
  * object to your liking.
  *
  * @author Matthew Messinger
@@ -47,7 +46,7 @@ public abstract class SettingsFile extends ValueObject implements AdvancedExposa
         try {
             // create the paths to it
             Files.createParentDirs(file);
-        } catch (IOException e) {}
+        } catch (IOException ignored) {}
         return file;
     }
 

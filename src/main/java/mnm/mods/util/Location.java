@@ -94,20 +94,18 @@ public class Location implements ILocation {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (obj == null)
-            return false;
-        if (!(obj instanceof ILocation))
+        if (obj == null || !(obj instanceof ILocation))
             return false;
         ILocation other = (ILocation) obj;
-        if (height != other.getHeight())
-            return false;
-        if (width != other.getWidth())
-            return false;
-        if (xPos != other.getXPos())
-            return false;
-        if (yPos != other.getYPos())
-            return false;
-        return true;
+        return height == other.getHeight()
+                && width == other.getWidth()
+                && xPos == other.getXPos()
+                && yPos == other.getYPos();
+    }
+
+    @Override
+    public ILocation asImmutable() {
+        return new ImmutableLocation(getXPos(), getYPos(), getWidth(), getHeight());
     }
 
     public static Location copyOf(ILocation location) {

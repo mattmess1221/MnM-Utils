@@ -1,21 +1,21 @@
 package mnm.mods.util.gui;
 
-import java.awt.Dimension;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Queue;
-
-import javax.annotation.Nonnull;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
 import com.google.common.eventbus.Subscribe;
-
 import mnm.mods.util.ILocation;
 import mnm.mods.util.gui.events.GuiMouseEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
 import net.minecraft.client.renderer.GlStateManager;
+
+import java.awt.Dimension;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.Queue;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * A component that can contain multiple components.
@@ -25,16 +25,17 @@ import net.minecraft.client.renderer.GlStateManager;
 public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
 
     private List<GuiComponent> components = Lists.newArrayList();
-    private Optional<GuiComponent> overlay = Optional.empty();
-    private Optional<ILayout> layout = Optional.empty();
+    private GuiComponent overlay;
+    private ILayout layout;
 
     private Queue<Runnable> actionQueue = Queues.newLinkedBlockingDeque();
 
-    public GuiPanel(@Nonnull ILayout layout) {
-        setLayout(Optional.of(layout));
+    public GuiPanel(ILayout layout) {
+        setLayout(layout);
     }
 
-    public GuiPanel() {}
+    public GuiPanel() {
+    }
 
     @Subscribe
     public void unfocus(GuiMouseEvent event) {
@@ -46,8 +47,8 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
 
     @Override
     public void drawComponent(int mouseX, int mouseY) {
-        if (this.overlay.isPresent()) {
-            overlay.get().drawComponent(mouseX, mouseY);
+        if (this.getOverlay().isPresent()) {
+            getOverlay().get().drawComponent(mouseX, mouseY);
             return;
         }
         getLayout().ifPresent(layout -> layout.layoutComponents(this));
@@ -75,29 +76,20 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
         for (Runnable r = actionQueue.poll(); r != null; r = actionQueue.poll()) {
             r.run();
         }
-        this.components.forEach(GuiComponent::updateComponent);
-        getOverlay().ifPresent(GuiComponent::updateComponent);
+        getOverlayOrChildren().forEach(GuiComponent::updateComponent);
 
     }
 
     @Override
     public void handleMouseInput() {
         super.handleMouseInput();
-        if (overlay.isPresent()) {
-            overlay.get().handleMouseInput();
-            return;
-        }
-        this.components.forEach(GuiComponent::handleMouseInput);
+        getOverlayOrChildren().forEach(GuiComponent::handleMouseInput);
     }
 
     @Override
     public void handleKeyboardInput() {
         super.handleKeyboardInput();
-        if (overlay.isPresent()) {
-            overlay.get().handleKeyboardInput();
-            return;
-        }
-        this.components.forEach(GuiComponent::handleKeyboardInput);
+        getOverlayOrChildren().forEach(GuiComponent::handleKeyboardInput);
     }
 
     /**
@@ -122,7 +114,7 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
      * Adds a component to this panel with constraints.
      *
      * @param guiComponent The component
-     * @param constraints The constraints
+     * @param constraints  The constraints
      */
     public void addComponent(GuiComponent guiComponent, Object constraints) {
         if (guiComponent != null) {
@@ -139,12 +131,12 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
      */
     public void clearComponents() {
         this.actionQueue.offer(() -> {
-            for (GuiComponent comp : components) {
+            components.forEach(comp -> {
                 comp.setParent(null);
                 getLayout().ifPresent(layout -> layout.removeComponent(comp));
-            }
+            });
             components.clear();
-            setOverlay(Optional.empty());
+            setOverlay((GuiComponent) null);
         });
     }
 
@@ -165,7 +157,7 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
      *
      * @param lmg The layout manager
      */
-    public void setLayout(Optional<ILayout> lmg) {
+    public void setLayout(ILayout lmg) {
         this.layout = lmg;
     }
 
@@ -175,7 +167,7 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
      * @return The layout
      */
     public Optional<ILayout> getLayout() {
-        return layout;
+        return Optional.ofNullable(layout);
     }
 
     /**
@@ -185,9 +177,8 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
      *
      * @param gui The component to overlay
      */
-    public void setOverlay(Optional<GuiComponent> overlay) {
-        if (overlay.isPresent()) {
-            GuiComponent gui = overlay.get();
+    public void setOverlay(@Nullable GuiComponent gui) {
+        if (gui != null) {
             gui.setParent(this);
             gui.setLocation(gui.getLocation().copy()
                     .setWidth(getLocation().getWidth())
@@ -195,11 +186,15 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
         } else {
             this.unfocusAll();
         }
-        this.overlay = overlay;
+        this.overlay = gui;
     }
 
     public Optional<GuiComponent> getOverlay() {
-        return overlay;
+        return Optional.ofNullable(overlay);
+    }
+
+    private List<GuiComponent> getOverlayOrChildren() {
+        return getOverlay().map(Arrays::asList).orElse(this.components);
     }
 
     /**
@@ -218,9 +213,10 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
     @Override
     public void onClosed() {
         this.components.forEach(GuiComponent::onClosed);
-        this.overlay.ifPresent(GuiComponent::onClosed);
+        this.getOverlay().ifPresent(GuiComponent::onClosed);
     }
 
+    @Nonnull
     @Override
     public Dimension getMinimumSize() {
         Dimension size = getLayout().map(ILayout::getLayoutSize).orElseGet(() -> {

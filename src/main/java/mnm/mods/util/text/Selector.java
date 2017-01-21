@@ -9,7 +9,7 @@ public enum Selector {
 
     private char id;
 
-    private Selector(char c) {
+    Selector(char c) {
         this.id = c;
     }
 

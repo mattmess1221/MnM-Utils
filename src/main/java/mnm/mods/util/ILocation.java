@@ -14,6 +14,8 @@ public interface ILocation {
 
     int getHeight();
 
+    ILocation asImmutable();
+
     default int getXWidth() {
         return getXPos() + getWidth();
     }
@@ -40,14 +42,9 @@ public interface ILocation {
 
     default boolean contains(ILocation r) {
 
-        if (this.getXPos() >= r.getXWidth())
-            return false;
-        if (this.getXWidth() <= r.getXPos())
-            return false;
-        if (this.getYPos() >= r.getYHeight())
-            return false;
-        if (this.getYHeight() <= r.getYPos())
-            return false;
-        return true;
+        return this.getXPos() < r.getXWidth()
+                && this.getXWidth() > r.getXPos()
+                && this.getYPos() < r.getYHeight()
+                && this.getYHeight() > r.getYPos();
     }
 }

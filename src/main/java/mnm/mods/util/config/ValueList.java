@@ -1,14 +1,14 @@
 package mnm.mods.util.config;
 
+import com.google.common.collect.Lists;
+
 import java.util.Iterator;
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
 public class ValueList<T> extends Value<List<T>> implements Iterable<T> {
 
-    public ValueList() {
-        set(Lists.<T> newArrayList());
+    ValueList() {
+        set(Lists.newArrayList());
     }
 
     public void add(T value) {
@@ -19,7 +19,7 @@ public class ValueList<T> extends Value<List<T>> implements Iterable<T> {
         this.get().add(index, value);
     }
 
-    public void remove(Object value) {
+    public void remove(T value) {
         this.get().remove(value);
     }
 

@@ -5,6 +5,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 
 import java.util.List;
+import javax.annotation.Nullable;
 
 class TranslationBuilder extends AbstractChatBuilder {
 
@@ -40,7 +41,7 @@ class TranslationBuilder extends AbstractChatBuilder {
     }
 
     @Override
-    public TranslationBuilder append(ITextComponent chat) {
+    public TranslationBuilder append(@Nullable ITextComponent chat) {
         if (current != null) {
             if (this.buffer == null)
                 buffer = current;

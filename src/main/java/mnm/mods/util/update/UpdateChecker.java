@@ -34,7 +34,7 @@ public class UpdateChecker extends Thread {
     private IChatProxy chatProxy;
     private VersionData[] data;
 
-    public UpdateChecker(IChatProxy chat, VersionData[] data) {
+    private UpdateChecker(IChatProxy chat, VersionData[] data) {
         super("Update Checker");
         this.chatProxy = chat;
         this.data = data;
@@ -66,7 +66,7 @@ public class UpdateChecker extends Thread {
             IOUtils.closeQuietly(in);
         }
 
-        if (data.isOutdated(response.mcversion)) {
+        if (data.isOutdated(response.minecraft)) {
             notifyUser(data, response);
         } else {
             logger.info("Update check for " + data.getName() + " finished. None found.");
@@ -86,9 +86,9 @@ public class UpdateChecker extends Thread {
                     .click(new ClickEvent(ClickEvent.Action.OPEN_URL, data.getUrl()))
                     .text(". ");
         ITextComponent msg = builder
-                .text(response.mcversion.version)
+                .text(response.minecraft.version)
                 .text(" - ")
-                .text(response.mcversion.changes)
+                .text(response.minecraft.changes)
                 .build();
         LogManager.getLogger("Updates").info(msg.getUnformattedText());
         this.chatProxy.addToChat("Updates", msg);

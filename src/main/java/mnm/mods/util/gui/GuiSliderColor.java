@@ -66,10 +66,10 @@ public class GuiSliderColor extends GuiSlider {
     /**
      * Base colors from the rgba color model
      */
-    public static enum Model {
+    public enum Model {
         RED,
         GREEN,
         BLUE,
-        ALPHA;
+        ALPHA
     }
 }

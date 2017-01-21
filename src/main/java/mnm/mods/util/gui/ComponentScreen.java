@@ -1,10 +1,10 @@
 package mnm.mods.util.gui;
 
-import java.io.IOException;
-
 import mnm.mods.util.Location;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+
+import java.io.IOException;
 
 /**
  * A panel wrapper for a screen.
@@ -54,7 +54,7 @@ public class ComponentScreen extends GuiScreen {
      * 
      * @return The main panel
      */
-    public GuiPanel getPanel() {
+    protected GuiPanel getPanel() {
         return PANEL;
     }
 }

@@ -1,15 +1,16 @@
 package mnm.mods.util.gui;
 
-import java.awt.Dimension;
-
-import javax.annotation.Nonnull;
-
 import com.google.common.eventbus.EventBus;
-
+import mcp.MethodsReturnNonnullByDefault;
 import mnm.mods.util.Color;
 import mnm.mods.util.ILocation;
 import net.minecraft.util.text.ITextComponent;
 
+import java.awt.Dimension;
+import java.util.Optional;
+import javax.annotation.Nonnull;
+
+@MethodsReturnNonnullByDefault
 public class GuiWrappedComponent<T extends GuiComponent> extends GuiComponent {
 
     private final T wrapper;
@@ -59,7 +60,7 @@ public class GuiWrappedComponent<T extends GuiComponent> extends GuiComponent {
     }
 
     @Override
-    public GuiPanel getParent() {
+    public Optional<GuiPanel> getParent() {
         return wrapper.getParent();
     }
 
@@ -89,7 +90,7 @@ public class GuiWrappedComponent<T extends GuiComponent> extends GuiComponent {
     }
 
     @Override
-    public Color getPrimaryColor() {
+    public Optional<Color> getPrimaryColor() {
         return wrapper.getPrimaryColor();
     }
 
@@ -99,7 +100,7 @@ public class GuiWrappedComponent<T extends GuiComponent> extends GuiComponent {
     }
 
     @Override
-    public Color getSecondaryColor() {
+    public Optional<Color> getSecondaryColor() {
         return wrapper.getSecondaryColor();
     }
 
@@ -139,7 +140,7 @@ public class GuiWrappedComponent<T extends GuiComponent> extends GuiComponent {
     }
 
     @Override
-    public ITextComponent getCaptionText() {
+    public Optional<ITextComponent> getCaptionText() {
         return wrapper.getCaptionText();
     }
 

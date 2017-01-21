@@ -1,24 +1,9 @@
 package mnm.mods.util.gui;
 
-import java.awt.Dimension;
-import java.awt.Point;
-import java.util.function.Function;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.logging.log4j.LogManager;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.SubscriberExceptionContext;
-import com.google.common.eventbus.SubscriberExceptionHandler;
-
+import mcp.MethodsReturnNonnullByDefault;
 import mnm.mods.util.Color;
 import mnm.mods.util.ILocation;
-import mnm.mods.util.ImmutableLocation;
 import mnm.mods.util.Location;
 import mnm.mods.util.gui.events.ActionPerformedEvent;
 import mnm.mods.util.gui.events.GuiKeyboardEvent;
@@ -30,13 +15,24 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
+import java.awt.Dimension;
+import java.awt.Point;
+import java.util.Optional;
+import java.util.function.Function;
+import javax.annotation.Nullable;
 
 /**
  * The base class for all gui components.
  *
  * @author Matthew
  */
+@MethodsReturnNonnullByDefault
 public abstract class GuiComponent extends Gui {
 
     private boolean enabled = true;
@@ -57,12 +53,7 @@ public abstract class GuiComponent extends Gui {
     private float scale = 1;
     private ITextComponent caption;
 
-    private EventBus bus = new EventBus(new SubscriberExceptionHandler() {
-        @Override
-        public void handleException(Throwable exception, SubscriberExceptionContext context) {
-            LogManager.getLogger().throwing(exception);
-        }
-    });
+    private EventBus bus = new EventBus((exception, context) -> LogManager.getLogger().throwing(exception));
 
     public GuiComponent() {
         this.bus.register(this);
@@ -77,13 +68,14 @@ public abstract class GuiComponent extends Gui {
     public void drawComponent(int mouseX, int mouseY) {
         // draw the caption
 
-        String caption = getCaption();
-        if (isHovered() && caption != null && !caption.isEmpty()) {
-            GlStateManager.pushMatrix();
-            GL11.glDisable(GL11.GL_SCISSOR_TEST);
-            drawCaptionAtCursor(caption, mouseX, mouseY);
-            GlStateManager.popMatrix();
-        }
+        getCaptionText().map(ITextComponent::getFormattedText).ifPresent(caption -> {
+            if (isHovered() && !caption.isEmpty()) {
+                GlStateManager.pushMatrix();
+                GL11.glDisable(GL11.GL_SCISSOR_TEST);
+                drawCaptionAtCursor(caption, mouseX, mouseY);
+                GlStateManager.popMatrix();
+            }
+        });
     }
 
     protected void drawCaption(String caption, int x, int y) {
@@ -97,7 +89,7 @@ public abstract class GuiComponent extends Gui {
         }
         y -= mc.fontRendererObj.FONT_HEIGHT * list.length;
 
-        Point point = getActualPosition();
+        Point point = getActualLocation().getPoint();
         ScaledResolution sr = new ScaledResolution(mc);
         int w2 = w;
         int x2 = x;
@@ -113,14 +105,14 @@ public abstract class GuiComponent extends Gui {
         drawBorders(x - 2, y - 2, x + w + 2, y + mc.fontRendererObj.FONT_HEIGHT * list.length + 1,
                 0xccaaaaaa);
         for (String s : list) {
-            mc.fontRendererObj.drawStringWithShadow(s, x, y, getForeColor().getHex());
+            mc.fontRendererObj.drawStringWithShadow(s, x, y, this.getPrimaryColorProperty().getHex());
             y += mc.fontRendererObj.FONT_HEIGHT;
         }
         GlStateManager.popMatrix();
     }
 
     private void drawCaptionAtCursor(String msg, int mouseX, int mouseY) {
-        Point point = getActualPosition();
+        Point point = getActualLocation().getPoint();
         drawCaption(msg, mouseX - point.x + 8, mouseY - point.y);
     }
 
@@ -135,13 +127,13 @@ public abstract class GuiComponent extends Gui {
      * Draws borders around the provided points. Uses a brightened background
      * color with 0xaa transparency.
      *
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
+     * @param x1 left point
+     * @param y1 upper point
+     * @param x2 right point
+     * @param y2 lower point
      */
     protected void drawBorders(int x1, int y1, int x2, int y2) {
-        Color color = getBackColor();
+        Color color = getSecondaryColorProperty();
         int r = color.getRed();
         int g = color.getGreen();
         int b = color.getBlue();
@@ -160,7 +152,8 @@ public abstract class GuiComponent extends Gui {
     /**
      * Updates the component. Called when it is called on the {@link GuiScreen}.
      */
-    public void updateComponent() {}
+    public void updateComponent() {
+    }
 
     /**
      * Handles the mouse input and sends it to the mouse and action listeners.
@@ -172,7 +165,7 @@ public abstract class GuiComponent extends Gui {
         }
         if (mc.currentScreen != null) {
             float scale = getActualScale();
-            Point point = scalePoint(new Point(Mouse.getX(), Mouse.getY()));
+            Point point = scalePoint(new Point(Mouse.getX(), Mouse.getY()), mc.currentScreen);
             ILocation actual = getActualLocation();
             // adjust for position and scale
             int x = (int) ((point.x - actual.getXPos()) / scale);
@@ -181,12 +174,8 @@ public abstract class GuiComponent extends Gui {
             int button = Mouse.getEventButton();
             int scroll = Mouse.getEventDWheel();
 
-            if (x >= 0 && x <= actual.getWidth()
-                    && y >= 0 && y <= actual.getHeight()) {
-                this.hovered = true;
-            } else {
-                this.hovered = false;
-            }
+            this.hovered = x >= 0 && x <= actual.getWidth()
+                    && y >= 0 && y <= actual.getHeight();
 
             getBus().post(new GuiMouseEvent(this, MouseEvent.RAW, x, y, button, scroll));
 
@@ -249,11 +238,11 @@ public abstract class GuiComponent extends Gui {
     /**
      * Sets the location of this component. In order to maintain encapsulation,
      * it is wrapped as an immutable.
-     * 
+     *
      * @param location The new location
      */
     public void setLocation(ILocation location) {
-        this.location = ImmutableLocation.copyOf(location);
+        this.location = location.asImmutable();
     }
 
     /**
@@ -276,10 +265,10 @@ public abstract class GuiComponent extends Gui {
      *
      * @return The parent or null if there is none
      */
-    @Nullable
-    public GuiPanel getParent() {
-        return this.parent;
+    public Optional<GuiPanel> getParent() {
+        return Optional.ofNullable(this.parent);
     }
+
 
     /**
      * Sets the parent of this component. Should only be used by
@@ -294,46 +283,31 @@ public abstract class GuiComponent extends Gui {
     /**
      * Gets the top-most parent of this component. May return null if this
      * component has no parent and is not a {@link GuiPanel}.
-     * 
+     *
      * @return The root panel or {@code null}.
      */
-    @Nullable
-    public GuiPanel getRootPanel() {
-        GuiPanel panel = getParent();
-        if (panel == null) {
-            return this instanceof GuiPanel ? (GuiPanel) this : null;
-        }
+    private Optional<GuiPanel> getRootPanel() {
+        Optional<GuiPanel> panel = getParent();
         for (;;) {
-            if (panel.getParent() == null)
-                return panel;
-            panel = panel.getParent();
+            Optional<GuiPanel> parent = panel.flatMap(GuiComponent::getParent);
+            if (!parent.isPresent())
+                break;
+            panel = parent;
         }
-    }
-
-    /**
-     * Gets the position of this component when drawn on the screen. Includes
-     * all parent's positions and scales.
-     *
-     * @return The position
-     */
-    @Deprecated
-    public Point getActualPosition() {
-        return getActualLocation().getPoint();
-    }
-
-    @Deprecated
-    public Dimension getActualSize() {
-        return getActualLocation().getSize();
+        if (panel.isPresent())
+            return panel;
+        else if (this instanceof GuiPanel)
+            return Optional.of((GuiPanel) this);
+        else
+            return Optional.empty();
     }
 
     public ILocation getActualLocation() {
         Location location = this.getLocation().copy();
-        float scale = getScale();
-        location.scale(scale);
-        if (getParent() != null) {
-            ILocation loc1 = getParent().getActualLocation();
-            location.move(loc1.getXPos(), loc1.getYPos());
-        }
+        location.scale(getScale());
+        getParent().map(GuiComponent::getActualLocation).ifPresent(loc1 ->
+                location.move(loc1.getXPos(), loc1.getYPos())
+        );
         return location;
     }
 
@@ -369,27 +343,20 @@ public abstract class GuiComponent extends Gui {
      *
      * @return The scale
      */
-    public float getActualScale() {
-        float scale = getScale();
-        GuiPanel parent = getParent();
-        if (parent != null) {
-            scale *= parent.getActualScale();
-        }
-        return scale;
+    protected float getActualScale() {
+        return getScale() * getParent().map(GuiComponent::getActualScale).orElse(1F);
     }
 
-    @Nullable
-    public Color getPrimaryColor() {
-        return this.primaryColor;
+    public Optional<Color> getPrimaryColor() {
+        return Optional.ofNullable(this.primaryColor);
     }
 
     public void setPrimaryColor(@Nullable Color color) {
         this.primaryColor = color;
     }
 
-    @Nullable
-    public Color getSecondaryColor() {
-        return this.secondaryColor;
+    public Optional<Color> getSecondaryColor() {
+        return Optional.ofNullable(this.secondaryColor);
     }
 
     public void setSecondaryColor(@Nullable Color color) {
@@ -402,46 +369,6 @@ public abstract class GuiComponent extends Gui {
 
     public Color getSecondaryColorProperty() {
         return getProperty(GuiComponent::getSecondaryColor, Color.of(0));
-    }
-
-    /**
-     * Gets the background color. If it is 0, it returns the parent's.
-     *
-     * @return The background color
-     */
-    @Deprecated
-    public Color getBackColor() {
-        return getSecondaryColorProperty();
-    }
-
-    /**
-     * Sets the background color.
-     *
-     * @param backColor The new color
-     */
-    @Deprecated
-    public void setBackColor(Color backColor) {
-        this.setSecondaryColor(backColor);
-    }
-
-    /**
-     * Gets the foreground color. If it is -1, it returns the parent's.
-     *
-     * @return The foreground color
-     */
-    @Deprecated
-    public Color getForeColor() {
-        return this.getPrimaryColorProperty();
-    }
-
-    /**
-     * Sets the foreground color.
-     *
-     * @param foreColor The new color
-     */
-    @Deprecated
-    public void setForeColor(Color foreColor) {
-        this.setPrimaryColor(foreColor);
     }
 
     /**
@@ -493,19 +420,7 @@ public abstract class GuiComponent extends Gui {
      * @return THe hover state
      */
     public boolean isHovered() {
-        return hovered && (parent == null ? true : parent.isHovered());
-    }
-
-    /**
-     * Sets the caption which is shown when the mouse is hovering over this
-     * component.
-     *
-     * @param caption The new caption
-     * @deprecated Use {@link #setCaption(ITextComponent)
-     */
-    @Deprecated
-    public void setCaption(@Nullable String caption) {
-        this.setCaption(caption == null ? null : new TextComponentString(caption));
+        return hovered && getParent().map(GuiComponent::isHovered).orElse(true);
     }
 
     public void setCaption(@Nullable ITextComponent text) {
@@ -522,13 +437,11 @@ public abstract class GuiComponent extends Gui {
     @Nullable
     @Deprecated
     public String getCaption() {
-        ITextComponent caption = getCaptionText();
-        return caption == null ? null : caption.getFormattedText();
+        return getCaptionText().map(ITextComponent::getFormattedText).orElse(null);
     }
 
-    @Nullable
-    public ITextComponent getCaptionText() {
-        return caption;
+    public Optional<ITextComponent> getCaptionText() {
+        return Optional.ofNullable(caption);
     }
 
     /**
@@ -543,17 +456,14 @@ public abstract class GuiComponent extends Gui {
     /**
      * Sets the component's focus
      *
-     * @param focus The focus value
+     * @param focused The focus value
      */
     public void setFocused(boolean focused) {
         // check if is focusable
         if (isFocusable()) {
             if (focused) {
                 // unfocus everything before focusing this one
-                GuiPanel root = getRootPanel();
-                if (root != null) {
-                    root.unfocusAll();
-                }
+                getRootPanel().ifPresent(GuiPanel::unfocusAll);
             }
             this.focused = focused;
         }
@@ -569,26 +479,23 @@ public abstract class GuiComponent extends Gui {
         return false;
     }
 
-    protected <T> T getProperty(final Function<GuiComponent, T> prop, T def) {
-        T t = getProperty(prop);
-        return t == null ? def : t;
+    private <T> T getProperty(final Function<GuiComponent, Optional<T>> prop, T def) {
+        return getProperty(prop).orElse(def);
     }
 
-    @Nullable
-    protected <T> T getProperty(final Function<GuiComponent, T> prop) {
-        T result = prop.apply(this);
-        GuiPanel parent = getParent();
-        if (result == null && parent != null) {
-            result = parent.getProperty(prop);
+    private <T> Optional<T> getProperty(final Function<GuiComponent, Optional<T>> prop) {
+        Optional<T> result = prop.apply(this);
+        Optional<GuiPanel> parent = getParent();
+        if (!result.isPresent()) {
+            result = parent.flatMap((GuiComponent p) -> p.getProperty(prop));
         }
         return result;
-
     }
 
-    protected static Point scalePoint(Point point) {
+    protected static Point scalePoint(Point point, GuiScreen screen) {
         Minecraft mc = Minecraft.getMinecraft();
-        int x = point.x * mc.currentScreen.width / mc.displayWidth;
-        int y = mc.currentScreen.height - point.y * mc.currentScreen.height / mc.displayHeight - 1;
+        int x = point.x * screen.width / mc.displayWidth;
+        int y = screen.height - point.y * screen.height / mc.displayHeight - 1;
         return new Point(x, y);
     }
 

@@ -1,16 +1,13 @@
 package mnm.mods.util.gui;
 
+import com.google.common.collect.Maps;
+import mnm.mods.util.ILocation;
+import mnm.mods.util.Location;
+import org.apache.logging.log4j.LogManager;
+
 import java.awt.Dimension;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.apache.logging.log4j.LogManager;
-
-import com.google.common.collect.Maps;
-
-import mnm.mods.util.ILocation;
-import mnm.mods.util.ImmutableLocation;
-import mnm.mods.util.Location;
 
 /**
  * A layout which places components along a grid. Add components with an int[]
@@ -73,7 +70,7 @@ public class GuiGridLayout implements ILayout {
         ILocation rect = new Location(x, y, w, h);
         try {
             checkBoundsIfValid(rect);
-            grid.put(ImmutableLocation.copyOf(rect), comp);
+            grid.put(rect.asImmutable(), comp);
         } catch (Exception e) {
             LogManager.getLogger().catching(e);
         }

@@ -1,13 +1,13 @@
 package mnm.mods.util.config;
 
-import java.util.Map;
-
 import com.google.common.collect.Maps;
+
+import java.util.Map;
 
 public class ValueMap<T> extends Value<Map<String, T>> {
 
-    public ValueMap() {
-        this.set(Maps.<String, T> newHashMap());
+    ValueMap() {
+        this.set(Maps.newHashMap());
     }
 
     public void set(String key, T value) {

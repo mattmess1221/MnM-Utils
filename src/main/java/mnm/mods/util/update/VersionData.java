@@ -24,15 +24,15 @@ public class VersionData {
         return name;
     }
 
-    public String getUpdateUrl() {
+    String getUpdateUrl() {
         return updateUrl;
     }
 
-    public String getUrl() {
+    String getUrl() {
         return this.url;
     }
 
-    public int compareTo(double arg0) {
+    private int compareTo(double arg0) {
         return Double.compare(revision, arg0);
     }
 
@@ -40,7 +40,7 @@ public class VersionData {
         return update != null && compareTo(update.revision) > 0;
     }
 
-    public static VersionData fromLiteMod(LiteMod litemod) {
+    static VersionData fromLiteMod(LiteMod litemod) {
         String updateurl = LiteLoader.getInstance().getModMetaData(litemod, "updateUrl", null);
         String url = LiteLoader.getInstance().getModMetaData(litemod, "url", null);
         String rev = LiteLoader.getInstance().getModMetaData(litemod, "revision", null);

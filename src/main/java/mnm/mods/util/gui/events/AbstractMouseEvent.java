@@ -10,7 +10,7 @@ abstract class AbstractMouseEvent extends GuiEvent {
     private int mouseX;
     private int mouseY;
 
-    public AbstractMouseEvent(GuiComponent component, int mouseX, int mouseY) {
+    AbstractMouseEvent(GuiComponent component, int mouseX, int mouseY) {
         super(component);
         this.mouseX = mouseX;
         this.mouseY = mouseY;
