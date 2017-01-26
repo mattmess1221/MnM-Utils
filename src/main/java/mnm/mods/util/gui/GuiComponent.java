@@ -1,7 +1,6 @@
 package mnm.mods.util.gui;
 
 import com.google.common.eventbus.EventBus;
-import mcp.MethodsReturnNonnullByDefault;
 import mnm.mods.util.Color;
 import mnm.mods.util.ILocation;
 import mnm.mods.util.Location;
@@ -32,7 +31,6 @@ import javax.annotation.Nullable;
  *
  * @author Matthew
  */
-@MethodsReturnNonnullByDefault
 public abstract class GuiComponent extends Gui {
 
     private boolean enabled = true;
@@ -222,7 +220,6 @@ public abstract class GuiComponent extends Gui {
      *
      * @return The current immutable location.
      */
-
     public ILocation getLocation() {
         return this.location;
     }
@@ -280,7 +277,7 @@ public abstract class GuiComponent extends Gui {
      */
     private Optional<GuiPanel> getRootPanel() {
         Optional<GuiPanel> panel = getParent();
-        while (true) {
+        while(true) {
             Optional<GuiPanel> parent = panel.flatMap(GuiComponent::getParent);
             if (!parent.isPresent())
                 break;

@@ -1,7 +1,6 @@
 package mnm.mods.util.gui;
 
 import com.google.common.eventbus.EventBus;
-import mcp.MethodsReturnNonnullByDefault;
 import mnm.mods.util.Color;
 import mnm.mods.util.ILocation;
 import net.minecraft.util.text.ITextComponent;
@@ -10,7 +9,6 @@ import java.awt.Dimension;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 
-@MethodsReturnNonnullByDefault
 public class GuiWrappedComponent<T extends GuiComponent> extends GuiComponent {
 
     private final T wrapper;
