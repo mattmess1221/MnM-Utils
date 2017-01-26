@@ -59,15 +59,41 @@ public class GuiPanel extends GuiComponent implements Iterable<GuiComponent> {
                     ILocation location = gc.getLocation();
                     int xPos = location.getXPos();
                     int yPos = location.getYPos();
+                    int x = (int) (mouseX / gc.getScale()) - xPos;
+                    int y = (int) (mouseY / gc.getScale()) - yPos;
                     GlStateManager.translate(xPos, yPos, 0F);
                     GlStateManager.scale(gc.getScale(), gc.getScale(), 1F);
-
-                    gc.drawComponent(mouseX, mouseY);
+                    gc.drawComponent(x, y);
 
                     GlStateManager.popMatrix();
                 });
 
         super.drawComponent(mouseX, mouseY);
+    }
+
+    @Override
+    public void drawCaption(int mouseX, int mouseY) {
+        super.drawCaption(mouseX, mouseY);
+        if (this.getOverlay().isPresent()) {
+            getOverlay().get().drawCaption(mouseX, mouseY);
+            return;
+        }
+        this.components.stream()
+                .filter(GuiComponent::isVisible)
+                .forEach(gc -> {
+                    GlStateManager.pushMatrix();
+                    ILocation location = gc.getLocation();
+                    int xPos = location.getXPos();
+                    int yPos = location.getYPos();
+                    int x = (int) (mouseX / gc.getScale()) - xPos;
+                    int y = (int) (mouseY / gc.getScale()) - yPos;
+                    GlStateManager.translate(xPos, yPos, 0F);
+                    GlStateManager.scale(gc.getScale(), gc.getScale(), 1F);
+
+                    gc.drawCaption(x, y);
+
+                    GlStateManager.popMatrix();
+                });
     }
 
     @Override

@@ -17,6 +17,7 @@ public class ComponentScreen extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float tick) {
         PANEL.drawComponent(mouseX, mouseY);
         super.drawScreen(mouseX, mouseY, tick);
+        PANEL.drawCaption(mouseX, mouseY);
     }
 
     @Override

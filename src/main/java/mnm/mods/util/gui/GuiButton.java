@@ -41,7 +41,10 @@ public class GuiButton extends GuiComponent {
 
     @Subscribe
     public void onClick(ActionPerformedEvent action) {
-        mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(getSound(), 1.0F));
+        SoundEvent sound = getSound();
+        if (sound != null) {
+            mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(sound, 1.0F));
+        }
     }
 
     /**

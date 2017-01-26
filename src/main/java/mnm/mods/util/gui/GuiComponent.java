@@ -19,12 +19,12 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
 import java.awt.Dimension;
 import java.awt.Point;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 /**
@@ -66,16 +66,14 @@ public abstract class GuiComponent extends Gui {
      * @param mouseY The mouse y
      */
     public void drawComponent(int mouseX, int mouseY) {
-        // draw the caption
+    }
 
-        getCaptionText().map(ITextComponent::getFormattedText).ifPresent(caption -> {
-            if (isHovered() && !caption.isEmpty()) {
-                GlStateManager.pushMatrix();
-                GL11.glDisable(GL11.GL_SCISSOR_TEST);
-                drawCaptionAtCursor(caption, mouseX, mouseY);
-                GlStateManager.popMatrix();
-            }
-        });
+    public void drawCaption(int x, int y) {
+        getCaptionText()
+                .map(ITextComponent::getFormattedText)
+                .filter(((Predicate<String>) String::isEmpty).negate())
+                .filter(t -> this.isHovered())
+                .ifPresent(text -> this.drawCaption(text, x, y));
     }
 
     protected void drawCaption(String caption, int x, int y) {
@@ -98,7 +96,6 @@ public abstract class GuiComponent extends Gui {
             w2--;
         }
         // put it on top
-        this.zLevel = 100;
         GlStateManager.pushMatrix();
         Gui.drawRect(x - 2, y - 2, x + w + 2, y + mc.fontRendererObj.FONT_HEIGHT * list.length + 1,
                 0xcc333333);
@@ -109,11 +106,6 @@ public abstract class GuiComponent extends Gui {
             y += mc.fontRendererObj.FONT_HEIGHT;
         }
         GlStateManager.popMatrix();
-    }
-
-    private void drawCaptionAtCursor(String msg, int mouseX, int mouseY) {
-        Point point = getActualLocation().getPoint();
-        drawCaption(msg, mouseX - point.x + 8, mouseY - point.y);
     }
 
     protected void drawBorders(int x1, int y1, int x2, int y2, int color) {
@@ -288,7 +280,7 @@ public abstract class GuiComponent extends Gui {
      */
     private Optional<GuiPanel> getRootPanel() {
         Optional<GuiPanel> panel = getParent();
-        for (;;) {
+        while (true) {
             Optional<GuiPanel> parent = panel.flatMap(GuiComponent::getParent);
             if (!parent.isPresent())
                 break;
