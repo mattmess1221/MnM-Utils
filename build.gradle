@@ -11,7 +11,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.liteloader'
 
 group = "mnm.mods"
-version = "1.3.0"
+version = "1.3.1"
 
 apply from: file('gradle/minecraft.gradle')
 

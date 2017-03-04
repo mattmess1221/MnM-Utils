@@ -1,9 +1,8 @@
 package mnm.mods.util.gui.config;
 
-import java.util.Arrays;
-
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.Subscribe;
-
 import mnm.mods.util.Color;
 import mnm.mods.util.ILocation;
 import mnm.mods.util.config.Value;
@@ -11,75 +10,75 @@ import mnm.mods.util.gui.events.GuiMouseEvent;
 import mnm.mods.util.gui.events.GuiMouseEvent.MouseEvent;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * A setting for set values, such as enums. Values should either have a
  * toString() method or provide a names array during construction.
  *
- * @author Matthew
  * @param <T> The type
+ * @author Matthew
  */
 public class GuiSettingEnum<T> extends GuiSetting<T> {
 
-    private final T[] values;
-    private final String[] names;
+    private final List<T> values;
+    private final Function<T, String> namer;
 
     private T value;
 
     private String text;
-    private int selected;
 
     public GuiSettingEnum(Value<T> setting, T[] values) {
-        this(setting, values, null);
+        this(setting, Arrays.asList(values), Objects::toString);
     }
 
+    @Deprecated
     public GuiSettingEnum(Value<T> setting, T[] values, String[] names) {
-        super(setting);
-        this.names = names;
-        this.values = values;
-        selected = getCurrentPosition();
+        this(setting, Arrays.asList(values), val -> {
+            int i = ArrayUtils.indexOf(values, val);
+            return names[i];
+        });
+        Preconditions.checkArgument(values.length == names.length);
+    }
 
-        select(Arrays.binarySearch(values, setting.get()));
+    public GuiSettingEnum(Value<T> setting, List<T> values, Function<T, String> namer) {
+        super(setting);
+        this.namer = namer;
+        this.values = ImmutableList.copyOf(values);
+
+        setValue(setting.get());
         setSecondaryColor(Color.DARK_GRAY);
+
     }
 
     @Subscribe
     public void activate(GuiMouseEvent event) {
         if (event.getType() == MouseEvent.CLICK) {
+            int selected = this.values.indexOf(value);
+            int max = this.values.size();
+            int mov = 0;
+
             if (event.getButton() == 0) {
                 // Left click, go forward
-                select(selected + 1);
+                mov = 1;
             } else if (event.getButton() == 1) {
                 // Right click, go backward
-                select(selected - 1);
+                mov = -1;
+            }
+
+            if (mov != 0) {
+                // find the index and increment or decrement
+                int id = selected + mov;
+                id = id < 0 ? (max - id) % max : id % max;
+
+                setValue(values.get(id));
             }
         }
-    }
-
-    private int getCurrentPosition() {
-        int pos = -1;
-        T value = getSetting().get();
-        for (int i = 0; i < this.values.length && pos < 0; i++) {
-            if (values[i].equals(value)) {
-                pos = i;
-            }
-        }
-        return pos;
-    }
-
-    private void select(int id) {
-        if (id < 0) {
-            id = values.length - 1;
-        } else if (id > values.length - 1) {
-            id = 0;
-        }
-        selected = id;
-        setValue(values[selected]);
-        String text = values[selected].toString();
-        if (names != null) {
-            text = names[selected];
-        }
-        this.text = I18n.format(text);
     }
 
     @Override
@@ -101,5 +100,11 @@ public class GuiSettingEnum<T> extends GuiSetting<T> {
     @Override
     public void setValue(T value) {
         this.value = value;
+
+        String text = this.value.toString();
+        if (namer != null) {
+            text = namer.apply(this.value);
+        }
+        this.text = I18n.format(text);
     }
 }
