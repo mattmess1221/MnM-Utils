@@ -1,5 +1,7 @@
 package mnm.mods.util.config;
 
+import java.util.Objects;
+
 /**
  * A wrapper that saves a default value.
  *
@@ -33,4 +35,8 @@ public class Value<T> {
         return this.value;
     }
 
+    @Override
+    public String toString() {
+        return Objects.toString(this.value);
+    }
 }
